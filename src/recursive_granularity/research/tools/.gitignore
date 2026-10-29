@@ -1,0 +1,3 @@
+# Regenerable: python3 lean_tools.py index / mapping_tools.py results
+out/
+__pycache__/

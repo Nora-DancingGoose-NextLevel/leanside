@@ -1,0 +1,544 @@
+/* Recursive granularity prototype — reuses the app palette from index.css /
+   leandisplay.css (primary blue, grey scale, dark Lean panel). */
+
+.rg-page {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  background-color: var(--bg-light-grey);
+  color: var(--text-dark);
+}
+
+/* ===== Top bar ===== */
+.rg-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 8px 16px;
+  background-color: var(--bg-white);
+  border-bottom: 1px solid var(--border-grey);
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+
+.rg-title {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.rg-title h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.rg-subtitle {
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+.rg-granularity {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.85rem;
+}
+
+.rg-gran-label {
+  font-weight: 600;
+  color: #374151;
+}
+
+.rg-gran-end {
+  color: #9ca3af;
+  font-size: 0.75rem;
+}
+
+.rg-granularity input[type="range"] {
+  width: 200px;
+  accent-color: var(--primary-blue);
+  cursor: pointer;
+}
+
+/* Fixed widths: the text after the slider changes with the level, and since the
+   group is right-aligned any width change would move the slider. */
+.rg-gran-value {
+  width: 250px;
+  flex-shrink: 0;
+  color: var(--primary-blue);
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rg-gran-count {
+  width: 82px;
+  flex-shrink: 0;
+  text-align: center;
+  white-space: nowrap;
+  color: #6b7280;
+  background-color: #f3f4f6;
+  border-radius: 10px;
+  padding: 1px 8px;
+  font-size: 0.75rem;
+}
+
+.rg-reset {
+  border: 1px solid #d1d5db;
+  background: var(--bg-white);
+  color: #374151;
+  border-radius: 6px;
+  padding: 2px 10px;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.rg-reset:hover {
+  border-color: var(--primary-blue);
+  color: var(--primary-blue);
+}
+
+/* ===== Layout ===== */
+.rg-main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
+.rg-panel-heading {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #6b7280;
+  margin: 14px 0 6px;
+}
+
+/* ===== Left: NL proof ===== */
+.rg-nl-panel {
+  width: 30%;
+  min-width: 300px;
+  padding: 4px 18px 18px;
+  background-color: #fafafa;
+  border-right: 1px solid var(--border-grey);
+  overflow-y: auto;
+}
+
+.rg-problem {
+  background-color: var(--bg-white);
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: #444;
+}
+
+.rg-nl-steps {
+  list-style: none;
+}
+
+.rg-nl-section {
+  display: block;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #374151;
+  margin: 12px 0 4px;
+}
+
+.rg-nl-step {
+  display: flex;
+  gap: 10px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  font-size: 0.92rem;
+  line-height: 1.6;
+  transition: background-color 0.15s, border-color 0.15s;
+  cursor: pointer;
+}
+
+.rg-nl-step:active {
+  background-color: #dbeafe;
+}
+
+.rg-nl-step.is-highlighted {
+  background-color: #eff6ff;
+  border-color: #93c5fd;
+}
+
+.rg-step-num {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  margin-top: 2px;
+  border-radius: 50%;
+  background-color: #e5e7eb;
+  color: #374151;
+  font-size: 0.75rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rg-nl-step.is-highlighted .rg-step-num {
+  background-color: var(--primary-blue);
+  color: white;
+}
+
+.rg-step-text {
+  min-width: 0;
+}
+
+.rg-axioms {
+  list-style: none;
+  font-size: 0.85rem;
+  color: #4b5563;
+}
+
+.rg-axioms li {
+  display: flex;
+  flex-direction: column;
+  padding: 4px 0;
+}
+
+.rg-axioms code {
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+/* ===== Middle + right: cells ===== */
+.rg-cells-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background-color: var(--bg-white);
+}
+
+.rg-cells-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 0 24px;
+}
+
+.rg-row {
+  display: flex;
+  align-items: stretch;
+  padding: 3px 12px;
+}
+
+.rg-lean-col {
+  flex: 1.35;
+  display: flex;
+  min-width: 0;
+}
+
+.rg-informal-col {
+  flex: 1;
+  display: flex;
+  min-width: 0;
+  padding-left: 12px;
+}
+
+.rg-col-headings {
+  border-bottom: 1px solid var(--border-grey);
+  padding-top: 8px;
+  padding-bottom: 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #6b7280;
+  flex-shrink: 0;
+}
+
+/* Depth guides: one vertical line per nesting level */
+.rg-guide {
+  flex-shrink: 0;
+  width: 16px;
+  margin-top: -3px;
+  margin-bottom: -3px;
+  border-left: 2px solid #e5e7eb;
+  margin-left: 4px;
+}
+
+.rg-informal-col .rg-guide {
+  width: 8px;
+  margin-left: 2px;
+}
+
+/* Lean cell (collapsed node) */
+.rg-lean-cell,
+.rg-lean-frame {
+  flex: 1;
+  min-width: 0;
+  background-color: #1e1e1e;
+  border: 1px solid #333;
+  border-radius: 6px;
+  overflow: hidden;
+  transition: box-shadow 0.15s, border-color 0.15s;
+}
+
+.rg-lean-frame {
+  background-color: #252526;
+  border-style: dashed;
+  border-color: #4b5563;
+}
+
+.rg-cell-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 3px 8px;
+  background-color: #252526;
+  border-bottom: 1px solid #333;
+  font-size: 0.7rem;
+  color: #808080;
+}
+
+.rg-lean-frame .rg-cell-bar {
+  border-bottom: none;
+}
+
+.rg-lean-frame.no-header {
+  background-color: #f3f4f6;
+  border-color: #d1d5db;
+}
+
+.rg-lean-frame.no-header .rg-cell-bar {
+  background-color: transparent;
+  color: #6b7280;
+}
+
+.rg-lean-frame.no-header .rg-toggle {
+  color: var(--primary-blue);
+  border-color: #d1d5db;
+}
+
+.rg-lean-frame .rg-lean-code {
+  border-top: 1px solid #333;
+  opacity: 0.75;
+}
+
+.rg-toggle {
+  width: 18px;
+  height: 18px;
+  border: 1px solid #4b5563;
+  border-radius: 4px;
+  background: none;
+  color: #b2f3ff;
+  font-family: monospace;
+  font-size: 0.9rem;
+  font-weight: 900;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.rg-toggle:hover {
+  background-color: #333;
+  color: #ffffff;
+  border-color: var(--primary-blue);
+}
+
+.rg-toggle-leaf {
+  border-color: transparent;
+  color: #4b5563;
+  cursor: default;
+}
+
+.rg-kind {
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #9ca3af;
+}
+
+.rg-lines {
+  margin-left: auto;
+}
+
+.rg-lean-code {
+  margin: 0;
+  padding: 6px 10px;
+  font-family: "Consolas", "Monaco", "Courier New", monospace;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  overflow-x: auto;
+  white-space: pre;
+}
+
+.rg-lean-code .hljs {
+  background: transparent;
+  padding: 0;
+  color: #d4d4d4;
+}
+
+/* Informalization cell */
+.rg-informal-cell,
+.rg-informal-frame {
+  flex: 1;
+  min-width: 0;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  padding: 8px 12px;
+  background-color: var(--bg-white);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 6px;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  transition: background-color 0.15s, border-color 0.15s;
+}
+
+.rg-informal-frame {
+  border-style: dashed;
+  background-color: #fafafa;
+  color: #9ca3af;
+  font-size: 0.82rem;
+  padding: 4px 12px;
+}
+
+.rg-chips {
+  display: flex;
+  gap: 6px;
+}
+
+.rg-chip {
+  font: inherit;
+  font-size: 0.7rem;
+  color: #6b7280;
+  background-color: #f3f4f6;
+  border: none;
+  border-radius: 10px;
+  padding: 0 8px;
+  cursor: pointer;
+}
+
+.rg-chip:hover {
+  color: var(--primary-blue);
+  background-color: #dbeafe;
+}
+
+/* Hover linkage */
+.rg-row.is-highlighted .rg-lean-cell {
+  border-color: var(--primary-blue);
+  box-shadow: 0 0 0 1px var(--primary-blue);
+}
+
+.rg-row.is-highlighted .rg-informal-cell {
+  background-color: #eff6ff;
+  border-color: #93c5fd;
+}
+
+.rg-row.is-highlighted .rg-chip {
+  background-color: var(--primary-blue);
+  color: white;
+}
+
+.rg-row.rg-frame-row.is-highlighted .rg-lean-frame {
+  border-color: var(--primary-blue);
+}
+
+/* Click-to-navigate flash (two identical keyframes so repeat clicks restart it) */
+@keyframes rg-flash-lean-0 { 0%, 55% { border-color: #f59e0b; box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.55); } 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); } }
+@keyframes rg-flash-lean-1 { 0%, 55% { border-color: #f59e0b; box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.55); } 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); } }
+@keyframes rg-flash-informal-0 { 0%, 55% { background-color: #fef3c7; border-color: #f59e0b; } 100% { background-color: var(--bg-white); } }
+@keyframes rg-flash-informal-1 { 0%, 55% { background-color: #fef3c7; border-color: #f59e0b; } 100% { background-color: var(--bg-white); } }
+
+.rg-row.is-flash-0 :is(.rg-lean-cell, .rg-lean-frame) { animation: rg-flash-lean-0 1.8s ease-out; }
+.rg-row.is-flash-1 :is(.rg-lean-cell, .rg-lean-frame) { animation: rg-flash-lean-1 1.8s ease-out; }
+.rg-row.is-flash-0 :is(.rg-informal-cell, .rg-informal-frame) { animation: rg-flash-informal-0 1.8s ease-out; }
+.rg-row.is-flash-1 :is(.rg-informal-cell, .rg-informal-frame) { animation: rg-flash-informal-1 1.8s ease-out; }
+
+/* ===== Mode toggle (toy problem / research paper) ===== */
+.rg-mode {
+  display: inline-flex;
+  padding: 2px;
+  border-radius: 7px;
+  background-color: #f3f4f6;
+  border: 1px solid #e5e7eb;
+}
+
+.rg-mode button {
+  border: none;
+  background: none;
+  padding: 1px 9px;
+  border-radius: 5px;
+  font-size: 0.75rem;
+  color: #6b7280;
+  cursor: pointer;
+}
+
+.rg-mode button.is-on {
+  background-color: var(--bg-white);
+  color: var(--primary-blue);
+  font-weight: 600;
+  box-shadow: var(--shadow-sm);
+}
+
+/* ===== Research mode ===== */
+.rg-page.is-research .rg-nl-panel {
+  width: 36%;
+  min-width: 340px;
+  background-color: #fcfcfd;
+}
+
+/* paper | informalization | Lean */
+.rg-cells-panel.is-informal-first .rg-informal-col {
+  order: -1;
+  padding-left: 0;
+  padding-right: 12px;
+}
+
+.rg-page.is-research .rg-lean-col { flex: 1.25; }
+
+.rg-page.is-research .rg-lean-code {
+  max-height: 420px;
+  overflow: auto;
+}
+
+.rg-loading {
+  padding: 40px;
+  color: #6b7280;
+  text-align: center;
+}
+
+/* Confidence of a paper -> Lean link (also used in the paper column) */
+.rg-conf {
+  font-size: 0.62rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-radius: 8px;
+  padding: 0 6px;
+  white-space: nowrap;
+  font-family: system-ui, sans-serif;
+  font-style: normal;
+}
+
+.rg-conf--anchored { background-color: #d1fae5; color: #047857; }
+.rg-conf--named { background-color: #dbeafe; color: #1d4ed8; }
+.rg-conf--structural { background-color: #fef3c7; color: #92400e; }
+
+.rg-source {
+  color: #9ca3af;
+  text-decoration: none;
+  font-family: "Consolas", "Monaco", monospace;
+}
+
+.rg-source:hover { color: #b2f3ff; text-decoration: underline; }
+
+/* Left-column flash after clicking a cell's chip */
+@keyframes rg-flash-nl-0 { 0%, 55% { background-color: #fef3c7; border-color: #f59e0b; } 100% { background-color: transparent; } }
+@keyframes rg-flash-nl-1 { 0%, 55% { background-color: #fef3c7; border-color: #f59e0b; } 100% { background-color: transparent; } }
+.rg-nl-step.is-flash-0 { animation: rg-flash-nl-0 1.8s ease-out; }
+.rg-nl-step.is-flash-1 { animation: rg-flash-nl-1 1.8s ease-out; }

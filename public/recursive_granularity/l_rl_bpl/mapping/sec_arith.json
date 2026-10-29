@@ -1,0 +1,336 @@
+{
+  "section": "sec:arith",
+  "informal": "The Lean shows that approximations within \\(2\\) of \\(2^tV\\) give exact signed-digit streams with digits in \\([-6,6]\\), and that recipes built from Lipschitz arithmetic gates, indexed sums and indexed ranks compile to programs emitting such streams within explicit space costs.",
+  "modules": [
+    "DyadicArithmetic",
+    "QueryPrograms",
+    "RecursivePrograms"
+  ],
+  "results": [
+    {
+      "paper_id": "lem:arith-residue-stream",
+      "informal": "If \\(|V|\\le 1\\) and \\(|N_i-2^iV|\\le 2\\) for \\(i\\le H\\), the difference digits \\(z_t\\) satisfy \\(|z_t|\\le 6\\), their weighted partial sums give \\(N_H\\), and each \\(z_t\\) is recovered from \\(N_t\\) and \\(N_{t-1}\\) modulo \\(32\\).",
+      "confidence": "named",
+      "note": "The Lean predicate Checked is the approximation condition (with \\(\\le 2\\)), dsign is the difference digit \\(z_t\\), and codeQ/diffd recover the digit from residues modulo \\(2^5\\).",
+      "decls": [
+        {
+          "module": "DyadicArithmetic",
+          "name": "safe_d",
+          "informal": "If \\(|V|\\le 1\\) and \\(|N_i-2^iV|\\le 2\\) for all \\(i\\le H\\), then for \\(t\\le H\\) the digit \\(z_t\\) (with \\(z_0=N_0\\), \\(z_t=N_t-2N_{t-1}\\)) satisfies \\(|z_t|\\le 6\\).",
+          "chunks": {
+            "DyadicArithmetic.safe_d/0": "At place \\(t\\), \\(-2\\le N_t-2^tV\\le 2\\).",
+            "DyadicArithmetic.safe_d/1": "Over the reals \\(|z_t|\\le 6\\): at \\(t=0\\) from \\(|N_0-V|\\le 2\\) and \\(|V|\\le 1\\), and at \\(t+1\\) from \\(z_{t+1}=(N_{t+1}-2^{t+1}V)-2(N_t-2^tV)\\).",
+            "DyadicArithmetic.safe_d/2": "Hence \\(-6\\le z_t\\le 6\\) as integers.",
+            "DyadicArithmetic.safe_d/3": "So \\(|z_t|\\le 6\\)."
+          }
+        },
+        {
+          "module": "DyadicArithmetic",
+          "name": "sumsign",
+          "informal": "For every integer sequence \\(N\\) and every \\(H\\), \\(\\sum_{i=0}^{H} z_i\\,2^{H-i}=N_H\\), where \\(z_0=N_0\\) and \\(z_i=N_i-2N_{i-1}\\).",
+          "chunks": {}
+        },
+        {
+          "module": "DyadicArithmetic",
+          "name": "resolve",
+          "informal": "If \\(|n-2m|\\le 6\\), then \\(\\big((n \\bmod 32)-2(m \\bmod 32)+16\\big) \\bmod 32-16=n-2m\\).",
+          "chunks": {}
+        }
+      ]
+    },
+    {
+      "paper_id": "lem:arith-gate-evaluation",
+      "informal": "A program run on a child query \\(r=f(q,o)\\) can be inlined into a caller with tuple \\(q\\) that keeps only the short piece \\(o\\), regenerating \\(r\\) on demand, with the space allowance enlarged to cost \\(g\\ge 2C+c\\).",
+      "confidence": "structural",
+      "note": "focus_word is the Lean mechanism by which child queries are regenerated from the caller tuple and a small stored piece instead of saved addresses, which is the core of the paper's regenerated-address evaluation.",
+      "decls": [
+        {
+          "module": "RecursivePrograms",
+          "name": "focus_word",
+          "informal": "If program \\(p\\) runs from \\(a\\) to \\(y\\) at cost \\(c\\) and clock \\(j\\) on the query \\(r=f(q,o)\\), the piece \\(o\\) satisfies \\(\\ell(o)+1+Cj\\le Ct+C^2d\\), \\(d\\le w\\), \\(2C+c\\le g\\) and \\(c,C\\ge 1\\), then the inlined program that regenerates \\(r\\) from \\((q,o)\\) runs on query \\(q\\) from \\((o,a)\\) to \\((o,y)\\) at cost \\(g\\) and clock \\(t\\).",
+          "chunks": {
+            "RecursivePrograms.focus_word/0": "Every state admissible at cost \\(c\\) and clock \\(j\\) stays admissible at cost \\(g\\) and clock \\(t\\) once paired with \\(o\\).",
+            "RecursivePrograms.focus_word/1": "Every call admissible at cost \\(c\\) and clock \\(j\\) stays admissible at cost \\(g\\) and clock \\(t\\) once the caller record is paired with \\(o\\).",
+            "RecursivePrograms.focus_word/1/0": "The width condition carries over, and the length bound combines the bounds for \\(o\\) and for the record.",
+            "RecursivePrograms.focus_word/1/1": "The slack \\(d\\) is at most the caller width minus the callee width.",
+            "RecursivePrograms.focus_word/2": "Proceed by induction on the execution of \\(p\\).",
+            "RecursivePrograms.focus_word/3": "For an edit step, the regenerated query gives the same output state, now paired with \\(o\\).",
+            "RecursivePrograms.focus_word/4": "For a call step, the regenerated query gives the same callee query and return state, paired with \\(o\\).",
+            "RecursivePrograms.focus_word/5": "Sequential composition follows from the two induction hypotheses.",
+            "RecursivePrograms.focus_word/6": "For a branch taking the true side, the guard on the regenerated query agrees with the original guard.",
+            "RecursivePrograms.focus_word/7": "For a branch taking the false side, the guard on the regenerated query agrees with the original guard.",
+            "RecursivePrograms.focus_word/8": "For a loop iteration, the guard on the regenerated query is still true, so the iteration carries over.",
+            "RecursivePrograms.focus_word/9": "For a loop exit, the guard on the regenerated query is still false and the final state stays admissible."
+          }
+        }
+      ]
+    },
+    {
+      "paper_id": "lem:arith-elementary",
+      "informal": "A gate \\(F\\) that is \\(2^{ed}\\)-Lipschitz on the operand ranges turns exact operand streams with clock overshoot \\((e+i+j+6)d\\) into an exact output stream, and each of \\(+,-,\\times,\\min,\\max\\) and \\(x\\mapsto 1/\\max(x,1)\\) is such a gate with \\(e=i+j+2\\).",
+      "confidence": "structural",
+      "note": "Lean replaces the paper's residue procedures by a generic Lipschitz gate theorem (joint) plus a Lipschitz certificate for the elementary operations (legit), with overshoot linear in the slack \\(d\\).",
+      "decls": [
+        {
+          "module": "QueryPrograms",
+          "name": "joint",
+          "informal": "If \\(F\\) is exact on rationals and \\(2^{ed}\\)-Lipschitz for \\(|x|\\le 2\\cdot 2^{id}\\), \\(|y|\\le 2\\cdot 2^{jd}\\), the operand programs emit exact streams for \\(V/2^{id}\\) and \\(X/2^{jd}\\) up to clock \\(H+(e+i+j+6)d\\), and \\(|F(V,X)|\\le 2^{od}\\), then the combined gate program emits an exact stream for \\(F(V,X)/2^{od}\\) up to clock \\(H\\) at cost \\(\\text{powder}(\\text{price}(e+i+j+106+c))\\).",
+          "chunks": {
+            "QueryPrograms.joint/0": "From the stream hypotheses, \\(|V|\\le 2^{id}\\) and \\(|X|\\le 2^{jd}\\).",
+            "QueryPrograms.joint/1": "Fix tapes \\(w,b\\) for the operand streams and set up the paired recipe with operand values \\(V/2^{id}\\) and \\(X/2^{jd}\\).",
+            "QueryPrograms.joint/2": "The combined cost \\(C\\) satisfies \\(C\\ge 100\\) and \\(c\\le C\\).",
+            "QueryPrograms.joint/3": "The recipe margin equals \\((e+i+j+6)d\\).",
+            "QueryPrograms.joint/4": "The paired recipe's operand requirements hold up to clock \\(H+(e+i+j+6)d\\).",
+            "QueryPrograms.joint/4/0": "It suffices to check the margin bound, the label counts, and the operand streams.",
+            "QueryPrograms.joint/4/1": "The margin \\((e+i+j+6)d\\) is at most \\(Cd\\).",
+            "QueryPrograms.joint/4/2": "Each side has one label and \\(1<2^{Cd}\\).",
+            "QueryPrograms.joint/4/3": "Fix a side and a label, and split on the side.",
+            "QueryPrograms.joint/4/4": "On the false side the stream for \\(X/2^{jd}\\) works.",
+            "QueryPrograms.joint/4/4/0": "The false-side program is \\(g\\).",
+            "QueryPrograms.joint/4/4/1": "Raise the cost of the stream for \\(X/2^{jd}\\) from \\(c\\) to \\(C\\).",
+            "QueryPrograms.joint/4/5": "On the true side the stream for \\(V/2^{id}\\) works.",
+            "QueryPrograms.joint/4/5/0": "The true-side program is \\(f\\).",
+            "QueryPrograms.joint/4/5/1": "Raise the cost of the stream for \\(V/2^{id}\\) from \\(c\\) to \\(C\\).",
+            "QueryPrograms.joint/5": "The gate is Lipschitz with constant \\(2^{(e+i+j)d}\\) about the target \\(F(V,X)/2^{od}\\).",
+            "QueryPrograms.joint/5/0": "\\(|F(V,X)/2^{od}|\\le 1\\) and \\(1\\le 2^{(e+i+j)d}\\).",
+            "QueryPrograms.joint/5/1": "The rate condition \\(2^{(e+i+j)d}\\cdot 4\\cdot 3\\le 2^{(e+i+j+6)d}\\) holds.",
+            "QueryPrograms.joint/5/1/0": "With \\(n=e+i+j\\), rewrite \\(2^{(n+6)d}=2^{nd}2^{6d}\\) and note \\(12\\le 2^{6d}\\).",
+            "QueryPrograms.joint/5/1/1": "Multiply \\(12\\le 2^{6d}\\) by \\(2^{nd}\\).",
+            "QueryPrograms.joint/5/2": "For \\(x,y\\) within \\(1\\) of the operand values, the output error is at most \\(2^{(e+i+j)d}\\) times the sum of the input errors.",
+            "QueryPrograms.joint/5/2/0": "The true-side operand value is \\(V/2^{id}\\).",
+            "QueryPrograms.joint/5/2/1": "The false-side operand value is \\(X/2^{jd}\\).",
+            "QueryPrograms.joint/5/2/2": "The gate output is \\(F(x2^{id},y2^{jd})/2^{od}\\), so the scaled Lipschitz bound applies.",
+            "QueryPrograms.joint/6": "The recipe stream theorem gives the exact output stream."
+          }
+        },
+        {
+          "module": "QueryPrograms",
+          "name": "legit",
+          "informal": "For \\(F\\in\\{+,-,\\times,\\min,\\max,(x,y)\\mapsto 1/\\max(x,1)\\}\\), the rational gate computes \\(F\\) exactly, and for \\(d\\ge 1\\), \\(|x|,|z|\\le 2\\cdot 2^{id}\\), \\(|y|,|w|\\le 2\\cdot 2^{jd}\\): \\(|F(x,y)-F(z,w)|\\le 2^{(i+j+2)d}(|x-z|+|y-w|)\\).",
+          "chunks": {
+            "QueryPrograms.legit/0": "Split into exactness of the rational gate and the Lipschitz bound.",
+            "QueryPrograms.legit/1": "In every case the rational gate computes the real operation exactly.",
+            "QueryPrograms.legit/2": "Set \\(I=2^{id}\\), \\(J=2^{jd}\\), \\(K=2^{(i+j+2)d}\\).",
+            "QueryPrograms.legit/3": "\\(1\\le I\\) and \\(1\\le J\\).",
+            "QueryPrograms.legit/4": "\\(2\\le 2^{2d}\\).",
+            "QueryPrograms.legit/5": "\\(2I\\le K\\).",
+            "QueryPrograms.legit/6": "\\(2J\\le K\\).",
+            "QueryPrograms.legit/7": "Set \\(a=|x-z|\\) and \\(b=|y-w|\\).",
+            "QueryPrograms.legit/8": "\\(a\\ge 0\\) and \\(b\\ge 0\\).",
+            "QueryPrograms.legit/9": "\\(a+b\\le K(a+b)\\).",
+            "QueryPrograms.legit/10": "Split on the operation.",
+            "QueryPrograms.legit/11": "For addition, \\(|x+y-(z+w)|\\le a+b\\le K(a+b)\\).",
+            "QueryPrograms.legit/12": "For subtraction, \\(|x-y-(z-w)|\\le a+b\\le K(a+b)\\).",
+            "QueryPrograms.legit/13": "For multiplication, \\(|xy-zw|\\le K(a+b)\\).",
+            "QueryPrograms.legit/13/0": "The goal is \\(|xy-zw|\\le K(a+b)\\).",
+            "QueryPrograms.legit/13/1": "\\(|x-z|\\,|y|\\le aK\\) since \\(|y|\\le 2J\\le K\\).",
+            "QueryPrograms.legit/13/2": "\\(|y-w|\\,|z|\\le bK\\) since \\(|z|\\le 2I\\le K\\).",
+            "QueryPrograms.legit/13/3": "Write \\(xy-zw=(x-z)y+(y-w)z\\) and use the triangle inequality.",
+            "QueryPrograms.legit/14": "For the minimum, \\(|\\min(x,y)-\\min(z,w)|\\le a+b\\le K(a+b)\\).",
+            "QueryPrograms.legit/15": "For the maximum, \\(|\\max(x,y)-\\max(z,w)|\\le a+b\\le K(a+b)\\).",
+            "QueryPrograms.legit/16": "For the clipped reciprocal, \\(|1/\\max(x,1)-1/\\max(z,1)|\\le |x-z|\\le K(a+b)\\)."
+          }
+        }
+      ]
+    },
+    {
+      "paper_id": "lem:arith-reciprocal",
+      "informal": "The clipped reciprocal \\(x\\mapsto 1/\\max(x,1)\\) is \\(1\\)-Lipschitz, so it fits the Lipschitz gate interface.",
+      "confidence": "structural",
+      "note": "Lean handles reciprocals only through the clipped gate \\(1/\\max(x,1)\\) (the flip operation), whose Lipschitz bound down_clip replaces the paper's Taylor-based reciprocal on a compact interval.",
+      "decls": [
+        {
+          "module": "QueryPrograms",
+          "name": "down_clip",
+          "informal": "For all real \\(x,y\\), \\(|1/\\max(x,1)-1/\\max(y,1)|\\le |x-y|\\).",
+          "chunks": {
+            "QueryPrograms.down_clip/0": "Set \\(a=\\max(x,1)\\) and \\(b=\\max(y,1)\\).",
+            "QueryPrograms.down_clip/1": "\\(1\\le a\\).",
+            "QueryPrograms.down_clip/2": "\\(1\\le b\\).",
+            "QueryPrograms.down_clip/3": "\\(a^{-1}-b^{-1}=(b-a)/(ab)\\).",
+            "QueryPrograms.down_clip/4": "\\(|b-a|\\le |x-y|\\).",
+            "QueryPrograms.down_clip/5": "Since \\(ab\\ge 1\\), \\(|a^{-1}-b^{-1}|=|b-a|/(ab)\\le |b-a|\\le |x-y|\\)."
+          }
+        }
+      ]
+    },
+    {
+      "paper_id": "lem:arith-rank",
+      "informal": "For at most \\(2^{ed}\\) indexed values with exact streams, the rank program emits an exact stream for the \\(k\\)-th largest value (clipped at \\(0\\)), and clipping and ranking exact approximations gives exact approximations of the rank.",
+      "confidence": "named",
+      "note": "lease states that an indexed order statistic over fewer than \\(2^{ed}\\) descriptors has an exact digit stream at controlled cost, and sweepV is the approximation bound \\(|N_t-2^t\\,\\text{rank}|\\le 2\\) behind it.",
+      "decls": [
+        {
+          "module": "QueryPrograms",
+          "name": "lease",
+          "informal": "If \\(n<2^{ed}\\) and each \\(V_j\\), \\(j<n\\), has an exact stream for \\(V_j/2^{id}\\) up to clock \\(H\\) at cost \\(c\\ge 1\\), then the rank program emits an exact stream for \\(\\text{rank}_k(V)/2^{id}\\) up to clock \\(H\\) at cost \\(\\text{powder}(100\\,\\text{price}(c+e+100))\\), where \\(\\text{rank}_k\\) is the zero-based \\(k\\)-th largest value, padded by \\(0\\).",
+          "chunks": {
+            "QueryPrograms.lease/0": "Work classically.",
+            "QueryPrograms.lease/1": "For each index \\(j\\) choose a tape that is an exact stream for \\(V_j/2^{id}\\) whenever \\(j<n\\).",
+            "QueryPrograms.lease/1/0": "Split on whether \\(j<n\\).",
+            "QueryPrograms.lease/1/1": "If \\(j<n\\), take the given stream.",
+            "QueryPrograms.lease/1/2": "Otherwise take the zero tape.",
+            "QueryPrograms.lease/2": "Fix these tapes \\(w_j\\), the rank recipe, and the normalized values \\(W_j=V_j/2^{id}\\).",
+            "QueryPrograms.lease/3": "The rank recipe's hypotheses hold at cost \\(c+e+100\\): \\(n<2^{(c+e+100)d}\\) and each \\(w_j\\) is an exact stream for \\(W_j\\).",
+            "QueryPrograms.lease/4": "Set \\(v=2^{id}\\).",
+            "QueryPrograms.lease/5": "\\(\\text{rank}_k(W)=\\text{rank}_k(V)/v\\).",
+            "QueryPrograms.lease/5/0": "\\(W_j=v^{-1}V_j\\).",
+            "QueryPrograms.lease/5/1": "Rank commutes with multiplication by \\(v^{-1}>0\\).",
+            "QueryPrograms.lease/6": "The rank recipe emits an exact stream for \\(\\text{rank}_k(V)/v\\).",
+            "QueryPrograms.lease/7": "This is the claim."
+          }
+        },
+        {
+          "module": "DyadicArithmetic",
+          "name": "sweepV",
+          "informal": "If for each \\(i\\in S\\), \\(|V_i|\\le 1\\) and \\(|N^{(i)}_t-2^tV_i|\\le 2\\) for \\(t\\le H\\), then \\(t\\mapsto \\text{rank}_k\\big(\\max(N^{(i)}_t,0)\\big)\\) satisfies the same condition for \\(\\text{rank}_k(V)\\).",
+          "chunks": {
+            "DyadicArithmetic.sweepV/0": "\\(\\text{rank}_k(V)\\ge 0\\).",
+            "DyadicArithmetic.sweepV/1": "\\(|\\text{rank}_k(V)|\\le 1\\) since all \\(V_i\\le 1\\), and it remains to fix \\(t\\le H\\).",
+            "DyadicArithmetic.sweepV/2": "Since rank is \\(2\\)-Lipschitz in the sup norm, \\(|\\text{rank}_k(N_t)-\\text{rank}_k(2^tV)|\\le 2\\).",
+            "DyadicArithmetic.sweepV/3": "\\(\\max(0,N^{(i)}_t)\\) equals the value of \\(N^{(i)}_t\\) clipped to a natural number.",
+            "DyadicArithmetic.sweepV/3/0": "Split on whether \\(N^{(i)}_t\\ge 0\\).",
+            "DyadicArithmetic.sweepV/3/1": "If \\(N^{(i)}_t\\ge 0\\), both sides equal \\(N^{(i)}_t\\).",
+            "DyadicArithmetic.sweepV/3/2": "Otherwise the clipped value is \\(0\\).",
+            "DyadicArithmetic.sweepV/3/3": "In that case \\(N^{(i)}_t\\le 0\\).",
+            "DyadicArithmetic.sweepV/3/4": "So \\(\\max(0,N^{(i)}_t)=0\\).",
+            "DyadicArithmetic.sweepV/4": "Rank is unchanged by clipping at \\(0\\) and scales by \\(2^t\\), so \\(|\\text{rank}_k(\\max(N_t,0))-2^t\\,\\text{rank}_k(V)|\\le 2\\)."
+          }
+        }
+      ]
+    },
+    {
+      "paper_id": "lem:arith-sums-scales",
+      "informal": "For fewer than \\(2^{ed}\\) terms with exact streams at clock overshoot \\((e+6)d\\), the sum program emits an exact stream for the sum rescaled by \\(2^{-(i+e)d}\\).",
+      "confidence": "named",
+      "note": "poem states the bounded indexed sum with the known scale \\(2^{ed}\\) absorbing the term count, with an \\(O(d)\\) clock overshoot, matching the paper's bounded sums and known scales.",
+      "decls": [
+        {
+          "module": "QueryPrograms",
+          "name": "poem",
+          "informal": "If \\(n<2^{ed}\\) and each \\(V_j\\), \\(j<n\\), has an exact stream for \\(V_j/2^{id}\\) up to clock \\(H+(e+6)d\\) at cost \\(c\\ge 1\\), then the sum program emits an exact stream for \\(\\big(\\sum_{j<n}V_j\\big)/2^{(i+e)d}\\) up to clock \\(H\\) at cost \\(\\text{powder}(\\text{price}(c+e+106))\\).",
+          "chunks": {
+            "QueryPrograms.poem/0": "Set up the sum recipe, the cost \\(C=c+e+106\\), the weight \\(o=i+e\\), \\(D=2^{id}\\) and \\(B=2^{od}\\).",
+            "QueryPrograms.poem/1": "\\(D>0\\).",
+            "QueryPrograms.poem/2": "\\(B>0\\).",
+            "QueryPrograms.poem/3": "Set the normalized terms \\(W_j=V_j/D\\).",
+            "QueryPrograms.poem/4": "\\(C\\ge e+6\\), \\(C\\ge 100\\) and \\(c\\le C\\).",
+            "QueryPrograms.poem/5": "Each side of the recipe has at most \\(n\\) labels.",
+            "QueryPrograms.poem/6": "For each side and label \\(j\\), choose a tape that is an exact stream for \\(W_j\\) up to \\(H+(e+6)d\\) whenever \\(j\\) is a valid label.",
+            "QueryPrograms.poem/6/0": "Split on whether \\(j\\) is a valid label.",
+            "QueryPrograms.poem/6/1": "If it is, take the given stream.",
+            "QueryPrograms.poem/6/2": "Otherwise take the zero tape.",
+            "QueryPrograms.poem/7": "Fix these tapes.",
+            "QueryPrograms.poem/8": "The recipe margin equals \\((e+6)d\\).",
+            "QueryPrograms.poem/9": "The sum recipe's operand requirements hold at cost \\(C\\).",
+            "QueryPrograms.poem/9/0": "The margin satisfies \\((e+6)d\\le Cd\\), leaving the label counts and the streams.",
+            "QueryPrograms.poem/9/1": "Each label count is at most \\(n<2^{ed}\\le 2^{Cd}\\).",
+            "QueryPrograms.poem/9/2": "Each operand stream is raised to cost \\(C\\).",
+            "QueryPrograms.poem/10": "Set \\(m=n\\) and \\(v=\\sum_{j<n}V_j\\).",
+            "QueryPrograms.poem/11": "Every power \\(2^{rd}\\) is positive.",
+            "QueryPrograms.poem/12": "\\(B=D\\cdot 2^{ed}\\).",
+            "QueryPrograms.poem/13": "\\(n<2^{ed}\\).",
+            "QueryPrograms.poem/14": "The sum recipe is \\(1\\)-Lipschitz about the target \\(v/B\\).",
+            "QueryPrograms.poem/14/0": "It suffices to show \\(|v/B|\\le 1\\), the rate condition, and the error bound.",
+            "QueryPrograms.poem/14/1": "\\(|v/B|\\le 1\\) because \\(|v|\\le \\sum_j|V_j|\\le nD\\le B\\).",
+            "QueryPrograms.poem/14/1/0": "Reduce to \\(|v|\\le B\\) and bound \\(|v|\\le\\sum_j|V_j|\\).",
+            "QueryPrograms.poem/14/1/1": "Each \\(|V_j|\\le D\\), so \\(\\sum_j|V_j|\\le nD\\).",
+            "QueryPrograms.poem/14/1/2": "Since \\(n<2^{ed}\\), \\(nD\\le D\\,2^{ed}=B\\).",
+            "QueryPrograms.poem/14/2": "The rate condition \\(4(n+1)\\le 2^{(e+6)d}\\) holds.",
+            "QueryPrograms.poem/14/2/0": "Rewrite \\(2^{(e+6)d}=2^{ed}\\,2^{6d}\\).",
+            "QueryPrograms.poem/14/2/1": "\\(16\\le 2^{6d}\\).",
+            "QueryPrograms.poem/14/2/2": "\\(1\\le 2^{ed}\\).",
+            "QueryPrograms.poem/14/2/3": "Combine these with \\(n<2^{ed}\\).",
+            "QueryPrograms.poem/14/3": "The tally of the normalized terms is \\(v/D\\).",
+            "QueryPrograms.poem/14/4": "The gate output is \\(xD/B\\), so it suffices to show \\(|xD/B-v/B|\\le |x-v/D|\\).",
+            "QueryPrograms.poem/14/5": "\\(xD/B-v/B=(x-v/D)(D/B)\\).",
+            "QueryPrograms.poem/14/6": "Since \\(0\\le D/B\\le 1\\), the error is at most \\(|x-v/D|\\).",
+            "QueryPrograms.poem/14/7": "\\(D\\le B\\) because \\(1\\le 2^{ed}\\).",
+            "QueryPrograms.poem/15": "The recipe stream theorem gives the exact output stream."
+          }
+        }
+      ]
+    },
+    {
+      "paper_id": "lem:arith-buffered-test",
+      "informal": "A test program reads the operand approximation at clock \\(t=md\\), evaluates a fixed test on the value \\(2^{id}N_t/2^t\\), which is within \\(2^{id}\\cdot 2/2^t\\) of \\(V\\), and returns its result from clock \\(0\\).",
+      "confidence": "structural",
+      "note": "Badge (docstring: probe an actual finite-margin numerical question) queries one operand at an \\(O(d)\\) clock and evaluates a finite test whose result does not depend on an output clock; the specific \\(s>2u\\) versus \\(s>u\\) guarantee is not stated here.",
+      "decls": [
+        {
+          "module": "QueryPrograms",
+          "name": "query",
+          "informal": "If the operand program emits an exact stream \\(N\\) for \\(V/2^{id}\\) up to clock \\(t=md\\) at cost \\(c\\ge 1\\), and \\(j\\) is the test result on \\(2^{id}N_t/2^t\\) with \\(\\ell(j)+1\\le cd\\), then the check program, started from \\(0\\) at clock \\(0\\), outputs \\(j\\) at cost \\(4\\,\\text{price}(c+m+100)\\).",
+          "chunks": {
+            "QueryPrograms.query/0": "Use the one-operand recipe and set \\(c_1=c+m+100\\).",
+            "QueryPrograms.query/1": "\\(100\\le c_1\\) and \\(c\\le c_1\\).",
+            "QueryPrograms.query/2": "The port is well formed.",
+            "QueryPrograms.query/3": "The one-operand recipe's hypotheses hold at cost \\(c_1\\) and clock \\(t\\).",
+            "QueryPrograms.query/3/0": "It remains to bound the label counts and supply the operand stream.",
+            "QueryPrograms.query/3/1": "Each side has at most one label and \\(1<2^{c_1d}\\).",
+            "QueryPrograms.query/3/1/0": "Each side has at most one label.",
+            "QueryPrograms.query/3/1/1": "\\(c_1d+1\\le 2^{c_1d}\\).",
+            "QueryPrograms.query/3/1/2": "Hence the label count is below \\(2^{c_1d}\\).",
+            "QueryPrograms.query/3/2": "The operand stream at cost \\(c\\) is raised to cost \\(c_1\\).",
+            "QueryPrograms.query/4": "Running the recipe reaches its finished state.",
+            "QueryPrograms.query/5": "The finished record is \\(v=(t+1,2^{t+1},0,N_t,0)\\).",
+            "QueryPrograms.query/6": "Started from \\(0\\), the recipe reaches the record \\(v\\) at clock \\(t\\).",
+            "QueryPrograms.query/7": "\\(\\text{price}(c_1)\\) is at least \\(1\\), \\(c\\) and \\(m\\).",
+            "QueryPrograms.query/8": "Dispatching to clock \\(t=md\\), the first phase runs from clock \\(0\\) to the record \\(v\\) at cost \\(4\\,\\text{price}(c_1)\\).",
+            "QueryPrograms.query/9": "Compose with the final step that evaluates the test on \\(v\\), leaving its value and space bounds.",
+            "QueryPrograms.query/10": "The test on \\(v\\) returns \\(j\\).",
+            "QueryPrograms.query/10/0": "\\(2^{t+1}/2=2^t\\).",
+            "QueryPrograms.query/10/1": "So the tested value is \\(2^{id}N_t/2^t\\), whose test result is \\(j\\).",
+            "QueryPrograms.query/11": "\\(c\\le 4\\,\\text{price}(c_1)\\).",
+            "QueryPrograms.query/12": "\\(1\\le 4\\,\\text{price}(c_1)\\)."
+          }
+        },
+        {
+          "module": "QueryPrograms",
+          "name": "accuracy",
+          "informal": "If \\(|V/2^{id}|\\le 1\\) and \\(|N_s-2^sV/2^{id}|\\le 2\\) for \\(s\\le t\\), then \\(x=2^{id}N_t/2^t\\) satisfies \\(|x-V|\\le 2^{id}\\cdot 2/2^t\\).",
+          "chunks": {
+            "QueryPrograms.accuracy/0": "At clock \\(t\\), \\(-2\\le N_t-2^tV/2^{id}\\le 2\\).",
+            "QueryPrograms.accuracy/1": "Set \\(Q=2^t\\) and \\(R=2^{id}\\).",
+            "QueryPrograms.accuracy/2": "\\(Q>0\\).",
+            "QueryPrograms.accuracy/3": "\\(R>0\\).",
+            "QueryPrograms.accuracy/4": "Since \\(x=R\\,N_t/Q\\), the goal becomes \\(|R N_t/Q-V|\\le 2R/Q\\).",
+            "QueryPrograms.accuracy/5": "\\(R/Q\\ge 0\\).",
+            "QueryPrograms.accuracy/6": "\\(R N_t/Q-V=(R/Q)(N_t-QV/R)\\).",
+            "QueryPrograms.accuracy/7": "Hence \\(|R N_t/Q-V|=(R/Q)|N_t-QV/R|\\le 2R/Q\\)."
+          }
+        }
+      ]
+    },
+    {
+      "paper_id": "thm:arith-interface",
+      "informal": "Every recipe built from base streams, the gates \\(+,-,\\times,\\min,\\max,1/\\max(\\cdot,1)\\), indexed sums and indexed ranks compiles to a program that emits an exact stream for its value scaled by \\(2^{-\\text{weight}\\cdot d}\\), at a cost determined by the recipe, provided operands are valid \\(\\text{tail}\\cdot d\\) clocks beyond the output clock.",
+      "confidence": "named",
+      "note": "song is proved by induction over the recipe class Lyric (base streams, Doop gates, indexed sums and ranks), combining joint, poem and lease, which is the paper's uniform numerical interface.",
+      "decls": [
+        {
+          "module": "QueryPrograms",
+          "name": "song",
+          "informal": "If a recipe \\(f\\) has value \\(V\\) with all its operands valid up to clock \\(T\\), \\(c\\ge 1\\), and \\(H+\\text{tail}(f)\\,d\\le T\\), then the compiled program emits an exact stream for \\(V/2^{\\text{weight}(f)d}\\) up to clock \\(H\\) at cost \\(\\text{cost}(f,c)\\).",
+          "chunks": {}
+        },
+        {
+          "module": "QueryPrograms",
+          "name": "Lethe.bnd",
+          "informal": "If a recipe \\(f\\) has value \\(V\\), then \\(|V|\\le 2^{\\text{weight}(f)d}\\).",
+          "chunks": {}
+        }
+      ]
+    }
+  ],
+  "unmapped": [
+    {
+      "paper_id": "lem:arith-multiplication",
+      "reason": "Lean has no separate band-multiplication procedure; products are computed exactly on rational approximations and covered by the multiplication case of the Lipschitz gate lemma."
+    },
+    {
+      "paper_id": "rem:arith-clocks",
+      "reason": "Remark about how clocks are used; it has no separate Lean statement."
+    }
+  ]
+}

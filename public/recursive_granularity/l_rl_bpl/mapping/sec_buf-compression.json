@@ -1,0 +1,390 @@
+{
+  "section": "sec:buf-compression",
+  "informal": "The Lean proves that buffered row compression is local and Lipschitz, bounds the preloss before the first overflow, compares the final compressed outputs with a stationary reference, charges overflow events, and integrates these into a fourth-root error bound proportional to the budget \\(p\\).",
+  "modules": [
+    "CompressionBounds",
+    "EstimatorBounds",
+    "EstimatorOperations",
+    "HierarchicalEstimator"
+  ],
+  "results": [
+    {
+      "paper_id": "lem:buf-update",
+      "informal": "The compression update replaces entries with \\(|t_i|_\\infty\\le 2u_0\\) by the new default, fixes entries with \\(|t_i|_\\infty\\ge 3u_0\\), and is \\(30\\)-Lipschitz in the sup norm.",
+      "confidence": "named",
+      "note": "These lemmas about the update map push state the replacement, identity and Lipschitz clauses of the lemma with thresholds \\(2u_0\\), \\(3u_0\\).",
+      "decls": [
+        {
+          "module": "CompressionBounds",
+          "name": "nearbase",
+          "informal": "If \\(|t_i|_\\infty \\le 2u_0(v)\\) then the compression update replaces entry \\(i\\) by the new default: \\(\\mathcal C(v)_i=(z(v),0)\\).",
+          "chunks": {
+            "CompressionBounds.nearbase/0": "Saturation at level \\(0\\) is identically zero: \\(\\mathrm{sat}_0(x)=0\\).",
+            "CompressionBounds.nearbase/1": "Since \\(|t_i|_\\infty-2u_0\\le 0\\), the clamp width \\(7\\max(0,|t_i|_\\infty-2u_0)\\) is \\(0\\), so \\(\\mathcal C(v)_i=(z,0)+0=(z,0)\\)."
+          }
+        },
+        {
+          "module": "CompressionBounds",
+          "name": "offbase",
+          "informal": "If \\(3u_0(v)\\le |t_i|_\\infty\\) then the compression update leaves entry \\(i\\) unchanged: \\(\\mathcal C(v)_i=t_i\\).",
+          "chunks": {
+            "CompressionBounds.offbase/0": "Record \\(u_0\\ge 0\\), \\(u_0\\le z\\le 3u_0\\), and abbreviate the new default point by \\(\\zeta=(z,0)\\).",
+            "CompressionBounds.offbase/1": "Abbreviate \\(m=|t_i|_\\infty\\).",
+            "CompressionBounds.offbase/2": "The default point satisfies \\(|-\\zeta|_\\infty=z\\).",
+            "CompressionBounds.offbase/3": "By the triangle inequality, \\(|t_i-\\zeta|_\\infty\\le m+3u_0\\).",
+            "CompressionBounds.offbase/4": "Using \\(m\\ge 3u_0\\), this gives \\(|t_i-\\zeta|_\\infty\\le 7\\max(0,m-2u_0)\\).",
+            "CompressionBounds.offbase/5": "Hence both coordinates of \\(t_i-\\zeta\\) are bounded in absolute value by the clamp width \\(7\\max(0,m-2u_0)\\).",
+            "CompressionBounds.offbase/6": "So clamping \\(t_i-\\zeta\\) at that width does nothing.",
+            "CompressionBounds.offbase/7": "Therefore \\(\\mathcal C(v)_i=\\zeta+(t_i-\\zeta)=t_i\\)."
+          }
+        },
+        {
+          "module": "CompressionBounds",
+          "name": "smooth_push",
+          "informal": "If arrays \\(v,w\\) are \\(b\\)-close on \\(S\\) (defaults and all entries within \\(b\\)), then \\(\\mathcal C(v)\\) and \\(\\mathcal C(w)\\) are \\(30b\\)-close on \\(S\\).",
+          "chunks": {
+            "CompressionBounds.smooth_push/0": "The thresholds and new defaults are Lipschitz: \\(|u_0(v)-u_0(w)|\\le b\\) and \\(|z(v)-z(w)|\\le 3b\\).",
+            "CompressionBounds.smooth_push/1": "The closeness hypothesis forces \\(b\\ge 0\\).",
+            "CompressionBounds.smooth_push/2": "The new defaults differ by at most \\(3b\\le 30b\\), so it remains to compare each entry \\(i\\in S\\).",
+            "CompressionBounds.smooth_push/3": "Take the closeness of entries \\(t_i(v)\\) and \\(t_i(w)\\) within \\(b\\).",
+            "CompressionBounds.smooth_push/4": "Hence \\(\\big||t_i(v)|_\\infty-|t_i(w)|_\\infty\\big|\\le b\\).",
+            "CompressionBounds.smooth_push/5": "Let \\(r(v)=7\\max(0,|t_i(v)|_\\infty-2u_0(v))\\) be the clamp width.",
+            "CompressionBounds.smooth_push/6": "The clamp widths satisfy \\(|r(v)-r(w)|\\le 21b\\).",
+            "CompressionBounds.smooth_push/6/0": "First \\(|2u_0(v)-2u_0(w)|\\le 2b\\).",
+            "CompressionBounds.smooth_push/6/1": "So \\(|t_i|_\\infty-2u_0\\) differs by at most \\(b+2b\\) between \\(v\\) and \\(w\\).",
+            "CompressionBounds.smooth_push/6/2": "Taking the maximum with \\(0\\) keeps this \\(3b\\) bound.",
+            "CompressionBounds.smooth_push/6/3": "Multiplying by \\(7\\) gives \\(|r(v)-r(w)|\\le 21b\\).",
+            "CompressionBounds.smooth_push/7": "The default points \\((z(v),0)\\) and \\((z(w),0)\\) are \\(3b\\)-close.",
+            "CompressionBounds.smooth_push/8": "So \\(t_i(v)-(z(v),0)\\) and \\(t_i(w)-(z(w),0)\\) are \\(4b\\)-close.",
+            "CompressionBounds.smooth_push/9": "Adding the default points to the clamped differences, the updated entries are \\((3b+b+3b+21b)\\)-close.",
+            "CompressionBounds.smooth_push/10": "Since \\(28b\\le 30b\\), the updated entries are \\(30b\\)-close."
+          }
+        }
+      ]
+    },
+    {
+      "paper_id": "lem:buf-reference",
+      "informal": "Before the first overflow the preloss is at most \\(\\sum 6\\rho_k\\), the stationary reference is preserved by later compressions, and its root discrepancy from the true outputs is \\(O(\\sum\\rho_ke_k)\\).",
+      "confidence": "named",
+      "note": "pre_head is documented as the preloss bound until the first overflow, still_here is the stationary-reference invariance, and rain_effect the \\(C\\sum\\rho_ie_i\\) root bound.",
+      "decls": [
+        {
+          "module": "CompressionBounds",
+          "name": "pre_head",
+          "informal": "Before the first overflow (no overflow at groups \\(<i\\)), the compressed default satisfies \\(d(T_i)\\le \\sum_{k<i}6\\rho_k\\) and every preloss entry satisfies \\(|L_i(x)|_\\infty\\le \\sum_{k<i}6\\rho_k\\) for \\(x\\in S\\).",
+          "chunks": {}
+        },
+        {
+          "module": "CompressionBounds",
+          "name": "still_here",
+          "informal": "Before the first overflow at \\(j\\), for \\(j\\le i\\le L\\) the stationary reference calculation started at group \\(j\\) has, after the compressions of groups \\(j,\\dots,i-1\\), the same row outputs as the reference array at \\(j\\): \\(H(\\text{steady}_{j,i};x)=H(\\text{ref}_j;x)\\).",
+          "chunks": {}
+        },
+        {
+          "module": "CompressionBounds",
+          "name": "rain_effect",
+          "informal": "Before the first overflow at \\(i\\), for \\(x\\in S\\) the reference array \\((d(T_i),A+L_i)\\) and the true array \\((0,A)\\) have row outputs with \\(|H(\\text{ref};x)^{1/4}-H(A;x)^{1/4}|\\le 3C^3\\sum_{k<i}\\tfrac{24}{c}\\rho_k e_k\\).",
+          "chunks": {
+            "CompressionBounds.rain_effect/0": "Let \\(F\\) be the positions \\(x\\in S\\) whose true first entry satisfies \\(A^1_x\\ge 4c\\).",
+            "CompressionBounds.rain_effect/1": "Positions of \\(S\\) outside \\(F\\) have \\(A^1_x<4c\\).",
+            "CompressionBounds.rain_effect/2": "Take the preloss bounds \\(d(T_i)\\le \\sum_{k<i}6\\rho_k\\) and \\(|L_i(x)|_\\infty\\le \\sum_{k<i}6\\rho_k\\).",
+            "CompressionBounds.rain_effect/3": "The total \\(\\sum_{k<i}6\\rho_k\\) is at most \\(c\\), and \\(c>0\\).",
+            "CompressionBounds.rain_effect/4": "Hence \\(|L_i(x)|_\\infty\\le c\\) for every \\(x\\in S\\).",
+            "CompressionBounds.rain_effect/5": "After dropping positions outside \\(F\\), the reference and true arrays are \\(\\big(\\sum_{k<i}\\tfrac{24}{c}\\rho_k e_k\\big)\\)-close on \\(S\\).",
+            "CompressionBounds.rain_effect/5/0": "The bound \\(\\sum_{k<i}\\tfrac{24}{c}\\rho_k e_k\\) is nonnegative.",
+            "CompressionBounds.rain_effect/5/1": "The trimmed defaults agree, and we compare each position \\(j\\in S\\) according to whether \\(j\\in F\\).",
+            "CompressionBounds.rain_effect/5/2": "For \\(j\\in F\\) the entries differ by \\(L_i(j)\\), which is bounded by the endpoint preloss bound \\(\\sum_{k<i}\\tfrac{24}{c}\\rho_k e_k\\).",
+            "CompressionBounds.rain_effect/5/3": "For \\(j\\notin F\\) both trimmed entries are equal.",
+            "CompressionBounds.rain_effect/6": "Positions below the sensitivity level \\(10c\\) do not affect the row output, so both outputs equal those of the trimmed arrays.",
+            "CompressionBounds.rain_effect/7": "Close arrays have row roots within \\(3C^3\\) times the closeness, giving the bound.",
+            "CompressionBounds.rain_effect/8": "The sensitivity level \\(10c\\) is nonnegative.",
+            "CompressionBounds.rain_effect/9": "True first entries outside \\(F\\) are below \\(10c\\).",
+            "CompressionBounds.rain_effect/9/0": "Fix \\(j\\in S\\) with \\(j\\notin F\\).",
+            "CompressionBounds.rain_effect/9/1": "We have \\(A^1_j<4c\\) and must show \\(A^1_j\\le 10c\\).",
+            "CompressionBounds.rain_effect/9/2": "This follows since \\(4c\\le 10c\\).",
+            "CompressionBounds.rain_effect/10": "The reference default \\(d(T_i)\\le c\\) is below \\(10c\\).",
+            "CompressionBounds.rain_effect/11": "Reference first entries outside \\(F\\) are below \\(10c\\).",
+            "CompressionBounds.rain_effect/11/0": "Fix \\(j\\in S\\setminus F\\); the reference first entry is \\(A^1_j+L^1_i(j)\\).",
+            "CompressionBounds.rain_effect/11/1": "The preloss first coordinate satisfies \\(L^1_i(j)\\le |L_i(j)|_\\infty\\le c\\).",
+            "CompressionBounds.rain_effect/11/2": "So \\(A^1_j+L^1_i(j)<4c+c\\le 10c\\)."
+          }
+        }
+      ]
+    },
+    {
+      "paper_id": "lem:buf-relative-stability",
+      "informal": "At a first overflow \\(j\\), the final row roots differ from the true ones by a constant times the prefix term plus \\(\\sum_{k\\ge j}32^{L-k}e_k\\).",
+      "confidence": "named",
+      "note": "wave is documented as the final pointwise estimate after starting before group \\(j\\), with propagation factor \\(32^{L-k}\\) playing \\(C_1^{m_*-i+1}\\), and hood_cmp is its propagation step.",
+      "decls": [
+        {
+          "module": "CompressionBounds",
+          "name": "wave",
+          "informal": "If \\(j<L\\) is a group with no earlier overflow, then for \\(x\\in S\\) the final compressed row root satisfies \\(|H(T_L;x)^{1/4}-H(A;x)^{1/4}|\\le 16C^3(1+4(C+12))\\big(\\sum_{k<j}\\tfrac{24}{c}\\rho_ke_k+\\sum_{j\\le k<L}32^{L-k}e_k\\big)\\).",
+          "chunks": {
+            "CompressionBounds.wave/0": "Set the sentinel level \\(B=C+12\\).",
+            "CompressionBounds.wave/1": "Record \\(C\\ge 1\\).",
+            "CompressionBounds.wave/2": "So \\(B\\ge 12\\).",
+            "CompressionBounds.wave/3": "And \\(C\\le B\\).",
+            "CompressionBounds.wave/4": "And \\(C^3>0\\).",
+            "CompressionBounds.wave/5": "The propagation factor satisfies \\(1+4B\\ge 1\\).",
+            "CompressionBounds.wave/6": "The final constant dominates \\(4C^3\\).",
+            "CompressionBounds.wave/7": "The prefix term \\(\\sum_{k<j}\\tfrac{24}{c}\\rho_ke_k\\) is nonnegative.",
+            "CompressionBounds.wave/8": "Split into the cases \\(\\sum_{j\\le k<L}32^{L-k}e_k\\le 1/4\\) and \\(\\ge 1/4\\).",
+            "CompressionBounds.wave/9": "In the small-tail case, compare the final array with the stationary reference and the reference with the true array.",
+            "CompressionBounds.wave/9/0": "All relative errors \\(e_k\\) with \\(j\\le k<L\\) are at most \\(1/4\\).",
+            "CompressionBounds.wave/9/1": "Let \\(i=L-1\\) be the last group.",
+            "CompressionBounds.wave/9/2": "Then \\(L=i+1\\).",
+            "CompressionBounds.wave/9/3": "And \\(j\\le i\\).",
+            "CompressionBounds.wave/9/4": "And \\(i<L\\).",
+            "CompressionBounds.wave/9/5": "Let \\(\\mathcal C\\) be the compression of group \\(i\\).",
+            "CompressionBounds.wave/9/6": "Applying the Lipschitz compression to the sentinel comparison at \\(i\\) bounds the sentinel arrays after group \\(i\\) within \\(30(1+4B)\\sum_{j\\le k\\le i}32^{i-k}e_k\\).",
+            "CompressionBounds.wave/9/7": "The input of group \\(i\\) has first entries at least \\(B\\) on the large positions.",
+            "CompressionBounds.wave/9/8": "So does the stationary reference.",
+            "CompressionBounds.wave/9/9": "The stationary reference default is at most \\(4\\).",
+            "CompressionBounds.wave/9/10": "Compression commutes with sentinel replacement on such tall arrays.",
+            "CompressionBounds.wave/9/11": "For tall arrays, sentinel replacement does not change the row output after compression.",
+            "CompressionBounds.wave/9/12": "Close sentinel arrays give row roots within \\(3C^3\\) times the closeness.",
+            "CompressionBounds.wave/9/13": "Rewriting, \\(|H(T_L;x)^{1/4}-H(\\text{ref}_j;x)^{1/4}|\\) is bounded by \\(3C^3\\cdot 30(1+4B)\\sum_{j\\le k\\le i}32^{i-k}e_k\\).",
+            "CompressionBounds.wave/9/14": "The tail equals \\(32\\sum_{j\\le k\\le i}32^{i-k}e_k\\).",
+            "CompressionBounds.wave/9/15": "The reference discrepancy is at most \\(3C^3\\sum_{k<j}\\tfrac{24}{c}\\rho_ke_k\\).",
+            "CompressionBounds.wave/9/16": "By the triangle inequality the total discrepancy is at most the sum of the two bounds.",
+            "CompressionBounds.wave/9/17": "The weighted sum \\(\\sum_{j\\le k\\le i}32^{i-k}e_k\\) is nonnegative.",
+            "CompressionBounds.wave/9/18": "It remains to bound each of the two terms by the matching part of the final constant.",
+            "CompressionBounds.wave/9/19": "The stability term is dominated by the tail term.",
+            "CompressionBounds.wave/9/19/0": "The product \\(C^3(1+4B)\\sum_{j\\le k\\le i}32^{i-k}e_k\\) is nonnegative.",
+            "CompressionBounds.wave/9/19/1": "So the stability term is at most \\(16C^3(1+4B)\\cdot 32\\sum_{j\\le k\\le i}32^{i-k}e_k\\).",
+            "CompressionBounds.wave/9/20": "The reference term is at most the final constant times \\(\\sum_{k<j}\\tfrac{24}{c}\\rho_ke_k\\).",
+            "CompressionBounds.wave/10": "In the large-tail case, the trivial bound \\(C^3\\) suffices.",
+            "CompressionBounds.wave/10/0": "Every row root lies in \\([0,C^3]\\).",
+            "CompressionBounds.wave/10/1": "Apply this to \\(T_L\\) and \\((0,A)\\), and route the bound through \\(C^3\\).",
+            "CompressionBounds.wave/10/2": "The difference of two numbers in \\([0,C^3]\\) is at most \\(C^3\\).",
+            "CompressionBounds.wave/10/3": "And \\(C^3\\) is at most the final constant times a tail of size at least \\(1/4\\)."
+          }
+        },
+        {
+          "module": "CompressionBounds",
+          "name": "hood_cmp",
+          "informal": "If there is no overflow before \\(j\\) and every \\(e_k\\le 1/4\\) for \\(k\\ge j\\), then for \\(j\\le i<L\\) the sentinel versions (large positions replaced by \\(B\\ge 12\\)) of the group-\\(i\\) input and of the stationary reference are \\((1+4B)\\sum_{j\\le k\\le i}32^{i-k}e_k\\)-close on \\(S\\).",
+          "chunks": {
+            "CompressionBounds.hood_cmp/0": "The factor \\(1+4B\\) is positive.",
+            "CompressionBounds.hood_cmp/1": "By induction on \\(i\\ge j\\), starting from the initial comparison and propagating each step by the factor \\(30\\) of the Lipschitz compression plus the increment error \\((1+4B)(e_i+e_{i+1})\\), the closeness stays below \\((1+4B)\\sum_{j\\le k\\le i+1}32^{i+1-k}e_k\\)."
+          }
+        }
+      ]
+    },
+    {
+      "paper_id": "lem:buf-rarity",
+      "informal": "The conditional probability of a true heavy count at group \\(i\\) is at most \\((1024M\\phi_i)^4\\), via the count bound \\(|\\{\\text{heavy}\\}|\\rho_iR\\le 4M\\).",
+      "confidence": "structural",
+      "note": "raid bounds the conditional probability of the true heavy count event (binge/busy) at an endpoint, but with the bound \\((1024M\\phi_i)^4\\) rather than literally \\(C/(n_j\\rho_j)\\) and without the \\(L_s\\) moment clause.",
+      "decls": [
+        {
+          "module": "EstimatorBounds",
+          "name": "raid",
+          "informal": "For \\(x,y\\in S\\), the conditional probability given the endpoint condition at \\(y\\) that row \\(x\\) has a true heavy count at group \\(i\\) (\\(n_i\\le 2\\,|\\{\\text{retained heavy positions}\\}|\\)) is at most \\((1024M\\,\\phi_i)^4\\), where \\(1\\le n_i\\rho_i\\phi_i^4\\).",
+          "chunks": {
+            "EstimatorBounds.raid/0": "Let \\(N=n_i\\), \\(z=\\rho_i\\), \\(l\\) the heavy positions of row \\(x\\), \\(R\\) the retention rate, and \\(m\\) the conditional probability of \\(\\Theta_i\\).",
+            "EstimatorBounds.raid/1": "We have \\(N m\\le 2\\,\\mathbb E[\\#\\{\\text{retained positions of }l\\}\\mid y]\\).",
+            "EstimatorBounds.raid/1/0": "Compare the two conditional averages pointwise in the channel \\(c\\), splitting on whether \\(\\Theta_i\\) holds.",
+            "EstimatorBounds.raid/1/1": "If \\(\\Theta_i\\) holds at \\(c\\), then \\(N\\le 2\\) times the number of retained heavy positions.",
+            "EstimatorBounds.raid/1/1/0": "Assume \\(\\Theta_i\\) holds.",
+            "EstimatorBounds.raid/1/1/1": "This is the definition of a true heavy count.",
+            "EstimatorBounds.raid/1/2": "If \\(\\Theta_i\\) fails, the left side is \\(0\\), which is at most the nonnegative count.",
+            "EstimatorBounds.raid/2": "Recall \\(1\\le N z\\phi_i^4\\).",
+            "EstimatorBounds.raid/3": "The conditional expected number of retained heavy positions is at most \\(1+32R\\,|l|\\).",
+            "EstimatorBounds.raid/4": "The heavy count satisfies \\(|l|\\,zR\\le 4M\\).",
+            "EstimatorBounds.raid/5": "Recall \\(M\\ge 1\\).",
+            "EstimatorBounds.raid/6": "And \\(z>0\\).",
+            "EstimatorBounds.raid/7": "And \\(z\\le 1\\).",
+            "EstimatorBounds.raid/8": "And \\(N>0\\).",
+            "EstimatorBounds.raid/9": "It suffices to show \\(Nz\\,m\\le Nz(1024M\\phi_i)^4\\).",
+            "EstimatorBounds.raid/10": "We have \\(Nz\\,m\\le 260M\\).",
+            "EstimatorBounds.raid/10/0": "First \\(Nm\\le 2(1+32|l|R)\\).",
+            "EstimatorBounds.raid/10/1": "Multiplying by \\(z\\le 1\\) and using \\(|l|zR\\le 4M\\) gives \\(260M\\).",
+            "EstimatorBounds.raid/11": "It remains to show \\(260M\\le Nz(1024M\\phi_i)^4\\).",
+            "EstimatorBounds.raid/12": "Note \\(1024M\\ge 1024\\).",
+            "EstimatorBounds.raid/13": "So \\(260M\\le (1024M)^4\\).",
+            "EstimatorBounds.raid/14": "Multiplying \\(1\\le Nz\\phi_i^4\\) by \\((1024M)^4\\) gives \\((1024M)^4\\le Nz(1024M)^4\\phi_i^4\\).",
+            "EstimatorBounds.raid/15": "Combining these inequalities finishes the bound."
+          }
+        },
+        {
+          "module": "EstimatorBounds",
+          "name": "cut_belly",
+          "informal": "For \\(x\\in S\\), the number of heavy positions \\(\\{y:A_{xy}>\\rho_j/4\\}\\) satisfies \\(|\\{\\text{heavy}\\}|\\cdot\\rho_j\\cdot R\\le 4M\\), where \\(R\\) is the retention rate.",
+          "chunks": {
+            "EstimatorBounds.cut_belly/0": "Abbreviate \\(u=\\rho_j\\).",
+            "EstimatorBounds.cut_belly/1": "Since each heavy entry exceeds \\(u/4\\) and all entries are nonnegative, \\(|\\{\\text{heavy}\\}|\\,u/4\\le \\sum_{y\\in S}A_{xy}\\).",
+            "EstimatorBounds.cut_belly/2": "Recall the row mass bound \\(\\big(\\sum_{y\\in S}A_{xy}\\big)R\\le M\\).",
+            "EstimatorBounds.cut_belly/3": "Multiplying by \\(R>0\\) gives \\(|\\{\\text{heavy}\\}|\\,(u/4)R\\le M\\).",
+            "EstimatorBounds.cut_belly/4": "Hence \\(|\\{\\text{heavy}\\}|\\,uR\\le 4M\\)."
+          }
+        }
+      ]
+    },
+    {
+      "paper_id": "prop:buf-error",
+      "informal": "The integrated fourth-root discrepancy of compressed row roots is at most a fixed constant times the budget \\(p\\).",
+      "confidence": "named",
+      "note": "compress is documented as the integrated buffered row estimate and bounds the \\(L_4\\) norm of \\(H(T_{m_*})^{1/4}-H(d,v)^{1/4}\\) by \\(\\mathrm{const}\\cdot p\\).",
+      "decls": [
+        {
+          "module": "EstimatorBounds",
+          "name": "compress",
+          "informal": "Under the compression hypotheses with budget \\(p\\) and mass \\(M\\), the fourth-power integrated discrepancy of row roots satisfies \\(\\Big(\\int\\sum_x\\sum_y|H(T_L;y)^{1/4}-H(A;y)^{1/4}|^4\\,d\\mu\\Big)^{1/4}\\le (1+2K)\\,C_{\\text{charge}}\\,C_B(b,M)\\,p\\).",
+          "chunks": {
+            "EstimatorBounds.compress/0": "Let \\(g\\) be the root discrepancy table, \\(c=16C^3(1+4(C+12))\\), and \\(u(x)=(1+2K)\\,c\\,\\beta(x)\\) where \\(\\beta\\) is the total charge.",
+            "EstimatorBounds.compress/1": "The constant \\(c\\) is nonnegative.",
+            "EstimatorBounds.compress/2": "Multiplying an inequality by a nonnegative number preserves it.",
+            "EstimatorBounds.compress/3": "The total charge \\(\\beta\\) is nonnegative.",
+            "EstimatorBounds.compress/4": "For each row \\(x\\), \\(\\sum_y g(x,y)^4\\le u(x)^4\\).",
+            "EstimatorBounds.compress/4/0": "Let \\(b=c\\,\\beta(x)\\) and let \\(t\\) be the union of the supports of the final and true row outputs.",
+            "EstimatorBounds.compress/4/1": "The set \\(t\\) lies inside the destination set.",
+            "EstimatorBounds.compress/4/2": "The sum of \\(g^4\\) over destinations equals the sum over \\(t\\).",
+            "EstimatorBounds.compress/4/2/0": "It suffices that \\(g(x,y)=0\\) for destinations \\(y\\notin t\\).",
+            "EstimatorBounds.compress/4/2/1": "Such a \\(y\\) lies in \\(S\\).",
+            "EstimatorBounds.compress/4/2/2": "The final row output at \\(y\\) is \\(0\\).",
+            "EstimatorBounds.compress/4/2/3": "The true row output at \\(y\\) is \\(0\\).",
+            "EstimatorBounds.compress/4/2/4": "So \\(g(x,y)^4=(0-0)^4=0\\).",
+            "EstimatorBounds.compress/4/3": "Each row output has at most \\(K\\) nonzero positions.",
+            "EstimatorBounds.compress/4/4": "So \\(|t|\\le 2K\\).",
+            "EstimatorBounds.compress/4/5": "As a real number, \\(|t|\\le 2K\\).",
+            "EstimatorBounds.compress/4/6": "Hence \\(|t|\\le (1+2K)^4\\).",
+            "EstimatorBounds.compress/4/6/0": "Write \\(v=2K\\), so \\(|t|\\le v\\).",
+            "EstimatorBounds.compress/4/6/1": "And \\(v\\ge 0\\).",
+            "EstimatorBounds.compress/4/6/2": "Then \\(v\\le (1+v)^4\\).",
+            "EstimatorBounds.compress/4/7": "Using \\(|g(x,y)|\\le c\\,\\beta(x)\\) at each position, \\(\\sum_{y\\in t}g^4\\le |t|\\,b^4\\le (1+2K)^4b^4=u(x)^4\\).",
+            "EstimatorBounds.compress/5": "Taking fourth-root norms, \\(\\|g\\|\\le \\|u\\|\\).",
+            "EstimatorBounds.compress/6": "By homogeneity, \\(\\|u\\|=(1+2K)\\,c\\,\\|\\beta\\|\\).",
+            "EstimatorBounds.compress/7": "The charge norm satisfies \\(\\|\\beta\\|\\le C_B(b,M)\\,p\\), multiplied by \\((1+2K)c\\).",
+            "EstimatorBounds.compress/8": "This is the stated bound \\((1+2K)\\,c\\,C_B(b,M)\\,p\\)."
+          }
+        },
+        {
+          "module": "EstimatorBounds",
+          "name": "receipt",
+          "informal": "For every source \\(x\\) and destination \\(y\\), the root discrepancy satisfies \\(|H(T_L;y)^{1/4}-H(A;y)^{1/4}|\\le 16C^3(1+4(C+12))\\,\\beta(x)\\), where \\(\\beta\\) is the sum of the prefix, tail, last-group, noise and false-overflow charges.",
+          "chunks": {
+            "EstimatorBounds.receipt/0": "Let \\(r\\) be the run for row \\(x\\), and pick the first group \\(j\\) that is either the last group or an overflow, with no earlier overflow.",
+            "EstimatorBounds.receipt/1": "Record \\(C\\ge 1\\).",
+            "EstimatorBounds.receipt/2": "So \\(C^3>0\\).",
+            "EstimatorBounds.receipt/3": "And \\(1+4(C+12)\\ge 1\\).",
+            "EstimatorBounds.receipt/4": "So \\(C^3\\) is at most the constant \\(16C^3(1+4(C+12))\\).",
+            "EstimatorBounds.receipt/5": "Split on whether \\(j\\) is the last group or a true heavy count occurs at \\(j\\).",
+            "EstimatorBounds.receipt/6": "In that case, the first-overflow stability bound is dominated by the charges.",
+            "EstimatorBounds.receipt/6/0": "The tail term is bounded by the tail, last-group and noise charges.",
+            "EstimatorBounds.receipt/6/1": "The prefix term is bounded by the prefix charge.",
+            "EstimatorBounds.receipt/6/2": "Applying the stability bound and summing these charges gives the claim.",
+            "EstimatorBounds.receipt/7": "Otherwise \\(j\\) is an overflow.",
+            "EstimatorBounds.receipt/8": "So the false-overflow indicator at \\(j\\) equals \\(1\\).",
+            "EstimatorBounds.receipt/9": "Hence the false-overflow charge is at least \\(1\\).",
+            "EstimatorBounds.receipt/10": "So \\(\\beta(x)\\ge 1\\).",
+            "EstimatorBounds.receipt/11": "Every row root lies in \\([0,C^3]\\).",
+            "EstimatorBounds.receipt/12": "Apply this to both outputs and route the bound through \\(C^3\\).",
+            "EstimatorBounds.receipt/13": "The discrepancy of two numbers in \\([0,C^3]\\) is at most \\(C^3\\).",
+            "EstimatorBounds.receipt/14": "And \\(C^3\\le 16C^3(1+4(C+12))\\,\\beta(x)\\) since \\(\\beta(x)\\ge 1\\)."
+          }
+        },
+        {
+          "module": "EstimatorBounds",
+          "name": "subtotal",
+          "informal": "The fourth-root norm of the total charge satisfies \\(\\|\\beta\\|\\le C_B(b,M)\\,p\\) with \\(C_B(b,M)=\\tfrac{144}{c}+4\\cdot 1024M+64\\cdot 2^{b}+2+128\\), where \\(c\\) is the fixed small constant.",
+          "chunks": {
+            "EstimatorBounds.subtotal/0": "Group the charge as (prefix \\(+\\) tail) \\(+\\) last-group \\(+\\) noise, plus false-overflow, and apply the triangle inequality.",
+            "EstimatorBounds.subtotal/1": "The norm of the first four terms is at most the norm of the first three plus the noise norm.",
+            "EstimatorBounds.subtotal/2": "The norm of the first three is at most the norm of the first two plus the last-group norm.",
+            "EstimatorBounds.subtotal/3": "The norm of the first two is at most the prefix norm plus the tail norm.",
+            "EstimatorBounds.subtotal/4": "Use the bounds \\(\\le 2p\\) on the noise charge, \\(\\le 4\\cdot 1024Mp\\) on the tail charge, and \\(\\le \\tfrac{144}{c}p\\) on the prefix charge.",
+            "EstimatorBounds.subtotal/5": "Use the bounds \\(\\le 64\\cdot 2^bp\\) on the last-group charge and \\(\\le 128p\\) on the false-overflow charge.",
+            "EstimatorBounds.subtotal/6": "Summing gives \\(C_B(b,M)\\,p\\)."
+          }
+        }
+      ]
+    },
+    {
+      "paper_id": "lem:buf-clamping",
+      "informal": "With clamp margins \\(|\\mathrm{inc}_i|_\\infty+H_{i+1}\\le H_i\\), range clamps and sentinels do not change the final row outputs.",
+      "confidence": "named",
+      "note": "clamped states that the clamped calculation has the same final row values as the unclamped one under a margin condition analogous to the clamp margin equation.",
+      "decls": [
+        {
+          "module": "CompressionBounds",
+          "name": "clamped",
+          "informal": "If the clamp levels \\(H_j\\ge \\max(C,12)\\) satisfy \\(H_{i+1}\\le R_i\\) and \\(|\\mathrm{inc}_i(x)|_\\infty+H_{i+1}\\le H_i\\), and shutdowns only happen when \\(u_0\\ge 1\\), then the clamped calculation has the same final row outputs as the unclamped one: \\(H(T^{\\text{clamp}}_L;x)=H(T_L;x)\\) for \\(x\\in S\\).",
+          "chunks": {
+            "CompressionBounds.clamped/0": "By induction on \\(j\\le L\\), the unclamped and clamped arrays after \\(j\\) groups either agree after clamping at \\(H_j\\), or both have default at least \\(1\\).",
+            "CompressionBounds.clamped/1": "At \\(j=L\\), take \\(H_L\\ge C\\), \\(H_L\\ge 12\\), and split on the two alternatives.",
+            "CompressionBounds.clamped/2": "If the arrays agree after clamping at \\(H_L\\), their row outputs agree.",
+            "CompressionBounds.clamped/2/0": "The clamped arrays have equal defaults and equal entries on \\(S\\).",
+            "CompressionBounds.clamped/2/1": "Hence their ranks agree.",
+            "CompressionBounds.clamped/2/2": "Let \\(L'=H_L\\).",
+            "CompressionBounds.clamped/2/3": "The clamped calculation has default at most \\(4\\le L'\\).",
+            "CompressionBounds.clamped/2/4": "So does the unclamped calculation.",
+            "CompressionBounds.clamped/2/5": "The two clamped ranks are equal.",
+            "CompressionBounds.clamped/2/6": "Since clamping at \\(L'\\ge C\\) does not change row outputs, both outputs equal the same expression.",
+            "CompressionBounds.clamped/3": "If both defaults are at least \\(1\\ge \\theta/40\\), both arrays represent zero row outputs."
+          }
+        },
+        {
+          "module": "CompressionBounds",
+          "name": "strike_val",
+          "informal": "If \\(C\\le L\\) and the default satisfies \\(d\\le L\\), then clamping all entries to \\([-L,L]\\) does not change the row output: \\(H(\\mathrm{clamp}_L(v);i)=H(v;i)\\).",
+          "chunks": {
+            "CompressionBounds.strike_val/0": "The row function is unchanged by saturating its arguments at any level \\(L\\ge C\\).",
+            "CompressionBounds.strike_val/1": "Record \\(C\\ge 1\\).",
+            "CompressionBounds.strike_val/2": "The rank of the clamped array is \\(\\min(L,\\mathrm{rk}(v))\\).",
+            "CompressionBounds.strike_val/3": "Since the rank is nonnegative, \\(\\mathrm{sat}_L(\\mathrm{rk}(v))=\\min(L,\\mathrm{rk}(v))\\).",
+            "CompressionBounds.strike_val/4": "So both outputs equal the row function on saturated arguments."
+          }
+        },
+        {
+          "module": "CompressionBounds",
+          "name": "tower_val",
+          "informal": "If every position in \\(F\\) has first entry at least \\(L\\ge 12\\), \\(d\\le 4\\) and \\(C\\le L\\), then replacing these first entries by the sentinel \\(L\\) does not change the row output.",
+          "chunks": {
+            "CompressionBounds.tower_val/0": "The default satisfies \\(d\\le L\\).",
+            "CompressionBounds.tower_val/1": "After clamping at \\(L\\), the sentinel array and the original array coincide, and clamping does not change either row output."
+          }
+        }
+      ]
+    },
+    {
+      "paper_id": "prop:est-clean",
+      "informal": "For a ready task, compression with exact IDs keeps the row-output discrepancy within the prescribed error reserve.",
+      "confidence": "structural",
+      "note": "rated is documented as the full-array comparison with exact-ID compression and rootBills applies it to bound the row-block error by the task's prize, which is the role of this error-reserve proposition.",
+      "decls": [
+        {
+          "module": "HierarchicalEstimator",
+          "name": "rootBills",
+          "informal": "For a ready task, the fourth-root discrepancy between the true-ID row outputs and the compressed row-block outputs is at most the prescribed prize times the schedule width.",
+          "chunks": {
+            "HierarchicalEstimator.rootBills/0": "Let \\(p\\) be the compression input built from the task, and \\(H\\) the output builder.",
+            "HierarchicalEstimator.rootBills/1": "The true array for each row equals the true array of the compression run.",
+            "HierarchicalEstimator.rootBills/2": "So the true outputs are those of the compression runs.",
+            "HierarchicalEstimator.rootBills/3": "Apply the exact-ID compression comparison to this compression input.",
+            "HierarchicalEstimator.rootBills/4": "Rewriting the norm symmetrically, the compression bound times \\(2\\) times the contract equals the prize times the width."
+          }
+        },
+        {
+          "module": "EstimatorOperations",
+          "name": "rated",
+          "informal": "For a compression input satisfying the hypotheses with budget \\(s\\) and mass \\(M\\), the masked table discrepancy between outputs built from the final compressed arrays and from the true arrays is at most \\((1+2K)C_{\\text{charge}}C_B(b,M)\\,s\\).",
+          "chunks": {
+            "EstimatorOperations.rated/0": "Identify the axis of the table with that of the compression input.",
+            "EstimatorOperations.rated/1": "Take the integrated compression bound.",
+            "EstimatorOperations.rated/2": "It suffices to compare the masked output differences pointwise with the root discrepancies, splitting on whether the position is active.",
+            "EstimatorOperations.rated/3": "At active positions the masked difference equals the root discrepancy.",
+            "EstimatorOperations.rated/3/0": "The position lies in the source, destination and mask.",
+            "EstimatorOperations.rated/3/1": "So both masked outputs are the row outputs and the difference is exactly the root discrepancy.",
+            "EstimatorOperations.rated/4": "At inactive positions the masked difference is \\(0\\).",
+            "EstimatorOperations.rated/4/0": "The position fails the mask.",
+            "EstimatorOperations.rated/4/1": "So both masked outputs are \\(0\\) and \\(0\\le |\\cdot|\\)."
+          }
+        }
+      ]
+    }
+  ],
+  "unmapped": []
+}

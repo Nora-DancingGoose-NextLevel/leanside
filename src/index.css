@@ -1,0 +1,26 @@
+/* Global reset and palette, taken from the LeanTutor frontend (merge/frontend/src/style/index.css)
+   so the page looks the same as it does there. */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --bg-light-grey: #f5f5f5;
+  --bg-white: #ffffff;
+  --border-grey: #ddd;
+  --text-dark: #213547;
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.15);
+  --primary-blue: #3b82f6;
+  --primary-blue-hover: #2563eb;
+}
+
+body {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  line-height: 1.6;
+  color: var(--text-dark);
+  background-color: var(--bg-light-grey);
+  overflow: hidden; /* the page manages its own scrolling panels */
+}

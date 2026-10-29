@@ -1,0 +1,90 @@
+{
+  "section": "sec:fp-blocks",
+  "informal": "The Lean does not use fingerprints: it compares full endpoint IDs exactly with a catalytic test that adds \\(\\sum_i(x_i-y_i)^2\\) modulo \\(M\\) to a shared register, reads the result in four bit tests, and restores the register.",
+  "modules": [
+    "CatalyticComparison"
+  ],
+  "results": [
+    {
+      "paper_id": "lem:fp-catalytic",
+      "informal": "Four endpoint excursions change a shared catalytic register exactly when \\(x\\ne y\\), four inverse excursions restore it, and a program built on this branches on \\(x=y\\).",
+      "confidence": "structural",
+      "note": "CatalyticComparison carries out the restoring four-excursion equality test of this lemma, but on the exact IDs \\(x,y\\) rather than on hashed keys \\(k(v),k(w)\\).",
+      "decls": [
+        {
+          "module": "CatalyticComparison",
+          "name": "test_eye",
+          "informal": "For IDs \\(x,y\\le \\text{peak}\\) and a proper catalytic register \\(V=(V_1,V_2,V_3)\\), the four-step transform \\(\\mathrm{fair}_{x,y}\\) leaves the middle component unchanged if and only if \\(x=y\\): \\(\\mathrm{fair}_{x,y}(V)_2=V_2\\iff x=y\\).",
+          "chunks": {
+            "CatalyticComparison.test_eye/0": "The transform adds \\(h(x,y)=\\sum_{i<L}(x_i-y_i)^2\\) modulo \\(M\\) to \\(V_2\\) and leaves \\(V_1,V_3\\) unchanged.",
+            "CatalyticComparison.test_eye/1": "Record \\(M\\ge 4\\).",
+            "CatalyticComparison.test_eye/2": "Prove both directions.",
+            "CatalyticComparison.test_eye/3": "If \\(V_2+h(x,y)\\equiv V_2 \\pmod M\\), then \\(x=y\\).",
+            "CatalyticComparison.test_eye/3/0": "Assume the middle component is unchanged.",
+            "CatalyticComparison.test_eye/3/1": "Then \\(V_2+h(x,y)=V_2\\) in \\(\\mathbb Z/M\\).",
+            "CatalyticComparison.test_eye/3/2": "Since \\(0\\le h(x,y)<M\\), this forces \\(h(x,y)=0\\), and \\(h(x,y)=0\\) holds exactly when \\(x=y\\).",
+            "CatalyticComparison.test_eye/4": "Conversely, if \\(x=y\\) then \\(h(x,y)=0\\) and \\((V_2+0)\\bmod M=V_2\\)."
+          }
+        },
+        {
+          "module": "CatalyticComparison",
+          "name": "back",
+          "informal": "For a proper register \\(V\\), the inverse sequence of four excursions restores it: \\(\\mathrm{dark}_{x,y}(\\mathrm{fair}_{x,y}(V))=V\\).",
+          "chunks": {
+            "CatalyticComparison.back/0": "Name the intermediate registers \\(a,b,c\\) after the first three excursions of \\(\\mathrm{fair}_{x,y}\\).",
+            "CatalyticComparison.back/1": "The register \\(a\\) is proper.",
+            "CatalyticComparison.back/2": "The register \\(b\\) is proper.",
+            "CatalyticComparison.back/3": "The register \\(c\\) is proper.",
+            "CatalyticComparison.back/4": "The fourth excursion is undone by its inverse, returning \\(c\\).",
+            "CatalyticComparison.back/5": "The third inverse excursion returns \\(b\\).",
+            "CatalyticComparison.back/6": "The second inverse excursion returns \\(a\\).",
+            "CatalyticComparison.back/7": "The first inverse excursion returns \\(V\\), so \\(\\mathrm{dark}_{x,y}(\\mathrm{fair}_{x,y}(V))=V\\)."
+          }
+        },
+        {
+          "module": "CatalyticComparison",
+          "name": "done0",
+          "informal": "If the endpoint excursions behave as specified and \\(x,y\\le\\text{peak}\\), then the comparison program built from four bit tests runs from the proper register \\(V\\) to the continuation of branch \\(\\text{yes}\\) when \\(x=y\\) and of branch \\(\\text{no}\\) when \\(x\\ne y\\).",
+          "chunks": {
+            "CatalyticComparison.done0/0": "We have \\(x=y\\) if and only if, for all \\(i<4\\), flipping the bit of \\(V_3\\) indexed by the \\(i\\)-th base-\\(n\\) digit of \\(V_2\\) changes the probed bit after the transform.",
+            "CatalyticComparison.done0/1": "Run the four bit-test blocks and choose the yes branch when all four tests succeed and the no branch otherwise."
+          }
+        }
+      ]
+    }
+  ],
+  "unmapped": [
+    {
+      "paper_id": "lem:fp-hash",
+      "reason": "The Lean compares exact endpoint IDs catalytically and never builds a short hash map \\(k\\)."
+    },
+    {
+      "paper_id": "lem:fp-clean",
+      "reason": "There is no salted fingerprint or clean calculation in the Lean, since IDs are compared exactly."
+    },
+    {
+      "paper_id": "lem:fp-envelope",
+      "reason": "Collisions of keys do not arise in the Lean, so the envelope and its collision bound are not formalized."
+    },
+    {
+      "paper_id": "lem:fp-escape",
+      "reason": "The actual-clean coupling for escaped candidates is not formalized because the Lean has no fingerprints."
+    },
+    {
+      "paper_id": "lem:fp-buckets",
+      "reason": "The Lean has no bucket aliasing of increments, since it compresses with exact IDs."
+    },
+    {
+      "paper_id": "lem:fp-direct",
+      "reason": "There are no collisions in the Lean, so no direct collision cost is stated."
+    },
+    {
+      "paper_id": "prop:fp-coupling",
+      "reason": "The actual-clean block coupling is unnecessary in the Lean, which uses exact-ID comparisons."
+    },
+    {
+      "paper_id": "thm:fp-estimators",
+      "reason": "The final estimator error bounds are proved in the Lean's hierarchical estimator induction rather than as a fingerprint-section theorem, and no single declaration matches this statement."
+    }
+  ]
+}

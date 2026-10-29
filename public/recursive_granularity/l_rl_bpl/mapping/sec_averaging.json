@@ -1,0 +1,145 @@
+{
+ "section": "sec:averaging",
+ "informal": "The Lean proves an elementary uniform \\(L_2\\) gap for fixed affine generators on finite punctured frames and tori, turns it into the \\(L_4\\) contraction \\(\\mathbb E(K^d f-\\mathbb E f)^4\\le(1-\\delta)^d\\cdot16\\,\\mathbb E f^4\\) of the lazy walk on every conditional slice, and shows that the guessed-wrap variant sampler equals this conditional walk.",
+ "modules": [
+  "AffineSampling"
+ ],
+ "results": [
+  {
+   "paper_id": "lem:env-affine",
+   "informal": "For a fixed family of shear and translation generators, every function on \\(\\mathcal F_n\\times V_l\\) (and on \\(\\mathcal F_n\\) alone) satisfies \\(\\mathrm{Var}(f)\\le10\\gamma_0\\,\\mathcal E(f)\\) with \\(\\gamma_0=6+4/\\theta\\) independent of \\(n\\) and \\(l\\).",
+   "confidence": "structural",
+   "note": "The Lean replaces the property (T) input for \\(\\mathrm{SL}_H(\\mathbb Z)\\ltimes\\mathbb Z^H\\) by an elementary Fourier proof of a uniform Poincare inequality on finite frames and tori (module doc: without assuming a property-(T) result), and slice_gap is documented as the uniform spectral input for conditional averaging.",
+   "decls": [
+    {
+     "module": "AffineSampling",
+     "name": "slice_gap",
+     "informal": "For every \\(f:\\mathcal F_n\\times V_l\\to\\mathbb R\\), \\(\\mathrm{Var}(f)\\le 10\\gamma_0\\,\\mathcal E_{\\text{gens}}(f)\\), where \\(\\gamma_0=6+4/\\theta\\) and the generators act on the punctured frame \\(\\mathcal F_n\\) by \\(\\text{Fperm}\\) and affinely on \\(V_l=(\\mathbb Z/l)^4\\).",
+     "chunks": {
+      "AffineSampling.slice_gap/0": "Fix \\(f\\) and split \\(\\mathrm{Var}(f)\\) into the average fibre variance over \\(V_l\\) plus the variance of the fibre means.",
+      "AffineSampling.slice_gap/1": "The torus gap bounds the average fibre variance by \\(\\gamma_0\\sum_j \\text{stepE}_j(f)\\).",
+      "AffineSampling.slice_gap/2": "That sum is \\(\\gamma_0\\,\\mathcal E_{\\text{gens}}(f)\\).",
+      "AffineSampling.slice_gap/3": "Rewrite the fibre bound and define the fibre means \\(g(i)=\\mathbb E_j f(i,j)\\).",
+      "AffineSampling.slice_gap/4": "The frame gap gives \\(\\mathrm{Var}(g)\\le 9\\gamma_0\\,\\mathcal E_{\\text{Fperm}}(g)\\).",
+      "AffineSampling.slice_gap/5": "Projecting to the first factor does not increase energy, so \\(\\mathcal E_{\\text{Fperm}}(g)\\le\\mathcal E_{\\text{gens}}(f)\\).",
+      "AffineSampling.slice_gap/6": "Multiplying by \\(9\\gamma_0\\ge0\\) gives \\(9\\gamma_0\\,\\mathcal E_{\\text{Fperm}}(g)\\le 9\\gamma_0\\,\\mathcal E_{\\text{gens}}(f)\\).",
+      "AffineSampling.slice_gap/7": "Adding the two bounds gives \\(\\mathrm{Var}(f)\\le 10\\gamma_0\\,\\mathcal E_{\\text{gens}}(f)\\)."
+     }
+    },
+    {
+     "module": "AffineSampling",
+     "name": "frame_gap",
+     "informal": "For every \\(F:\\mathcal F_n\\to\\mathbb R\\) on the punctured frame \\(\\mathcal F_n=V_n\\setminus\\{0\\}\\), \\(\\mathrm{Var}(F)\\le 9\\gamma_0\\,\\mathcal E_{\\text{Fperm}}(F)\\).",
+     "chunks": {
+      "AffineSampling.frame_gap/0": "Extend \\(F\\) by zero to a function \\(f\\) on all of \\(V_n=(\\mathbb Z/n)^2\\times(\\mathbb Z/n)^2\\).",
+      "AffineSampling.frame_gap/1": "On nonzero vectors \\(f\\) agrees with \\(F\\).",
+      "AffineSampling.frame_gap/2": "The punctured-variance lemma bounds the weighted variance of \\(F\\) by \\(9\\) times the sum of the row and column slice variances of \\(f\\).",
+      "AffineSampling.frame_gap/3": "The slice gap bounds the row slice variances by \\(\\gamma_0\\) times the frame energies of the moves of type \\(\\text{true}\\).",
+      "AffineSampling.frame_gap/4": "The slice gap bounds the column slice variances by \\(\\gamma_0\\) times the frame energies of the moves of type \\(\\text{false}\\).",
+      "AffineSampling.frame_gap/5": "Restate the punctured-variance bound with the normalizing weights \\(w_F\\) and \\(w_U\\).",
+      "AffineSampling.frame_gap/6": "The restriction of \\(f\\) to the frame is \\(F\\).",
+      "AffineSampling.frame_gap/7": "The \\(\\text{true}\\) slices of \\(f\\) are its rows \\((i,j)\\mapsto f(i,j)\\).",
+      "AffineSampling.frame_gap/8": "The \\(\\text{false}\\) slices of \\(f\\) are its columns \\((i,j)\\mapsto f(j,i)\\).",
+      "AffineSampling.frame_gap/9": "Rewrite everything in terms of \\(\\mathrm{Var}(F)\\) and the energy sum split over both move types, and reduce to the inequality multiplied by \\(w_F\\).",
+      "AffineSampling.frame_gap/10": "The weighted inequality follows by combining the three bounds.",
+      "AffineSampling.frame_gap/11": "The weight \\(w_F=|\\mathcal F_n|\\) is positive."
+     }
+    }
+   ]
+  },
+  {
+   "paper_id": "lem:env-gap",
+   "informal": "On each conditional slice the generator family has gap constant \\(10\\gamma_0\\), and any such gap gives \\(\\mathbb E(K^d f-\\mathbb E f)^4\\le(1-\\delta)^d\\cdot16\\,\\mathbb E f^4\\) for the lazy averaging operator \\(K\\).",
+   "confidence": "structural",
+   "note": "walk_mix is the \\(s=4\\) case of \\(\\|K^d-\\Pi\\|_{L_s\\to L_s}\\le C_s2^{-c_sd}\\) with \\(\\Pi\\) the uniform average, and full_gap supplies the gap on the conditional slice; Lean proves only the fourth-moment case.",
+   "decls": [
+    {
+     "module": "AffineSampling",
+     "name": "walk_mix",
+     "informal": "If \\(C\\ge1\\) and \\(\\mathrm{Var}(h)\\le C\\,\\mathcal E_G(h)\\) for all \\(h\\), then \\(\\mathbb E(K^d f-\\mathbb E f)^4\\le(1-\\delta)^d\\cdot16\\,\\mathbb E f^4\\) for every \\(f\\) and \\(d\\), where \\(K\\) is the lazy walk on \\(G\\) and \\(\\delta=(16384(C|\\Gamma|)^2)^{-1}\\).",
+     "chunks": {
+      "AffineSampling.walk_mix/0": "Let \\(g=f-\\mathbb E f\\).",
+      "AffineSampling.walk_mix/1": "\\(\\mathbb E g=0\\).",
+      "AffineSampling.walk_mix/2": "\\(\\mathbb E g^4\\le16\\,\\mathbb E f^4\\).",
+      "AffineSampling.walk_mix/2/0": "Pointwise \\((f(i)-\\mathbb E f)^4\\le8(f(i)^4+(\\mathbb E f)^4)\\).",
+      "AffineSampling.walk_mix/2/0/0": "Use \\(((a+b)/2)^4+(a-b)^4/16\\le(a^4+b^4)/2\\) with \\(a=f(i)\\) and \\(b=\\mathbb E f\\).",
+      "AffineSampling.walk_mix/2/0/1": "Since \\(((a+b)/2)^4\\ge0\\), this gives \\((a-b)^4\\le8(a^4+b^4)\\).",
+      "AffineSampling.walk_mix/2/1": "Averaging gives \\(\\mathbb E(f-\\mathbb E f)^4\\le\\mathbb E\\,8(f^4+(\\mathbb E f)^4)\\).",
+      "AffineSampling.walk_mix/2/2": "Since \\((\\mathbb E f)^4\\le\\mathbb E f^4\\), the right side is at most \\(16\\,\\mathbb E f^4\\).",
+      "AffineSampling.walk_mix/3": "By induction on \\(d\\), \\(\\mathbb E(K^d g)^4\\le(1-\\delta)^d\\cdot16\\,\\mathbb E f^4\\), \\(\\mathbb E K^d g=0\\) and \\(K^d g=K^d f-\\mathbb E f\\), using the one-step contraction and \\(\\mathbb E Kh=\\mathbb E h\\).",
+      "AffineSampling.walk_mix/4": "Substituting \\(K^d g=K^d f-\\mathbb E f\\) gives the claim."
+     }
+    },
+    {
+     "module": "AffineSampling",
+     "name": "K_shrink",
+     "informal": "If \\(C\\ge1\\), \\(\\mathrm{Var}(h)\\le C\\,\\mathcal E_G(h)\\) for all \\(h\\), and \\(\\mathbb E f=0\\), then \\(\\mathbb E(Kf)^4\\le(1-\\delta)\\,\\mathbb E f^4\\).",
+     "chunks": {
+      "AffineSampling.K_shrink/0": "One lazy step gives \\(\\mathbb E(Kf)^4+\\frac1{16}\\mathbb E_j\\mathcal E^{(4)}_{G_j}(f)\\le\\mathbb E f^4\\).",
+      "AffineSampling.K_shrink/1": "The \\(L_4\\) Poincare inequality gives \\(\\mathbb E f^4\\le1024A^2\\,\\mathbb E_j\\mathcal E^{(4)}_{G_j}(f)\\) with \\(A=C|\\Gamma|\\).",
+      "AffineSampling.K_shrink/2": "Write \\(V=\\mathbb E_j\\mathcal E^{(4)}_{G_j}(f)\\), so the goal is \\(\\mathbb E(Kf)^4\\le(1-(16384A^2)^{-1})\\,\\mathbb E f^4\\).",
+      "AffineSampling.K_shrink/3": "\\(A>0\\).",
+      "AffineSampling.K_shrink/4": "\\((16384A^2)^{-1}\\,\\mathbb E f^4\\le V/16\\).",
+      "AffineSampling.K_shrink/5": "Combining the bounds gives \\(\\mathbb E(Kf)^4\\le(1-\\delta)\\,\\mathbb E f^4\\)."
+     }
+    },
+    {
+     "module": "AffineSampling",
+     "name": "full_gap",
+     "informal": "On the conditional slice \\(\\mathcal C\\) (two retained channels, one free channel and salt bits), the combined generator family \\(\\text{mixP}\\) satisfies \\(\\mathrm{Var}(f)\\le10\\gamma_0\\,\\mathcal E_{\\text{mixP}}(f)\\).",
+     "chunks": {
+      "AffineSampling.full_gap/0": "\\(\\gamma_0\\ge0\\).",
+      "AffineSampling.full_gap/1": "Gap constants pass to products of families, so it suffices to use the uniform affine gap on the three channels and to prove the bound for the salt bits.",
+      "AffineSampling.full_gap/2": "The salt-bit gap gives \\(\\mathrm{Var}(f)\\le\\gamma_0\\,\\mathcal E(f)\\).",
+      "AffineSampling.full_gap/3": "The energy is nonnegative.",
+      "AffineSampling.full_gap/4": "Since \\(\\gamma_0\\le10\\gamma_0\\), this gives \\(\\mathrm{Var}(f)\\le10\\gamma_0\\,\\mathcal E(f)\\)."
+     }
+    }
+   ]
+  },
+  {
+   "paper_id": "lem:env-variants",
+   "informal": "Each guessed variant is a permutation of the full environment not depending on the retained point, the correctly guessed variant acts on opened slice elements as the conditional generator, and the weighted sum over live variant paths equals \\(K^l\\) of the slice function.",
+   "confidence": "structural",
+   "note": "variant_pin and sampler_identity state the clauses that exactly one valid variant gives the conditional transformation and that the sum of valid variants is the conditional walk; bijectivity and the \\(O(d)\\)-bit descriptions are built into the definitions rather than stated as lemmas.",
+   "decls": [
+    {
+     "module": "AffineSampling",
+     "name": "variant_pin",
+     "informal": "For every generator \\(g\\), point \\(y\\) and slice element \\(s\\), the variant with the guessed wrap \\(w=\\text{guessP}_k(g,s)\\) satisfies \\(\\text{Variant}_{k,g,w}(\\text{open}_y(s))=\\text{open}_y(g\\cdot s)\\).",
+     "chunks": {
+      "AffineSampling.variant_pin/0": "Check the frame and torus components separately.",
+      "AffineSampling.variant_pin/1": "On the frame component both sides apply \\(\\text{Fperm}(g)\\).",
+      "AffineSampling.variant_pin/2": "On the torus component, affinity of \\(g\\) and the wrap-correction identity give \\(g(\\text{wide}(s_2)-y\\,s_1)+\\text{wrap}=\\text{wide}(g\\,s_2)-y\\,g\\,s_1\\)."
+     }
+    },
+    {
+     "module": "AffineSampling",
+     "name": "sampler_identity",
+     "informal": "For every slice element \\(s\\) and length \\(l\\), \\(\\sum_{p,r}\\mathbf 1_{\\text{live}(p,r)}\\,w^l f(\\text{go}_{p,r}(o(s)))=K_{\\text{mixP}}^l(f\\circ o)(s)\\), where \\(o\\) opens \\(s\\) into the full environment and \\(w\\) is the atom weight.",
+     "chunks": {}
+    }
+   ]
+  },
+  {
+   "paper_id": "rem:env-averaging",
+   "informal": "After identifying the variant sum with the conditional walk, the sampler satisfies the \\(L_4\\) contraction \\(\\mathbb E(\\text{sampling}_l f\\circ o-\\mathbb E[f\\circ o])^4\\le(1-\\delta)^l\\cdot16\\,\\mathbb E(f\\circ o)^4\\).",
+   "confidence": "structural",
+   "note": "The proof of sampler_est first rewrites the sum of valid variants as the conditional walk and only then applies the spectral estimate, which is the order the remark prescribes.",
+   "decls": [
+    {
+     "module": "AffineSampling",
+     "name": "sampler_est",
+     "informal": "For fixed high salt bits, with \\(o\\) the opening map and \\(g=f\\circ o\\), \\(\\mathbb E_s(\\text{sampling}_l f(o(s))-\\mathbb E g)^4\\le(1-\\delta)^l\\cdot16\\,\\mathbb E g^4\\) where \\(\\delta=\\text{loss}(\\text{Choice},10\\gamma_0)\\).",
+     "chunks": {}
+    }
+   ]
+  }
+ ],
+ "unmapped": [
+  {
+   "paper_id": "rem:env-effective",
+   "reason": "Interpretive remark about coordinates after a change of variables; not stated separately in Lean."
+  }
+ ]
+}

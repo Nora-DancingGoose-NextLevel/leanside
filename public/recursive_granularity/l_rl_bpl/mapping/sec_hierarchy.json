@@ -1,0 +1,415 @@
+{
+  "section": "sec:hierarchy",
+  "informal": "The Lean defines the finite correction iteration \\(E_t\\), the pilot that chooses the column multiplier \\(\\gamma(V)\\) by detector expectations, the residual \\(D=C-E+EC\\) and the copy step \\(C^+\\), proves the factorial truncation, pilot, detector, residual and copy bounds, and shows that the reward identity \\(v=W+Cv\\) is preserved so that \\(W_k\\) approaches \\(v\\) within \\(|S|2^kb_{i+k}\\).",
+  "modules": [
+    "ProbabilityHierarchy"
+  ],
+  "results": [
+    {
+      "paper_id": "lem:hier-fixed-point",
+      "informal": "For every multiplier \\(0\\le g\\le1\\), the iterates \\(E_t\\) of \\(E_t=fQ((C+E_{t-1}C)/f)g\\) increase in \\(t\\), consecutive differences satisfy \\(\\Delta_{t+1}\\le5\\,\\Delta_tC\\), and \\(E_{T+1}(x,y)-E_T(x,y)\\le f(5/A)^T/T!\\).",
+      "confidence": "structural",
+      "note": "Lean never forms the fixed point \\(E_*\\); it proves the factorial bound directly for the consecutive differences \\(E_{T+1}-E_T\\) with \\(\\theta_1=A=1/4096\\) and \\(L_Q=5\\), by the same row-support counting argument as the paper.",
+      "decls": [
+        {
+          "module": "ProbabilityHierarchy",
+          "name": "factorial",
+          "informal": "If \\(C\\) satisfies the stage conditions at rate \\(f>0\\) and \\(0\\le g\\le1\\), then for all \\(T,x,y\\), \\(E_{T+1}(x,y)-E_T(x,y)\\le f\\,(5/A)^T/T!\\).",
+          "chunks": {
+            "ProbabilityHierarchy.factorial/0": "Let \\(R=C-E_{T+1}+E_{T+1}C\\) and \\(A_x=\\{y:E_{T+1}(x,y)>0\\}\\); \\(R\\) is nonnegative substochastic and \\(R(x,y)\\ge Af\\) on \\(A_x\\).",
+            "ProbabilityHierarchy.factorial/1": "\\(|A_x|\\cdot Af\\le\\sum_{y\\in A_x}R(x,y)\\le1\\).",
+            "ProbabilityHierarchy.factorial/2": "Write \\(\\Delta_t=E_{t+1}-E_t\\).",
+            "ProbabilityHierarchy.factorial/3": "\\(\\Delta_t(x,z)\\ge0\\) by monotonicity of the iterates.",
+            "ProbabilityHierarchy.factorial/4": "By induction on \\(t\\le T\\), \\(\\Delta_t(x,y)\\le f(5f)^t\\binom{|\\{z\\in A_x:z<y\\}|}{t}\\), since in \\(\\Delta_{t+1}\\le5\\Delta_tC\\) only intermediate vertices \\(z\\in A_x\\) with \\(z<y\\) contribute.",
+            "ProbabilityHierarchy.factorial/5": "Apply this at \\(t=T\\) and put \\(m=|\\{z\\in A_x:z<y\\}|\\).",
+            "ProbabilityHierarchy.factorial/6": "\\(\\binom{m}{T}\\le m^T/T!\\).",
+            "ProbabilityHierarchy.factorial/7": "\\(5fm\\le5/A\\).",
+            "ProbabilityHierarchy.factorial/7/0": "\\(m\\le|A_x|\\).",
+            "ProbabilityHierarchy.factorial/7/1": "Hence \\(5fm\\le5f|A_x|\\le5/A\\) because \\(|A_x|Af\\le1\\).",
+            "ProbabilityHierarchy.factorial/8": "It remains to show \\(f(5f)^T\\binom{m}{T}\\le f(5/A)^T/T!\\).",
+            "ProbabilityHierarchy.factorial/9": "\\((5fm)^T\\le(5/A)^T\\).",
+            "ProbabilityHierarchy.factorial/10": "Therefore \\(f(5f)^T\\binom mT\\le f(5fm)^T/T!\\le f(5/A)^T/T!\\)."
+          }
+        },
+        {
+          "module": "ProbabilityHierarchy",
+          "name": "transfer_diff",
+          "informal": "If \\(C\\) satisfies the stage conditions, \\(f>0\\) and \\(0\\le g\\le1\\), then \\(\\Delta_{n+1}(x,y)\\le5\\,(\\Delta_nC)(x,y)\\) where \\(\\Delta_n=E_{n+1}-E_n\\).",
+          "chunks": {
+            "ProbabilityHierarchy.transfer_diff/0": "Let \\(v_t=(C+E_tC)(x,y)\\) and \\(h_t=\\Delta_t(x,y)\\).",
+            "ProbabilityHierarchy.transfer_diff/1": "\\((\\Delta_nC)(x,y)\\ge0\\).",
+            "ProbabilityHierarchy.transfer_diff/2": "\\(v_{n+1}-v_n=(\\Delta_nC)(x,y)\\).",
+            "ProbabilityHierarchy.transfer_diff/3": "\\(v_n/f\\le v_{n+1}/f\\).",
+            "ProbabilityHierarchy.transfer_diff/4": "Since \\(Q\\) is monotone and \\(5\\)-Lipschitz, \\(0\\le Q(v_{n+1}/f)-Q(v_n/f)\\le5(v_{n+1}/f-v_n/f)\\).",
+            "ProbabilityHierarchy.transfer_diff/5": "\\(\\Delta_{n+1}(x,y)=f\\,(Q(v_{n+1}/f)-Q(v_n/f))\\,g(y)\\).",
+            "ProbabilityHierarchy.transfer_diff/6": "Restate the goal in terms of \\(h_{n+1}\\).",
+            "ProbabilityHierarchy.transfer_diff/7": "\\(f(v_{n+1}/f-v_n/f)=(\\Delta_nC)(x,y)\\).",
+            "ProbabilityHierarchy.transfer_diff/8": "Substitute the formula for \\(\\Delta_{n+1}(x,y)\\).",
+            "ProbabilityHierarchy.transfer_diff/9": "Since \\(g(y)\\le1\\), \\(\\Delta_{n+1}(x,y)\\le f(Q(v_{n+1}/f)-Q(v_n/f))\\).",
+            "ProbabilityHierarchy.transfer_diff/10": "\\(f(Q(v_{n+1}/f)-Q(v_n/f))\\le5f(v_{n+1}/f-v_n/f)\\).",
+            "ProbabilityHierarchy.transfer_diff/11": "Combining gives \\(\\Delta_{n+1}(x,y)\\le5(\\Delta_nC)(x,y)\\)."
+          }
+        },
+        {
+          "module": "ProbabilityHierarchy",
+          "name": "mono_steps",
+          "informal": "If \\(f>0\\), \\(0\\le g\\le1\\) and \\(C\\) satisfies the stage conditions, then \\(t\\mapsto E_t\\) is monotone: \\(E_0\\le E_1\\le E_2\\le\\cdots\\).",
+          "chunks": {}
+        }
+      ]
+    },
+    {
+      "paper_id": "lem:hier-pilot-bounds",
+      "informal": "For the pilot corrections \\(\\widehat E_k\\) and actual corrections \\(E_k\\): both are nonnegative, strictly forward, supported in the active set, with entries \\(\\le kf\\) and row sums \\(\\le k\\); and \\(E_k\\le\\widehat E_k\\) for \\(k\\le k_*\\).",
+      "confidence": "named",
+      "note": "The predicate SB with constant \\(k\\) is exactly the paper's list (nonnegative, entries \\(\\le kf\\), rows \\(\\le k\\), forward support in the active set), and cpilot is \\(E_k\\le\\widehat E_k\\); the pilot inputs \\(G_i\\) are covered by the companion lemma tbounds.",
+      "decls": [
+        {
+          "module": "ProbabilityHierarchy",
+          "name": "pilot_bounds",
+          "informal": "If \\(C\\) satisfies the stage conditions with support in \\(S'\\), then for every \\(k\\) the pilot correction \\(\\widehat E_k\\) satisfies \\(E\\ge0\\), \\(E(x,y)\\le kf\\), \\(E\\mathbf 1\\le k\\mathbf 1\\), and every positive entry has \\(x<y\\) in the active set \\(S'\\).",
+          "chunks": {}
+        },
+        {
+          "module": "ProbabilityHierarchy",
+          "name": "cpilot",
+          "informal": "If \\(C\\) satisfies the stage conditions and \\(k\\le k_*\\), then \\(E_k\\le\\widehat E_k\\).",
+          "chunks": {}
+        },
+        {
+          "module": "ProbabilityHierarchy",
+          "name": "cbounds",
+          "informal": "If \\(C\\) satisfies the stage conditions with support in \\(S'\\), then for every \\(k\\) the actual correction \\(E_k\\) satisfies \\(E\\ge0\\), \\(E(x,y)\\le kf\\), \\(E\\mathbf 1\\le k\\mathbf 1\\), and every positive entry has \\(x<y\\) in the active set \\(S'\\).",
+          "chunks": {}
+        }
+      ]
+    },
+    {
+      "paper_id": "lem:hier-column-test",
+      "informal": "If at least \\((128+4(J+1))/b_l\\) rows \\(x\\) have \\(G(x,y)\\ge2\\delta b_l\\) then \\(U(y)\\ge9/10\\); always \\((J+1)U(y)\\le\\#\\{x:G(x,y)>\\delta b_l\\}\\pi_{b_l}\\); and a positive multiplier \\(\\gamma(V_{k+1}(y))>0\\) forces \\(\\#\\{x:G_k(x,y)\\ge2\\delta f\\}\\cdot f\\le128+4(J+1)\\).",
+      "confidence": "named",
+      "note": "These three lemmas are the three bullet points of the paper lemma with the concrete thresholds \\(\\delta_1=2\\delta\\), \\(\\delta_0=\\delta\\), \\(R_*=128+4(J+1)\\), proved by the same second-moment and row-gate arguments.",
+      "decls": [
+        {
+          "module": "ProbabilityHierarchy",
+          "name": "U_heavy",
+          "informal": "If \\(S\\) is admissible, \\(G\\) satisfies the bounds with constant \\(k\\) at rate \\(b_l\\), \\(2^l\\le P\\), \\((1+32k/\\eta(\\delta))\\cdot128\\le K+1\\) and \\(128+4(J+1)\\le\\#\\{x:G(x,y)\\ge2\\delta b_l\\}\\cdot b_l\\), then \\(U(y)\\ge9/10\\).",
+          "chunks": {
+            "ProbabilityHierarchy.U_heavy/0": "Let \\(W=\\{x:G(x,y)\\ge2\\delta b_l\\}\\), \\(z_i\\) the indicator that the row gate of \\(i\\) is not full, \\(T(s)\\) the number of retained rows of \\(W\\), and \\(m=|W|\\pi_{b_l}\\).",
+            "ProbabilityHierarchy.U_heavy/1": "\\(128+4(J+1)\\le m\\) because \\(b_l\\le\\pi_{b_l}\\).",
+            "ProbabilityHierarchy.U_heavy/2": "\\(128\\le m\\).",
+            "ProbabilityHierarchy.U_heavy/3": "\\(m>0\\).",
+            "ProbabilityHierarchy.U_heavy/4": "Let \\(\\text{loss}(s,t)\\) be the number of retained rows of \\(W\\) whose gate fails, and \\(v(s,t)\\) the detector score.",
+            "ProbabilityHierarchy.U_heavy/5": "For all \\(s,t\\): \\(m^2(1-v)\\le4(T-m)^2+4m\\cdot\\text{loss}\\).",
+            "ProbabilityHierarchy.U_heavy/5/0": "Let \\(B\\) be the retained rows of \\(W\\) and \\(S_0\\subseteq B\\) those with a full row gate.",
+            "ProbabilityHierarchy.U_heavy/5/1": "\\(\\text{loss}=T-|S_0|\\).",
+            "ProbabilityHierarchy.U_heavy/5/1/0": "\\(z_i=1-\\mathbf 1\\{\\text{gate of }i\\text{ is full}\\}\\).",
+            "ProbabilityHierarchy.U_heavy/5/1/1": "Summing over retained rows gives \\(\\text{loss}=T-|S_0|\\).",
+            "ProbabilityHierarchy.U_heavy/5/2": "\\(v\\ge0\\).",
+            "ProbabilityHierarchy.U_heavy/5/3": "\\(\\text{loss}\\ge0\\).",
+            "ProbabilityHierarchy.U_heavy/5/4": "Case \\(T<m/2\\).",
+            "ProbabilityHierarchy.U_heavy/5/5": "Then \\(4(T-m)^2>m^2\\ge m^2(1-v)\\).",
+            "ProbabilityHierarchy.U_heavy/5/6": "Case \\(\\text{loss}>m/4\\).",
+            "ProbabilityHierarchy.U_heavy/5/7": "Then \\(4m\\cdot\\text{loss}>m^2\\ge m^2(1-v)\\).",
+            "ProbabilityHierarchy.U_heavy/5/8": "Otherwise \\(v\\ge1\\).",
+            "ProbabilityHierarchy.U_heavy/5/8/0": "\\(J<|S_0|\\), since \\(|S_0|=T-\\text{loss}\\ge m/4\\ge J+1\\).",
+            "ProbabilityHierarchy.U_heavy/5/8/1": "Every row of \\(S_0\\) has mark \\(1\\), so the \\(J\\)th largest mark is at least \\(1\\).",
+            "ProbabilityHierarchy.U_heavy/5/9": "In all cases the inequality holds.",
+            "ProbabilityHierarchy.U_heavy/6": "\\(U(y)=\\mathbb E_t\\mathbb E_s v(s,t)\\).",
+            "ProbabilityHierarchy.U_heavy/7": "\\(\\mathbb E\\,T=m\\).",
+            "ProbabilityHierarchy.U_heavy/8": "\\(\\mathbb E(T-m)^2\\le m\\).",
+            "ProbabilityHierarchy.U_heavy/9": "\\(\\mathbb E_t\\mathbb E_s\\,\\text{loss}\\le m/128\\).",
+            "ProbabilityHierarchy.U_heavy/9/0": "Exchange the two averages.",
+            "ProbabilityHierarchy.U_heavy/9/1": "For each \\(s\\), \\(\\mathbb E_t\\,\\text{loss}(s,t)\\le T(s)/128\\).",
+            "ProbabilityHierarchy.U_heavy/9/1/0": "Each row gate fails with conditional probability at most \\(1/128\\).",
+            "ProbabilityHierarchy.U_heavy/9/1/1": "Sum this over the \\(T(s)\\) retained rows.",
+            "ProbabilityHierarchy.U_heavy/9/2": "Average over \\(s\\) and use \\(\\mathbb E\\,T=m\\).",
+            "ProbabilityHierarchy.U_heavy/10": "Average the pointwise inequality over \\(s\\) and \\(t\\).",
+            "ProbabilityHierarchy.U_heavy/11": "This gives \\(m^2(1-U)\\le4\\mathbb E(T-m)^2+4m\\,\\mathbb E\\,\\text{loss}\\); suppose \\(U<9/10\\).",
+            "ProbabilityHierarchy.U_heavy/12": "Then \\(m^2(1-U)\\le4m+4m\\cdot m/128\\).",
+            "ProbabilityHierarchy.U_heavy/13": "Since \\(m\\ge128\\), this gives \\(1-U\\le1/16<1/10\\), a contradiction."
+          }
+        },
+        {
+          "module": "ProbabilityHierarchy",
+          "name": "U_light",
+          "informal": "\\((J+1)\\,U(y)\\le\\#\\{x:G(x,y)>\\delta b_l\\}\\cdot\\pi_{b_l}\\).",
+          "chunks": {
+            "ProbabilityHierarchy.U_light/0": "For all \\(s,t\\), \\((J+1)\\,\\text{score}(s,t)\\) is at most the number of retained rows \\(x\\) with \\(G(x,y)>\\delta b_l\\).",
+            "ProbabilityHierarchy.U_light/0/0": "The score lies in \\([0,1]\\); split into the cases score \\(=0\\) and score \\(>0\\).",
+            "ProbabilityHierarchy.U_light/0/1": "If the score is \\(0\\) the bound is trivial.",
+            "ProbabilityHierarchy.U_light/0/2": "If the score is positive, more than \\(J\\) retained rows have a positive mark.",
+            "ProbabilityHierarchy.U_light/0/3": "Hence more than \\(J\\) retained rows satisfy \\(G(x,y)>\\delta b_l\\).",
+            "ProbabilityHierarchy.U_light/0/3/0": "It suffices that each retained row with positive mark has \\(G(x,y)>\\delta b_l\\); suppose instead \\(G(x,y)\\le\\delta b_l\\).",
+            "ProbabilityHierarchy.U_light/0/3/1": "Then \\(\\text{light}(G(x,y)/b_l)=0\\).",
+            "ProbabilityHierarchy.U_light/0/3/2": "But the mark of \\(x\\) is positive.",
+            "ProbabilityHierarchy.U_light/0/3/3": "This is impossible, since the mark is \\(\\text{light}(G(x,y)/b_l)\\) times the row gate.",
+            "ProbabilityHierarchy.U_light/0/4": "So the count is at least \\(J+1\\).",
+            "ProbabilityHierarchy.U_light/0/5": "Since the score is at most \\(1\\), \\((J+1)\\,\\text{score}\\le J+1\\le\\) count.",
+            "ProbabilityHierarchy.U_light/1": "Write \\(U(y)\\) as the conditional average over \\(t\\) of the average over \\(s\\).",
+            "ProbabilityHierarchy.U_light/2": "For each \\(t\\), \\((J+1)\\,\\mathbb E_s\\,\\text{score}\\le\\#\\{x:G(x,y)>\\delta b_l\\}\\pi_{b_l}\\), using the expected retained count.",
+            "ProbabilityHierarchy.U_light/3": "Average over \\(t\\)."
+          }
+        },
+        {
+          "module": "ProbabilityHierarchy",
+          "name": "columns",
+          "informal": "If \\(S\\) is admissible, \\(C\\) satisfies the stage conditions, \\(2^i\\le P\\), \\(k<k_*\\), \\(y\\in S\\) and \\(\\gamma(V_{k+1}(y))>0\\), then \\(\\#\\{x:G_k(x,y)\\ge2\\delta f\\}\\cdot f\\le128+4(J+1)\\).",
+          "chunks": {
+            "ProbabilityHierarchy.columns/0": "Suppose instead \\(\\#\\{x:G_k(x,y)\\ge2\\delta f\\}\\cdot f>128+4(J+1)\\).",
+            "ProbabilityHierarchy.columns/1": "\\(k+1\\le k_*\\).",
+            "ProbabilityHierarchy.columns/2": "Use the choice of \\(K\\) in the constants.",
+            "ProbabilityHierarchy.columns/3": "Then the detector gives \\(U_k(y)\\ge9/10\\).",
+            "ProbabilityHierarchy.columns/4": "\\(V_{k+1}(y)\\ge U_k(y)\\).",
+            "ProbabilityHierarchy.columns/5": "So \\(V_{k+1}(y)\\ge4/5\\) and \\(\\gamma(V_{k+1}(y))=0\\).",
+            "ProbabilityHierarchy.columns/6": "This contradicts \\(\\gamma(V_{k+1}(y))>0\\)."
+          }
+        }
+      ]
+    },
+    {
+      "paper_id": "lem:hier-residual",
+      "informal": "For \\(D_T=C-E_T+E_TC\\): \\(D_T\\) is nonnegative, strictly forward and substochastic with \\(D_T(x,y)\\le(T+1)f\\) and \\(D_T\\ge Af\\) where \\(E_T>0\\); if \\(g(y)=1\\) and \\(T\\) is admissible then \\(D_T(x,y)\\le f/256\\); and \\(C+E_T+E_TC\\le(1+2T/A)D_T\\).",
+      "confidence": "named",
+      "note": "These lemmas state the three claims of the paper lemma with \\(K_*=T+1\\), \\(\\varepsilon_{\\rm good}=1/256\\) and \\(c_{\\rm dom}^{-1}=1+2T/A\\).",
+      "decls": [
+        {
+          "module": "ProbabilityHierarchy",
+          "name": "substochastic",
+          "informal": "If \\(f>0\\), \\(0\\le g\\le1\\) and \\(C\\) satisfies the stage conditions in \\(S'\\), then \\(D_t=C-E_t+E_tC\\) is nonnegative, strictly forward in \\(S'\\), has \\(D_t\\mathbf 1\\le\\mathbf 1\\) and \\(D_t(x,y)\\le(t+1)f\\), and \\(E_t(x,y)>0\\) implies \\(D_t(x,y)\\ge Af\\).",
+          "chunks": {
+            "ProbabilityHierarchy.substochastic/0": "Let \\(F=E_t\\).",
+            "ProbabilityHierarchy.substochastic/1": "\\(E_t\\) satisfies the stage bounds with constant \\(t\\).",
+            "ProbabilityHierarchy.substochastic/2": "So \\(H=C+E_tC\\) satisfies them with constant \\(t+1\\).",
+            "ProbabilityHierarchy.substochastic/3": "Let \\(H=C+E_tC\\).",
+            "ProbabilityHierarchy.substochastic/4": "\\(E_t(x,y)\\le\\max(0,H(x,y)-Af)\\).",
+            "ProbabilityHierarchy.substochastic/4/0": "\\(E_t\\le E_{t+1}\\).",
+            "ProbabilityHierarchy.substochastic/4/1": "And \\(E_{t+1}(x,y)=fQ(H(x,y)/f)g(y)\\le\\max(0,H(x,y)-Af)\\).",
+            "ProbabilityHierarchy.substochastic/5": "Let \\(D_t=C-E_t+E_tC\\).",
+            "ProbabilityHierarchy.substochastic/6": "\\(D_t(x,y)=H(x,y)-E_t(x,y)\\).",
+            "ProbabilityHierarchy.substochastic/7": "If \\(E_t(x,y)>0\\) then \\(D_t(x,y)\\ge Af\\).",
+            "ProbabilityHierarchy.substochastic/8": "The second claim is proved; it remains to show the stage bounds for \\(D_t\\).",
+            "ProbabilityHierarchy.substochastic/9": "\\(D_t\\le H\\) since \\(E_t\\ge0\\).",
+            "ProbabilityHierarchy.substochastic/10": "Check the four bound conditions.",
+            "ProbabilityHierarchy.substochastic/11": "\\(D_t\\ge0\\).",
+            "ProbabilityHierarchy.substochastic/11/0": "Fix \\(x,y\\) and split on the sign of \\(E_t(x,y)\\).",
+            "ProbabilityHierarchy.substochastic/11/1": "If \\(E_t(x,y)\\le0\\), then \\(D_t(x,y)\\ge0\\).",
+            "ProbabilityHierarchy.substochastic/11/1/0": "The goal is \\(D_t(x,y)\\ge0\\).",
+            "ProbabilityHierarchy.substochastic/11/1/1": "\\(H(x,y)\\ge0\\).",
+            "ProbabilityHierarchy.substochastic/11/1/2": "So \\(D_t(x,y)=H(x,y)-E_t(x,y)\\ge0\\).",
+            "ProbabilityHierarchy.substochastic/11/2": "If \\(E_t(x,y)\\ge0\\), split on whether it is \\(0\\).",
+            "ProbabilityHierarchy.substochastic/11/2/0": "Either \\(E_t(x,y)=0\\) or \\(E_t(x,y)>0\\).",
+            "ProbabilityHierarchy.substochastic/11/2/1": "If \\(E_t(x,y)=0\\), then \\(D_t(x,y)=H(x,y)\\ge0\\).",
+            "ProbabilityHierarchy.substochastic/11/2/2": "If \\(E_t(x,y)>0\\), then \\(D_t(x,y)\\ge Af\\ge0\\).",
+            "ProbabilityHierarchy.substochastic/12": "\\(D_t(x,y)\\le H(x,y)\\le(t+1)f\\).",
+            "ProbabilityHierarchy.substochastic/13": "\\(D_t\\mathbf 1\\le\\mathbf 1\\).",
+            "ProbabilityHierarchy.substochastic/13/0": "Fix \\(x\\).",
+            "ProbabilityHierarchy.substochastic/13/1": "\\((E_tC\\mathbf 1)(x)\\le(E_t\\mathbf 1)(x)\\) because \\(C\\mathbf 1\\le\\mathbf 1\\).",
+            "ProbabilityHierarchy.substochastic/13/2": "\\((D_t\\mathbf 1)(x)=(C\\mathbf 1)(x)+(E_tC\\mathbf 1)(x)-(E_t\\mathbf 1)(x)\\).",
+            "ProbabilityHierarchy.substochastic/13/3": "So \\((D_t\\mathbf 1)(x)\\le(C\\mathbf 1)(x)\\le1\\).",
+            "ProbabilityHierarchy.substochastic/14": "A positive entry of \\(D_t\\) is a positive entry of \\(H\\), so it is strictly forward in \\(S'\\)."
+          }
+        },
+        {
+          "module": "ProbabilityHierarchy",
+          "name": "good_col",
+          "informal": "If \\(C\\) satisfies the stage conditions, \\(0\\le g\\le1\\), \\((5/A)^T/T!\\le1/1024\\) and \\(g(y)=1\\), then \\(D_T(x,y)\\le f/256\\).",
+          "chunks": {
+            "ProbabilityHierarchy.good_col/0": "Let \\(F=E_T\\) and \\(w=(C+E_TC)(x,y)\\).",
+            "ProbabilityHierarchy.good_col/1": "\\(E_{T+1}(x,y)-E_T(x,y)\\le f(5/A)^T/T!\\le f/1024\\).",
+            "ProbabilityHierarchy.good_col/2": "Here \\(E_{T+1}(x,y)=fQ(w/f)g(y)\\), and the goal is \\(w-E_T(x,y)\\le f/256\\).",
+            "ProbabilityHierarchy.good_col/3": "\\(f(w/f-2A)\\le fQ(w/f)\\).",
+            "ProbabilityHierarchy.good_col/4": "So \\(fQ(w/f)g(y)-E_T(x,y)\\le f/1024\\).",
+            "ProbabilityHierarchy.good_col/5": "\\(f(w/f)=w\\).",
+            "ProbabilityHierarchy.good_col/6": "With \\(g(y)=1\\), \\(w-E_T(x,y)\\le2Af+f/1024\\le f/256\\)."
+          }
+        },
+        {
+          "module": "ProbabilityHierarchy",
+          "name": "cover",
+          "informal": "For every \\(T\\), \\(C(x,y)+E_T(x,y)+(E_TC)(x,y)\\le(1+2T/A)\\,D_T(x,y)\\) where \\(D_T=C-E_T+E_TC\\).",
+          "chunks": {
+            "ProbabilityHierarchy.cover/0": "Let \\(F=E_T\\) and \\(D=C-E_T+E_TC\\); the goal is \\(C+E_T+E_TC\\le(1+2T/A)D\\) at \\((x,y)\\).",
+            "ProbabilityHierarchy.cover/1": "\\(E_T(x,y)\\ge0\\).",
+            "ProbabilityHierarchy.cover/2": "\\(D\\) satisfies the residual bounds, and \\(E_T(x,y)>0\\) implies \\(D(x,y)\\ge Af\\).",
+            "ProbabilityHierarchy.cover/3": "\\(D(x,y)\\ge0\\).",
+            "ProbabilityHierarchy.cover/4": "\\(D(x,y)=C(x,y)+(E_TC)(x,y)-E_T(x,y)\\).",
+            "ProbabilityHierarchy.cover/5": "\\(E_T(x,y)\\le Tf\\).",
+            "ProbabilityHierarchy.cover/6": "Split on whether \\(E_T(x,y)=0\\) or \\(E_T(x,y)>0\\).",
+            "ProbabilityHierarchy.cover/7": "If \\(E_T(x,y)=0\\), the left side equals \\(D(x,y)\\le(1+2T/A)D(x,y)\\).",
+            "ProbabilityHierarchy.cover/8": "If \\(E_T(x,y)>0\\), then \\(D(x,y)\\ge Af\\).",
+            "ProbabilityHierarchy.cover/9": "Then \\(C+E_T+E_TC=D+2E_T\\le D+2Tf\\le D+(2T/A)D\\)."
+          }
+        }
+      ]
+    },
+    {
+      "paper_id": "prop:hier-copy-step",
+      "informal": "The copied matrix \\(C^+(x_i,y_j)=r_i(x)D(x,y)s_j(D(x,y)/f)\\) has entries \\(\\le f/16\\), satisfies \\(|\\mathcal A(C^+)|\\le2|\\mathcal A(C)|\\), and \\(C^+P^rv=P^rDv\\) for every vector \\(v\\).",
+      "confidence": "named",
+      "note": "edge_small, few_nodes and commute are the entry bound \\(C^+\\le f/q\\) with \\(q=16\\), the active-count bound, and the intertwining \\(C^+P^r=P^rD\\) (stated on vectors); strict forwardness and substochasticity are the separate lemma newGood.",
+      "decls": [
+        {
+          "module": "ProbabilityHierarchy",
+          "name": "edge_small",
+          "informal": "If \\(C\\) satisfies the stage conditions, then every entry of the copied matrix satisfies \\(C^+(x',y')\\le b_{i+1}\\).",
+          "chunks": {
+            "ProbabilityHierarchy.edge_small/0": "Write \\(C^+(x',y')=r\\cdot d\\cdot s\\) with \\(r=r_i(x)\\), \\(d=D(x,y)\\), \\(s=s_j(d/f)\\).",
+            "ProbabilityHierarchy.edge_small/1": "\\(b_{i+1}=f/16\\).",
+            "ProbabilityHierarchy.edge_small/2": "The goal is \\(r\\,d\\,s\\le f/16\\).",
+            "ProbabilityHierarchy.edge_small/3": "\\(D\\) is nonnegative with \\(D(x,y)\\le(k_*+1)f\\).",
+            "ProbabilityHierarchy.edge_small/4": "\\(d\\ge0\\).",
+            "ProbabilityHierarchy.edge_small/5": "\\(s\\ge0\\).",
+            "ProbabilityHierarchy.edge_small/6": "\\(r\\le1\\).",
+            "ProbabilityHierarchy.edge_small/7": "\\(r\\,d\\,s\\le d\\,s\\).",
+            "ProbabilityHierarchy.edge_small/8": "It suffices to show \\(d\\,s\\le f/16\\).",
+            "ProbabilityHierarchy.edge_small/9": "\\(f>0\\).",
+            "ProbabilityHierarchy.edge_small/10": "Split into the cases \\(d/f\\ge1/64\\) and \\(d/f\\le1/64\\).",
+            "ProbabilityHierarchy.edge_small/11": "If \\(d/f\\ge1/64\\), then \\(s=1/M\\).",
+            "ProbabilityHierarchy.edge_small/11/0": "Here \\(s=1/M\\) and \\(d\\le(k_*+1)f\\), so the goal is \\(d/M\\le f/16\\).",
+            "ProbabilityHierarchy.edge_small/11/1": "\\(16(k_*+1)<M\\).",
+            "ProbabilityHierarchy.edge_small/11/2": "Hence \\(d/M\\le(k_*+1)f/M<f/16\\).",
+            "ProbabilityHierarchy.edge_small/12": "If \\(d/f\\le1/64\\), the bound is immediate.",
+            "ProbabilityHierarchy.edge_small/12/0": "\\(s\\le1\\).",
+            "ProbabilityHierarchy.edge_small/12/1": "\\(d\\le f/64\\).",
+            "ProbabilityHierarchy.edge_small/12/2": "So \\(d\\,s\\le f/64\\le f/16\\)."
+          }
+        },
+        {
+          "module": "ProbabilityHierarchy",
+          "name": "few_nodes",
+          "informal": "If \\(C\\) satisfies the stage conditions and \\(2^i\\le P\\), then \\(|\\mathcal A(C^+)|\\le2|\\mathcal A(C)|\\).",
+          "chunks": {
+            "ProbabilityHierarchy.few_nodes/0": "Let \\(T=\\mathcal A(C)\\), \\(E\\) the set of active vertices (\\(V(x)>1/4\\)), and \\(A'\\) the primary copies of \\(T\\).",
+            "ProbabilityHierarchy.few_nodes/1": "\\(D\\) satisfies the residual bounds with support in \\(\\mathcal A(C)\\).",
+            "ProbabilityHierarchy.few_nodes/2": "\\(C^+(i,j)>0\\) implies \\(D(x,y)>0\\), \\(r_i(x)\\ne0\\) and \\(s_j(D(x,y)/f)\\ne0\\).",
+            "ProbabilityHierarchy.few_nodes/2/0": "Write \\(C^+(i,j)\\) as the product of the three factors, which is positive.",
+            "ProbabilityHierarchy.few_nodes/2/1": "\\(D(x,y)\\ge0\\).",
+            "ProbabilityHierarchy.few_nodes/2/2": "The product is nonzero.",
+            "ProbabilityHierarchy.few_nodes/2/3": "Hence each factor is nonzero, and \\(D(x,y)>0\\).",
+            "ProbabilityHierarchy.few_nodes/3": "\\(\\mathcal A(C^+)\\subseteq A'\\cup\\{\\text{copies of }E\\}\\).",
+            "ProbabilityHierarchy.few_nodes/3/0": "Take \\(i\\in\\mathcal A(C^+)\\) with some \\(C^+(i,y)>0\\) or \\(C^+(y,i)>0\\).",
+            "ProbabilityHierarchy.few_nodes/3/1": "The base vertex of \\(i\\) lies in \\(S\\).",
+            "ProbabilityHierarchy.few_nodes/3/2": "\\(i\\) is the copy of its base vertex with its own index.",
+            "ProbabilityHierarchy.few_nodes/3/3": "Consider the outgoing and incoming cases.",
+            "ProbabilityHierarchy.few_nodes/3/4": "Outgoing case \\(C^+(i,y)>0\\).",
+            "ProbabilityHierarchy.few_nodes/3/4/0": "Split on whether \\(i\\) is the primary copy.",
+            "ProbabilityHierarchy.few_nodes/3/4/1": "A primary \\(i\\) is the primary copy of a vertex of \\(\\mathcal A(C)\\).",
+            "ProbabilityHierarchy.few_nodes/3/4/2": "A nonprimary \\(i\\) has \\(r_i(x)\\ne0\\), which forces \\(V(x)>1/4\\), so \\(x\\) is active.",
+            "ProbabilityHierarchy.few_nodes/3/5": "Incoming case \\(C^+(y,i)>0\\).",
+            "ProbabilityHierarchy.few_nodes/3/5/0": "Split on whether \\(i\\) is the primary copy.",
+            "ProbabilityHierarchy.few_nodes/3/5/1": "A primary \\(i\\) is the primary copy of a column in \\(\\mathcal A(C)\\).",
+            "ProbabilityHierarchy.few_nodes/3/5/2": "A nonprimary \\(i\\) with nonzero routing fraction has \\(V(x)>1/2\\), so \\(x\\) is active.",
+            "ProbabilityHierarchy.few_nodes/4": "\\(|E|\\cdot M\\le|\\mathcal A(C)|\\).",
+            "ProbabilityHierarchy.few_nodes/5": "Restate this bound.",
+            "ProbabilityHierarchy.few_nodes/6": "So \\(|\\mathcal A(C^+)|\\le|A'|+M|E|\\le|T|+|T|=2|\\mathcal A(C)|\\)."
+          }
+        },
+        {
+          "module": "ProbabilityHierarchy",
+          "name": "commute",
+          "informal": "If \\(C\\) satisfies the stage conditions, then \\((C^+P^rv)(x')=(P^rDv)(x')\\) for every vector \\(v\\) and vertex \\(x'\\).",
+          "chunks": {
+            "ProbabilityHierarchy.commute/0": "Write \\(x'=x_i\\) and \\(a=r_i(x)\\).",
+            "ProbabilityHierarchy.commute/1": "For each \\(y\\), \\(\\sum_{j<M}C^+(x_i,y_j)(P^rv)(y_j)=a\\,D(x,y)\\,v(y)\\).",
+            "ProbabilityHierarchy.commute/1/0": "With \\(f_j=s_j(D(x,y)/f)\\), show each term equals \\(a\\,D(x,y)v(y)f_j\\), then sum.",
+            "ProbabilityHierarchy.commute/1/1": "Each term equals \\(a\\,D(x,y)v(y)f_j\\).",
+            "ProbabilityHierarchy.commute/1/1/0": "Fix \\(j\\).",
+            "ProbabilityHierarchy.commute/1/1/1": "\\(j<M\\).",
+            "ProbabilityHierarchy.commute/1/1/2": "The term is \\(a\\,D(x,y)f_j\\cdot r_j(y)v(y)\\); split on whether \\(f_j=0\\).",
+            "ProbabilityHierarchy.commute/1/1/3": "If \\(f_j=0\\) both sides vanish.",
+            "ProbabilityHierarchy.commute/1/1/4": "If \\(f_j\\ne0\\) then \\(r_j(y)=1\\): trivially for \\(j=0\\), and since \\(V(y)>1/2\\) otherwise.",
+            "ProbabilityHierarchy.commute/1/1/5": "So the term equals \\(a\\,D(x,y)v(y)f_j\\).",
+            "ProbabilityHierarchy.commute/1/2": "\\(\\sum_{j<M}f_j=1\\).",
+            "ProbabilityHierarchy.commute/2": "Summing over the copies \\(y_j\\) of all \\(y\\in S\\) gives \\((C^+P^rv)(x_i)=a\\,(Dv)(x)\\)."
+          }
+        }
+      ]
+    },
+    {
+      "paper_id": "rem:hier-constant-order",
+      "informal": "There exist constants \\(T,K,J,M\\) with \\(T>0\\), \\((5/A)^T/T!\\le1/1024\\), \\((1+32(T+1)/\\eta(\\delta))\\cdot128\\le K+1\\), \\(16(T+1)<M\\), and \\(64M(T+1)^2\\le\\delta(J+1)\\).",
+      "confidence": "structural",
+      "note": "The Lean constant record fixes \\(k_*=T\\) first and then \\(K\\), \\(M\\) and \\(J\\) from it, which is the ordering described in the remark.",
+      "decls": [
+        {
+          "module": "ProbabilityHierarchy",
+          "name": "Const",
+          "informal": "A constant choice is a tuple \\((T,K,J,M)\\) with \\(T>0\\), \\((5/A)^T/T!\\le1/1024\\), \\((1+32(T+1)/\\eta(\\delta))\\cdot128\\le K+1\\), \\(16(T+1)<M\\) and \\(64M(T+1)^2\\le\\delta(J+1)\\).",
+          "chunks": {}
+        },
+        {
+          "module": "ProbabilityHierarchy",
+          "name": "exists_const",
+          "informal": "Such a tuple \\((T,K,J,M)\\) exists.",
+          "chunks": {}
+        }
+      ]
+    },
+    {
+      "paper_id": "prop:hier-reward-target",
+      "informal": "Correctness (\\(C\\) a valid stage, \\(W\\ge0\\), \\(v\\in[0,1]\\), \\(v=W+Cv\\)) is preserved by the update \\(W^+=P^r(W+EW)\\), \\(v^+=P^rv\\); after \\(k\\) stages \\(|\\mathcal A(C_k)|\\le|S|2^k\\) and \\(0\\le v(x)-W_k(\\bar x_k)\\le|S|2^kb_{i+k}\\).",
+      "confidence": "named",
+      "note": "Correct.raise is the reward identity and update, and finish is the shallow-target bound \\(0\\le p_0(x)-W_l(\\bar x_l)\\le|V_0|2^lb_l\\) with \\(b_l=2^{-4l}\\); the choice \\(L=O(B)\\) is made elsewhere.",
+      "decls": [
+        {
+          "module": "ProbabilityHierarchy",
+          "name": "finish",
+          "informal": "If \\(H\\) is correct and \\(2^{i+k}\\le P\\), then \\(0\\le v(x)-W_k(\\bar x_k)\\le|S|\\,2^k\\,b_{i+k}\\), where \\(\\bar x_k\\) is the all-primary copy of \\(x\\) after \\(k\\) stages.",
+          "chunks": {
+            "ProbabilityHierarchy.finish/0": "Let \\(H_k\\) be the hierarchy after \\(k\\) stages and \\(y=\\bar x_k\\); since \\(v_k(y)=v(x)\\), work with \\(v_k(y)\\).",
+            "ProbabilityHierarchy.finish/1": "\\(H_k\\) is correct.",
+            "ProbabilityHierarchy.finish/2": "\\(v_k(y)-W_k(y)=(C_kv_k)(y)\\).",
+            "ProbabilityHierarchy.finish/3": "The goal becomes \\(0\\le(C_kv_k)(y)\\le|S|2^kb_{i+k}\\).",
+            "ProbabilityHierarchy.finish/4": "Each term \\(C_k(y,i)v_k(i)\\) is nonnegative.",
+            "ProbabilityHierarchy.finish/5": "So \\((C_kv_k)(y)\\ge0\\); now consider the active set \\(\\mathcal A(C_k)\\).",
+            "ProbabilityHierarchy.finish/6": "\\(\\mathcal A(C_k)\\) is contained in the stage domain.",
+            "ProbabilityHierarchy.finish/7": "\\(C_k\\) satisfies the stage conditions with support in \\(\\mathcal A(C_k)\\).",
+            "ProbabilityHierarchy.finish/8": "Restrict the sum to \\(\\mathcal A(C_k)\\).",
+            "ProbabilityHierarchy.finish/9": "The restricted sum is at most \\(|S|2^kb_{i+k}\\).",
+            "ProbabilityHierarchy.finish/9/0": "The stage rate is \\(b_{i+k}\\).",
+            "ProbabilityHierarchy.finish/9/1": "Since \\(C_k\\le b_{i+k}\\) and \\(v_k\\le1\\), the sum is at most \\(|\\mathcal A(C_k)|b_{i+k}\\le|S|2^kb_{i+k}\\).",
+            "ProbabilityHierarchy.finish/10": "Terms outside \\(\\mathcal A(C_k)\\) vanish.",
+            "ProbabilityHierarchy.finish/10/0": "Take \\(i\\) outside \\(\\mathcal A(C_k)\\).",
+            "ProbabilityHierarchy.finish/10/1": "Then \\(C_k(y,i)\\) is not positive.",
+            "ProbabilityHierarchy.finish/10/2": "So \\(C_k(y,i)v_k(i)=0\\)."
+          }
+        },
+        {
+          "module": "ProbabilityHierarchy",
+          "name": "Correct.raise",
+          "informal": "If \\(H\\) is correct, then the next stage \\((C^+,\\,W^+=P^r(W+EW),\\,v^+=P^rv)\\) is correct.",
+          "chunks": {
+            "ProbabilityHierarchy.Correct.raise/0": "Let \\(E=E_{k_*}\\) be the actual correction.",
+            "ProbabilityHierarchy.Correct.raise/1": "\\(E\\) satisfies the bounds with constant \\(k_*\\).",
+            "ProbabilityHierarchy.Correct.raise/2": "Prove the four correctness conditions.",
+            "ProbabilityHierarchy.Correct.raise/3": "\\(C^+\\) satisfies the stage conditions at rate \\(b_{i+1}\\).",
+            "ProbabilityHierarchy.Correct.raise/4": "\\(W^+\\ge0\\).",
+            "ProbabilityHierarchy.Correct.raise/4/0": "Fix \\(x\\).",
+            "ProbabilityHierarchy.Correct.raise/4/1": "\\(W+EW\\ge0\\).",
+            "ProbabilityHierarchy.Correct.raise/4/2": "So \\(r_i(x)(W+EW)(x)\\ge0\\).",
+            "ProbabilityHierarchy.Correct.raise/5": "\\(v^+=r_i(x)v(x)\\in[0,1]\\).",
+            "ProbabilityHierarchy.Correct.raise/6": "\\(v^+=W^++C^+v^+\\).",
+            "ProbabilityHierarchy.Correct.raise/6/0": "Let \\(W'=W+EW\\); the goal is \\(P^rv=P^rW'+C^+P^rv\\) at \\(x\\).",
+            "ProbabilityHierarchy.Correct.raise/6/1": "\\(C^+P^rv=P^rDv\\).",
+            "ProbabilityHierarchy.Correct.raise/6/2": "So it suffices that \\(r_i(x)v(x)=r_i(x)(W'+Dv)(x)\\).",
+            "ProbabilityHierarchy.Correct.raise/6/3": "\\(v=W+EW+Dv\\).",
+            "ProbabilityHierarchy.Correct.raise/6/3/0": "\\(Dv=Cv+ECv-Ev\\).",
+            "ProbabilityHierarchy.Correct.raise/6/3/1": "\\(Ev=EW+ECv\\) because \\(v=W+Cv\\).",
+            "ProbabilityHierarchy.Correct.raise/6/3/2": "Substitute this.",
+            "ProbabilityHierarchy.Correct.raise/6/3/3": "Then \\(W+EW+Dv=W+Cv=v\\).",
+            "ProbabilityHierarchy.Correct.raise/6/4": "Evaluate at the base vertex of \\(x\\).",
+            "ProbabilityHierarchy.Correct.raise/6/5": "This gives the identity."
+          }
+        },
+        {
+          "module": "ProbabilityHierarchy",
+          "name": "density",
+          "informal": "If \\(H\\) is correct and \\(2^{i+k}\\le P\\), then after \\(k\\) stages \\(|\\mathcal A(C_k)|\\le|S|\\,2^k\\).",
+          "chunks": {}
+        }
+      ]
+    }
+  ],
+  "unmapped": []
+}

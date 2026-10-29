@@ -1,0 +1,377 @@
+{
+ "section": "sec:ctrl",
+ "informal": "The Lean compiles any recursive program whose executions carry simultaneous allowance certificates into one logspace function, and certifies the contour, capped-port, score-rank, visit and catalytic-comparison programs and the allowance drops that the estimator uses.",
+ "modules": [
+  "RecursivePrograms",
+  "ContourTraversal",
+  "CatalyticComparison",
+  "EstimatorInterfaces",
+  "EstimatorInstructions",
+  "UniformEstimator"
+ ],
+ "results": [
+  {
+   "paper_id": "thm:ctrl-realization",
+   "informal": "Every certified execution of a fixed recursive program is computed by one logspace function \\(f\\) once the space bound \\(U\\) dominates \\(2^{\\text{meter}(q)}\\); raw certificates with coefficient \\(c\\) yield such executions under the meter \\(c t + c^2 w\\); and every active estimator unit satisfies its full interface contract.",
+   "confidence": "structural",
+   "note": "The top-level estimator proof (Equality.lean, delivered) obtains its machine from realization applied to the estimator program, the potential \\(\\Phi(w,t)=Aw+Dt\\) appears as the meter \\(c t+c^2 w\\) in Mane.issue, and coverage is the induction in increasing allowance that realizes all interfaces.",
+   "decls": [
+    {
+     "module": "RecursivePrograms",
+     "name": "realization",
+     "informal": "For every recursive program \\(P\\) there is a logspace-computable \\(f\\) such that \\(f(x,((U,q),a))=b\\) whenever \\(P\\) has a certified execution from \\(a\\) to \\(b\\) at tuple \\(q\\) with \\(2^{\\text{meter}(q)}\\le U\\) and \\(\\text{limit}\\le U\\).",
+     "chunks": {}
+    },
+    {
+     "module": "RecursivePrograms",
+     "name": "Mane.issue",
+     "informal": "If a program has a raw certificate with coefficient \\(c\\) at level \\(b=\\text{book}(q)\\), \\(q\\le\\text{limit}\\), and \\(\\text{meter}(x)=c\\,t_x+c^2 w_x\\) for every tuple \\(x\\), then the same execution is a certified execution with the meter budget.",
+     "chunks": {
+      "RecursivePrograms.Mane.issue/0": "Every raw state at level \\((w,t)\\) has \\(\\log\\) length at most \\(c t + c^2 w=\\text{meter}(q)\\), so it fits the meter.",
+      "RecursivePrograms.Mane.issue/1": "Every raw call boundary \\((w,t)\\to(w',t')\\) gives \\(\\ell+1+\\text{meter}(q')\\le\\text{meter}(q)\\).",
+      "RecursivePrograms.Mane.issue/1/0": "Unpack the call condition into \\(w'+d\\le w\\) and the span inequality \\(\\ell+1+c t'\\le c t+c^2(w-w')\\).",
+      "RecursivePrograms.Mane.issue/1/1": "Note that \\((w-w')+w'=w\\).",
+      "RecursivePrograms.Mane.issue/1/2": "Expanding both meters gives the required inequality \\(\\ell+1+c t'+c^2 w'\\le c t+c^2 w\\).",
+      "RecursivePrograms.Mane.issue/2": "Translate the raw execution into a metered one by induction on its instructions.",
+      "RecursivePrograms.Mane.issue/3": "A local edit is translated directly, using that both endpoints fit the meter.",
+      "RecursivePrograms.Mane.issue/4": "A call is translated using the state bounds and the call inequality, keeping the callee's certified execution.",
+      "RecursivePrograms.Mane.issue/5": "A sequence is translated componentwise.",
+      "RecursivePrograms.Mane.issue/6": "A taken branch is translated directly.",
+      "RecursivePrograms.Mane.issue/7": "An untaken branch is translated directly.",
+      "RecursivePrograms.Mane.issue/8": "A loop iteration is translated by combining the body and the remaining loop.",
+      "RecursivePrograms.Mane.issue/9": "A loop exit is translated using that the final state fits the meter."
+     }
+    },
+    {
+     "module": "UniformEstimator",
+     "name": "coverage",
+     "informal": "Every active estimator unit \\(u_0\\) satisfies its full contract \\(\\text{FullV}(u_0)\\).",
+     "chunks": {
+      "UniformEstimator.coverage/0": "By strong induction on the allowance \\(W(i)\\): if all active units of smaller allowance satisfy their contracts, then unit \\(i\\) satisfies its interface covenant, its transition-query contract, and its terminal-answer contract.",
+      "UniformEstimator.coverage/1": "Apply this to \\(u_0\\) with \\(j=W(u_0)\\)."
+     }
+    }
+   ]
+  },
+  {
+   "paper_id": "def:ctrl-record",
+   "informal": "A program can be inlined with a held record \\(o\\) so that its inner tuple is regenerated as \\(f(q,o)\\) from the outer tuple \\(q\\), and this preserves raw certificates up to fixed coefficients.",
+   "confidence": "structural",
+   "note": "The docstring of focus says the inlined program carries an inner tuple regenerated from \\(q\\) and the piece \\(o\\), which is the regenerable-record mechanism of the definition.",
+   "decls": [
+    {
+     "module": "RecursivePrograms",
+     "name": "focus",
+     "informal": "Given \\(f\\) mapping an outer tuple and a record to an inner tuple, \\(\\text{focus}_f(P)\\) runs \\(P\\) on states \\((\\langle o,a_1\\rangle,a_2)\\), recomputing the inner tuple \\(f(q,o)\\) at every instruction and branch test.",
+     "chunks": {}
+    },
+    {
+     "module": "RecursivePrograms",
+     "name": "focus_word",
+     "informal": "If \\(P\\) has a raw certificate from \\(a\\) to \\(y\\) at tuple \\(r=f(q,o)\\), level \\((w,j)\\) and coefficient \\(c\\), and \\(\\ell(o)+1+C j\\le C t+C^2 d\\), \\(d\\le w\\), \\(2C+c\\le g\\), \\(c,C\\ge1\\), then \\(\\text{focus}_f(P)\\) has a certificate from \\(\\langle o,a\\rangle\\) to \\(\\langle o,y\\rangle\\) at tuple \\(q\\), level \\((w,t)\\) and coefficient \\(g\\).",
+     "chunks": {
+      "RecursivePrograms.focus_word/0": "Each state of \\(P\\) at level \\((w,j)\\) with \\(o\\) held fits level \\((w,t)\\) with coefficient \\(g\\).",
+      "RecursivePrograms.focus_word/1": "Each call of \\(P\\) with \\(o\\) held still satisfies the call condition at level \\((w,t)\\) with coefficient \\(g\\).",
+      "RecursivePrograms.focus_word/1/0": "The held record \\(o\\) is charged against \\(d\\le w-w'\\) using the call's gap.",
+      "RecursivePrograms.focus_word/1/1": "Since \\(w'+d\\le w\\), we get \\(d\\le w-w'\\).",
+      "RecursivePrograms.focus_word/2": "Proceed by induction on the certified execution of \\(P\\).",
+      "RecursivePrograms.focus_word/3": "For a local edit, the inlined edit recomputes \\(f(q,o)=r\\) and gives the same output with \\(o\\) held.",
+      "RecursivePrograms.focus_word/4": "For a call, the inlined call computes the same child tuple and output with \\(o\\) held.",
+      "RecursivePrograms.focus_word/5": "A sequence is handled componentwise.",
+      "RecursivePrograms.focus_word/6": "A taken branch is handled since the guarded test evaluates the original test at \\(r\\).",
+      "RecursivePrograms.focus_word/7": "An untaken branch is handled in the same way.",
+      "RecursivePrograms.focus_word/8": "A loop iteration is handled since the guarded test agrees with the original one.",
+      "RecursivePrograms.focus_word/9": "A loop exit is handled since the guarded test is false and the final state fits."
+     }
+    }
+   ]
+  },
+  {
+   "paper_id": "def:ctrl-allowance",
+   "informal": "A raw certificate at level \\((w,t)\\) with coefficient \\(c\\) requires every state to satisfy \\(\\ell+1\\le c t+c^2 w\\) and every call to a callee at level \\((w',t')\\) to satisfy \\(w'+d\\le w\\) and \\(\\ell+1+c t'\\le c t+c^2(w-w')\\).",
+   "confidence": "named",
+   "note": "Lot.jump is exactly the local bound \\(w'<w\\), \\(j-t\\le a'(w-w')\\), \\(\\ell\\le a_0(w-w')+b_0(t-j)\\) combined into one linear inequality, and Lot.Mane imposes it at every call of an execution.",
+   "decls": [
+    {
+     "module": "RecursivePrograms",
+     "name": "jump",
+     "informal": "A call with suspended record \\(h\\) to tuple \\(q\\) at level \\((w',t')=\\text{book}(q)\\) from level \\((w,t)\\) is allowed iff \\(w'+d\\le w\\) and \\(\\ell(h)+1+c t'\\le c t+c^2(w-w')\\).",
+     "chunks": {}
+    },
+    {
+     "module": "RecursivePrograms",
+     "name": "Mane",
+     "informal": "\\(\\text{Mane}_{c,(w,t),d,q}(P,a,y)\\) says \\(P\\) runs from \\(a\\) to \\(y\\) at tuple \\(q\\) with every state satisfying \\(\\ell+1\\le c t+c^2 w\\) and every call satisfying the allowance condition \\(\\text{jump}\\), the callee having a certified execution.",
+     "chunks": {}
+    }
+   ]
+  },
+  {
+   "paper_id": "lem:ctrl-local-graph",
+   "informal": "A guarded path kernel defines a finite graph on (program state, cursor) pairs of outdegree at most one whose sources are determined by target and label, and its successor and predecessor probes equal local computations.",
+   "confidence": "structural",
+   "note": "Wall.twig builds the functional graph from the guarded kernel (the docstring of Bud says every guard is generated before calling a lower query), proving outdegree at most one, and auth identifies its neighbor probes with the kernel's local queries.",
+   "decls": [
+    {
+     "module": "ContourTraversal",
+     "name": "Wall.twig",
+     "informal": "A guarded kernel satisfying \\(\\text{Wall}\\) gives a graph on \\(\\text{raw}\\times\\text{cursor}\\) with edges \\(\\text{Hill}\\), in which edges respect the label ranges, each vertex has at most one successor, and an edge's source is determined by its target and its label.",
+     "chunks": {}
+    },
+    {
+     "module": "ContourTraversal",
+     "name": "auth",
+     "informal": "For a cursor \\(c\\) in the cursor set, the tree's probe in direction \\(b\\) at \\((v,c)\\) with label \\(i\\) equals the local query \\(\\text{lit}_b((v,i),c)\\) paired with \\(i\\).",
+     "chunks": {
+      "ContourTraversal.auth/0": "For every \\(w\\), the probe returns \\(w\\) iff the local query returns \\(w\\).",
+      "ContourTraversal.auth/0/0": "Split \\(w=(w_1,e)\\) and the direction \\(b\\).",
+      "ContourTraversal.auth/0/1": "For predecessor probes, reduce to the edge relation and split on whether \\(w_1=i\\).",
+      "ContourTraversal.auth/0/1/0": "Rewrite the predecessor probe as an edge into \\((v,c)\\) with label \\(i\\).",
+      "ContourTraversal.auth/0/1/1": "If \\(w_1=i\\), the edge \\((i,e)\\to(v,c)\\) holds iff the backward local query returns \\(e\\).",
+      "ContourTraversal.auth/0/1/2": "If \\(w_1\\ne i\\), both sides are false.",
+      "ContourTraversal.auth/0/2": "For successor probes, reduce to the edge relation and split on whether \\(w_1=i\\).",
+      "ContourTraversal.auth/0/2/0": "Rewrite the successor probe as an edge out of \\((v,c)\\) to label \\(i\\).",
+      "ContourTraversal.auth/0/2/1": "If \\(w_1=i\\), the edge \\((v,c)\\to(i,e)\\) holds iff the forward local query returns \\(e\\).",
+      "ContourTraversal.auth/0/2/2": "If \\(w_1\\ne i\\), both sides are false.",
+      "ContourTraversal.auth/1": "Two optional values with the same \\(\\text{some}\\) members are equal."
+     }
+    }
+   ]
+  },
+  {
+   "paper_id": "lem:ctrl-tour",
+   "informal": "In a finite tree with root \\(S\\), the marked contour positions of the root component form a duplicate-free list starting at \\((S,0)\\), visited in order by the forward contour step and in reverse order by the backward step.",
+   "confidence": "named",
+   "note": "streak gives mutually inverse next-mark and previous-mark walks on the contour of the root component, with marks including the root sentinel \\((S,0)\\), using only the local steps \\(\\text{roll}\\) and \\(\\text{fold}\\) shown inverse in forward.",
+   "decls": [
+    {
+     "module": "ContourTraversal",
+     "name": "streak",
+     "informal": "If \\(S\\in V\\) is a root and \\(m(S,0)=\\text{true}\\), there is a list \\(l\\) with \\((S,0)::l\\) duplicate-free, its members exactly the marked contour positions of the component of \\(S\\), linked from \\((S,0)\\) back to \\((S,0)\\) by forward contour steps between consecutive marks, and with \\(l\\) reversed linked by backward steps.",
+     "chunks": {
+      "ContourTraversal.streak/0": "The root position \\((S,0)\\) lies in the component of \\(S\\).",
+      "ContourTraversal.streak/1": "The forward contour orbit from \\((S,0)\\) is a cycle listing every position of the component exactly once.",
+      "ContourTraversal.streak/2": "Each step of this orbit is a forward contour move between live positions.",
+      "ContourTraversal.streak/3": "Each forward move \\(a\\to b\\) is a backward move \\(b\\to a\\).",
+      "ContourTraversal.streak/4": "Hence the reversed orbit is a chain of backward moves from \\((S,0)\\) to \\((S,0)\\).",
+      "ContourTraversal.streak/5": "The orbit is a chain of forward moves from \\((S,0)\\) to \\((S,0)\\).",
+      "ContourTraversal.streak/6": "Take the marked positions of the orbit as the list.",
+      "ContourTraversal.streak/7": "Filtering keeps the list duplicate-free.",
+      "ContourTraversal.streak/8": "Its members are exactly the marked positions of the component.",
+      "ContourTraversal.streak/8/0": "Use the description of the orbit's members.",
+      "ContourTraversal.streak/8/1": "Unfold membership in the filtered list and conclude.",
+      "ContourTraversal.streak/9": "Filtering the reversed chain gives the backward chain between consecutive marks."
+     }
+    },
+    {
+     "module": "ContourTraversal",
+     "name": "forward",
+     "informal": "If \\(x\\) is a live contour position, then \\(\\text{roll}(x)\\) is live and \\(\\text{fold}(\\text{roll}(x))=x\\).",
+     "chunks": {
+      "ContourTraversal.forward/0": "Write \\(x=(p,i)\\) with \\(p\\in V\\), \\(i\\le\\text{rad}(p)\\), and split on \\(i<\\text{rad}(p)\\).",
+      "ContourTraversal.forward/1": "If \\(i<\\text{rad}(p)\\), stepping to the next child slot or descending to child \\(i\\) is undone by \\(\\text{fold}\\).",
+      "ContourTraversal.forward/2": "If \\(i=\\text{rad}(p)\\), returning to the parent (or the root wrap) is undone by \\(\\text{fold}\\)."
+     }
+    }
+   ]
+  },
+  {
+   "paper_id": "lem:ctrl-cap",
+   "informal": "On a root contour circuit with other marks \\(l\\), the program \\(\\text{dune}\\) moves from the root to the \\(i\\)th mark when \\(|l|\\le k\\) and \\(1\\le i\\le|l|\\), and the program \\(\\text{surf}\\) moves from a mark back to the root with inverse port \\(|a|+1\\) when \\(|l|\\le k\\), failing otherwise.",
+   "confidence": "structural",
+   "note": "These are the capped paired motions of the lemma: the endpoint's incoming entries are the contour marks, the cap is \\(k\\), and the ports are positions \\(1,\\dots,k\\) in the contour order.",
+   "decls": [
+    {
+     "module": "ContourTraversal",
+     "name": "chose",
+     "informal": "If the root \\(x\\) has contour circuit with marks \\(l\\), then \\(\\text{dune}(k,i,\\text{yes},\\text{bad})\\) runs from \\(x\\) to \\(u\\), provided \\(\\text{yes}\\) reaches \\(u\\) from the \\(i\\)th mark \\(v\\) (\\(l=a\\,v\\,b\\), \\(i=|a|+1\\)) when \\(|l|\\le k\\) and \\(0<i\\le|l|\\), and \\(\\text{bad}\\) reaches \\(u\\) from \\(x\\) otherwise.",
+     "chunks": {
+      "ContourTraversal.chose/0": "Reduce to the counting traversal, whose continuation receives \\(\\min(|l|,k+1)\\).",
+      "ContourTraversal.chose/1": "Case \\(|l|\\le k\\) and \\(0<i\\le|l|\\).",
+      "ContourTraversal.chose/1/0": "Enter this case.",
+      "ContourTraversal.chose/1/1": "Walk \\(i\\) forward steps along the circuit to the \\(i\\)th mark and continue with \\(\\text{yes}\\).",
+      "ContourTraversal.chose/2": "Otherwise continue with \\(\\text{bad}\\) from \\(x\\)."
+     }
+    },
+    {
+     "module": "ContourTraversal",
+     "name": "climbed",
+     "informal": "If the root \\(x\\) has contour circuit with marks \\(l=a\\,i\\,b\\), then \\(\\text{surf}(k,y,\\text{bad})\\) runs from mark \\(i\\) to \\(u\\), provided \\(y(|a|+1)\\) reaches \\(u\\) from \\(x\\) when \\(|l|\\le k\\), and \\(\\text{bad}\\) reaches \\(u\\) from \\(i\\) when \\(k<|l|\\).",
+     "chunks": {
+      "ContourTraversal.climbed/0": "Substitute \\(l=a\\,i\\,b\\).",
+      "ContourTraversal.climbed/1": "Split the circuit at mark \\(i\\) into a part before and after it.",
+      "ContourTraversal.climbed/2": "From \\(i\\), the circuit's remaining part reaches the root in \\(|b|+1\\) steps.",
+      "ContourTraversal.climbed/3": "Walk forward to the root, counting \\(|b|+1\\) steps when at most \\(k\\).",
+      "ContourTraversal.climbed/4": "Case: the root is reached within the bound.",
+      "ContourTraversal.climbed/4/0": "At the root, run the counting traversal and split on \\(|l|\\le k\\).",
+      "ContourTraversal.climbed/4/1": "Subcase \\(|l|\\le k\\).",
+      "ContourTraversal.climbed/4/1/0": "Enter this subcase.",
+      "ContourTraversal.climbed/4/1/1": "Here \\(|l|\\le k\\).",
+      "ContourTraversal.climbed/4/1/2": "So \\(y(|a|+1)\\) reaches \\(u\\) from \\(x\\).",
+      "ContourTraversal.climbed/4/1/3": "It remains to match the computed index with \\(|a|+1\\).",
+      "ContourTraversal.climbed/4/1/4": "Indeed \\(\\min(|l|,k+1)+1-(|b|+1)=|a|+1\\).",
+      "ContourTraversal.climbed/4/1/5": "Substitute this index.",
+      "ContourTraversal.climbed/4/2": "Subcase \\(k<|l|\\).",
+      "ContourTraversal.climbed/4/2/0": "Enter this subcase.",
+      "ContourTraversal.climbed/4/2/1": "Here \\(k<|l|\\).",
+      "ContourTraversal.climbed/4/2/2": "Walking back \\(|b|+1\\) steps from the root returns to \\(i\\), where \\(\\text{bad}\\) reaches \\(u\\).",
+      "ContourTraversal.climbed/4/2/3": "Conclude this subcase.",
+      "ContourTraversal.climbed/5": "If the root is not reached within the bound, then \\(k<|l|\\) and \\(\\text{bad}\\) runs from \\(i\\)."
+     }
+    }
+   ]
+  },
+  {
+   "paper_id": "lem:ctrl-score-rank",
+   "informal": "The track program computes the place-\\(t\\) digit of the incoming score rank with a raw certificate at level \\((W(u),t)\\) that restores the catalyst word, and these digits approximate the \\(k\\)th-largest incoming score value within \\(2\\) at every place \\(t\\le H\\).",
+   "confidence": "structural",
+   "note": "scoreRank is the rank (\\(k\\)th largest, zero padded) of the incoming scores and digit certifies its digit computation at clock \\(t\\) with bounded overshoot, matching the lemma's exact redundant digits and record bound.",
+   "decls": [
+    {
+     "module": "EstimatorInterfaces",
+     "name": "digit",
+     "informal": "For \\(t\\le H\\), \\(x\\in P\\) and a proper catalyst \\(b\\), the track program runs from \\((0,\\text{glove}(b,x))\\) to \\((\\text{code}(\\text{scoreTape}_x(t)),\\text{glove}(b,x))\\) with a raw certificate of coefficient \\(\\text{Bcost}\\), level \\((W(u),t)\\) and gap \\(1\\).",
+     "chunks": {
+      "EstimatorInterfaces.digit/0": "Fix the contour invocation \\(q\\) at precision \\(t\\) and catalyst \\(b\\).",
+      "EstimatorInterfaces.digit/1": "It has \\(t+1\\) steps, its circuits are well formed, and it is tidy.",
+      "EstimatorInterfaces.digit/2": "Each threshold label \\(2^t+i\\) with \\(i\\le 2^t\\) has admissible size.",
+      "EstimatorInterfaces.digit/3": "For each threshold \\(i\\le 2^t\\) there is a contour list of incoming entries.",
+      "EstimatorInterfaces.digit/3/0": "Split on \\(i\\le 2^t\\).",
+      "EstimatorInterfaces.digit/3/1": "If so, the contour traversal supplies such a list.",
+      "EstimatorInterfaces.digit/3/2": "Otherwise take the empty list.",
+      "EstimatorInterfaces.digit/4": "Choose these lists and assemble the rank traversal data with the score digits and the cap \\(k\\).",
+      "EstimatorInterfaces.digit/5": "Its offset equals \\(2^t\\).",
+      "EstimatorInterfaces.digit/6": "The traversal data are well formed.",
+      "EstimatorInterfaces.digit/6/0": "Check the required fields one by one.",
+      "EstimatorInterfaces.digit/6/1": "Each threshold has its contour list.",
+      "EstimatorInterfaces.digit/6/2": "Each list length equals the number of incoming digits equal to that threshold.",
+      "EstimatorInterfaces.digit/6/3": "The thresholds stay within the bound.",
+      "EstimatorInterfaces.digit/7": "The invocation's level is \\((W(u),t)\\).",
+      "EstimatorInterfaces.digit/8": "Rewrite the level accordingly.",
+      "EstimatorInterfaces.digit/9": "The coefficient \\(\\text{Bcost}\\) equals the traversal's cost.",
+      "EstimatorInterfaces.digit/10": "The traversal computes \\(\\text{code}(\\text{rank}_k)\\) with this certificate."
+     }
+    },
+    {
+     "module": "EstimatorInterfaces",
+     "name": "estimated",
+     "informal": "The score tape is a checked approximation: \\(|\\text{scoreRank}(c)|\\le1\\) and \\(|\\text{scoreTape}_c(t)-2^t\\,\\text{scoreRank}(c)|\\le2\\) for all \\(t\\le H\\), where \\(\\text{scoreRank}(c)\\) is the \\(k\\)th-largest incoming score.",
+     "chunks": {
+      "EstimatorInterfaces.estimated/0": "Let \\(X\\) be the set of incoming entries of \\(c\\).",
+      "EstimatorInterfaces.estimated/1": "Each entry of \\(X\\) has a nonnegative score \\(V_0(i)\\) with checked digits up to \\(H\\).",
+      "EstimatorInterfaces.estimated/2": "Hence the rank satisfies \\(|\\text{scoreRank}(c)|\\le1\\).",
+      "EstimatorInterfaces.estimated/3": "It remains to bound the error at each \\(t\\le H\\).",
+      "EstimatorInterfaces.estimated/4": "Since rank is \\(1\\)-Lipschitz in the sup norm and each digit is within \\(2\\) of \\(2^t V_0(i)\\), the integer rank is within \\(2\\) of \\(2^t\\,\\text{scoreRank}(c)\\).",
+      "EstimatorInterfaces.estimated/5": "This is the claimed bound for \\(\\text{scoreTape}_c(t)\\)."
+     }
+    }
+   ]
+  },
+  {
+   "paper_id": "lem:ctrl-paths",
+   "informal": "A visit program consisting of a selection query, a forward paired probe, an optional single delegation or local label map, and a backward probe has a raw certificate with \\(O(d)\\) record at level \\((w,0)\\).",
+   "confidence": "structural",
+   "note": "The docstring of Vase describes a visit whose single optional subterminal path is delegated, with pure actions compiled at leaves, and arrives certifies exactly this ordered form.",
+   "decls": [
+    {
+     "module": "CatalyticComparison",
+     "name": "arrives",
+     "informal": "If \\(k\\ge4\\), \\(1\\le d\\le w\\), the selection returns \\(h_0\\ne0\\), the records \\(h_0,i\\) have \\(\\ell\\le kd\\), the forward probe moves \\(x\\) to \\(y\\), then either the delegation (when chosen) or the local map gives \\((i,z)\\) from \\(y\\), and the backward probe moves \\(z\\) to \\(w\\), with all calls affordable, then \\(\\text{play}\\) runs from \\((0,x)\\) to \\((i,w)\\) with a certificate of coefficient \\(10k\\) at level \\((w,0)\\) and gap \\(d\\).",
+     "chunks": {
+      "CatalyticComparison.arrives/0": "The records \\(h_0\\) and \\(\\langle h_0,i\\rangle\\) have length at most \\(6kd\\).",
+      "CatalyticComparison.arrives/1": "The state \\((h_0,y)\\) fits the level.",
+      "CatalyticComparison.arrives/2": "The state \\((\\langle h_0,i\\rangle,z)\\) fits the level.",
+      "CatalyticComparison.arrives/3": "The forward probe from \\((h_0,x)\\) to \\((h_0,y)\\) is certified.",
+      "CatalyticComparison.arrives/4": "The middle step from \\((h_0,y)\\) to \\((\\langle h_0,i\\rangle,z)\\) is certified.",
+      "CatalyticComparison.arrives/4/0": "Split on whether the delegation is chosen.",
+      "CatalyticComparison.arrives/4/1": "If not, the local label map computes \\((i,z)\\) as one edit.",
+      "CatalyticComparison.arrives/4/2": "If so, the single delegated call returns \\((i,z)\\) within its allowance.",
+      "CatalyticComparison.arrives/5": "Chain the selection, the nonzero test, the forward probe, the middle step and the backward probe call.",
+      "CatalyticComparison.arrives/6": "The backward probe call receives the correct tuple.",
+      "CatalyticComparison.arrives/7": "The final output is \\((i,w)\\)."
+     }
+    }
+   ]
+  },
+  {
+   "paper_id": "lem:ctrl-equality",
+   "informal": "Two identifiers \\(x,y\\le\\text{peak}\\) are compared by four catalytic bit tests that branch to the yes-continuation iff \\(x=y\\), starting from an arbitrary proper catalyst \\(v\\) and without storing \\(x\\) or \\(y\\).",
+   "confidence": "structural",
+   "note": "The module section is titled deterministic catalytic ID comparisons, and done0 gives a restoring equality test whose answer does not depend on the catalyst contents \\(v\\).",
+   "decls": [
+    {
+     "module": "CatalyticComparison",
+     "name": "done0",
+     "informal": "For a proper catalyst \\(v\\) and \\(x,y\\le\\text{peak}\\), if \\(y_1\\) reaches \\(c\\) from \\(v\\) when \\(x=y\\) and \\(n\\) reaches \\(c\\) from \\(v\\) when \\(x\\ne y\\), then the four-round test \\(\\text{nexts}(4,y_1,n)\\) reaches \\(c\\) from \\(v\\).",
+     "chunks": {
+      "CatalyticComparison.done0/0": "By the catalytic criterion, \\(x=y\\) iff all four bit tests succeed.",
+      "CatalyticComparison.done0/1": "Run the four rounds: if all succeed, \\(x=y\\) and \\(y_1\\) runs, and if some round fails, \\(x\\ne y\\) and \\(n\\) runs."
+     }
+    },
+    {
+     "module": "CatalyticComparison",
+     "name": "learned",
+     "informal": "For \\(x,y\\le\\text{peak}\\) and a proper catalyst \\(v\\), \\(x=y\\) iff for all \\(i<4\\), flipping bit \\(i\\) of \\(v\\) changes the tested bit of \\(\\text{fair}(x,y,\\cdot)\\) at position \\(i\\).",
+     "chunks": {
+      "CatalyticComparison.learned/0": "Each bit test succeeds iff digit \\(i\\) of the transformed catalyst is unchanged.",
+      "CatalyticComparison.learned/1": "Since the transformed catalyst is unchanged iff \\(x=y\\), reduce to comparing digits.",
+      "CatalyticComparison.learned/2": "If \\(x=y\\), all digits agree.",
+      "CatalyticComparison.learned/3": "If the first four digits agree, the transformed catalyst equals \\(v\\), so \\(x=y\\)."
+     }
+    }
+   ]
+  },
+  {
+   "paper_id": "lem:ctrl-recipes",
+   "informal": "With allowance \\(w=128(n+1)-(64-i)d\\), where \\(d\\) is the prefix slack, each permitted descent (to a lower stratum at the same slack, to the preceding prefix of slack \\(2d\\), or to a budget \\(m\\le n-d\\)) lowers the allowance by at least \\(d\\).",
+   "confidence": "structural",
+   "note": "weight is the allowance formula \\(K_1(1+M)-(K_0+s_0)d\\) with \\(K_1=128\\) and slack \\(d=2^{L(n)-1-j}\\), and these three lemmas are the allowance drops for the call types that the recipe lemma permits.",
+   "decls": [
+    {
+     "module": "EstimatorInstructions",
+     "name": "oldpay",
+     "informal": "If \\(j+1<L(n)\\) and \\(a,b\\le5\\), then \\(\\text{weight}(n,b,j)+d(n,a,j+1)\\le\\text{weight}(n,a,j+1)\\): moving to the preceding prefix of slack \\(2d\\) lowers the allowance by at least \\(d\\).",
+     "chunks": {
+      "EstimatorInstructions.oldpay/0": "Use \\(\\text{weight}+(64-\\text{role})\\cdot\\text{slack}=128(n+1)\\) at both positions.",
+      "EstimatorInstructions.oldpay/1": "Both slacks are gaps, and the gap at \\(j\\) is twice the gap at \\(j+1\\).",
+      "EstimatorInstructions.oldpay/2": "Since \\(a,b\\le5\\), \\(64-a+1\\le2(64-b)\\).",
+      "EstimatorInstructions.oldpay/3": "Combine these to get the inequality."
+     }
+    },
+    {
+     "module": "EstimatorInstructions",
+     "name": "renewal",
+     "informal": "If \\(m+d(n,a,i)\\le n\\), then \\(\\text{weight}(m,b,j)+d(n,a,i)\\le\\text{weight}(n,a,i)\\): descending to a budget \\(m\\le n-d\\) lowers the allowance by at least \\(d\\).",
+     "chunks": {
+      "EstimatorInstructions.renewal/0": "\\(\\text{weight}(n,a,i)+(64-a)\\,d(n,a,i)=128(n+1)\\).",
+      "EstimatorInstructions.renewal/1": "\\(\\text{weight}(m,b,j)+(64-b)\\,d(m,b,j)=128(m+1)\\).",
+      "EstimatorInstructions.renewal/2": "\\((64-a)\\,d(n,a,i)\\le64\\,d(n,a,i)\\).",
+      "EstimatorInstructions.renewal/3": "Combine these linear facts."
+     }
+    },
+    {
+     "module": "EstimatorInstructions",
+     "name": "sooner",
+     "informal": "If \\(d(n,a,i)=d(n,j,k)\\), \\(a<j\\) and \\(j\\le64\\), then \\(\\text{weight}(n,a,i)+d(n,j,k)\\le\\text{weight}(n,j,k)\\): a call to an earlier stratum at the same slack lowers the allowance by at least \\(d\\).",
+     "chunks": {
+      "EstimatorInstructions.sooner/0": "\\(\\text{weight}(n,a,i)+(64-a)\\,d(n,a,i)=128(n+1)\\).",
+      "EstimatorInstructions.sooner/1": "Replace \\(d(n,a,i)\\) by the equal slack \\(d(n,j,k)\\).",
+      "EstimatorInstructions.sooner/2": "\\(\\text{weight}(n,j,k)+(64-j)\\,d(n,j,k)=128(n+1)\\).",
+      "EstimatorInstructions.sooner/3": "Since \\(a<j\\le64\\), \\(64-j+1\\le64-a\\).",
+      "EstimatorInstructions.sooner/4": "Combine these to get the inequality."
+     }
+    }
+   ]
+  }
+ ],
+ "unmapped": [
+  {
+   "paper_id": "lem:ctrl-replay",
+   "reason": "Salt visibility and parameter replay are not stated separately in Lean; tuples are recomputed by the program's logspace functions."
+  },
+  {
+   "paper_id": "rem:ctrl-effective-environment",
+   "reason": "Explanatory remark with no separate Lean counterpart."
+  }
+ ]
+}

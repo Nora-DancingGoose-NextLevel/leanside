@@ -1,0 +1,314 @@
+{
+  "section": "sec:atom",
+  "informal": "The Lean defines the bin functions, the normalized row tables with row gate, incoming gate and clipped denominator, proves the exact conditional-mean identity \\(\\mathbb E[\\text{atom}\\mid X_u(x)=Y_t(y)=1]=f(d_y)g_0(y)\\), the support and exposure bounds for arbitrary raw rows, and the fourth-root comparison bounds used for assembly.",
+  "modules": [
+    "ProbabilityAtoms",
+    "EstimatorOperations",
+    "ProbabilityHierarchy"
+  ],
+  "results": [
+    {
+      "paper_id": "lem:atom-dense",
+      "informal": "The bin weights telescope, \\(\\sum_{j\\le k}x\\,\\omega_j(x)=x\\,\\chi(x/b_k)\\), and the clipped routed bin function satisfies \\(b_k\\,k^{(i)}_{b_k}(x/b_k)=x\\,\\omega_k(x)\\,s_i(x/b_l)\\) for every true input \\(x\\le(k_*+1)b_l\\).",
+      "confidence": "structural",
+      "note": "These lemmas establish the bin partition and that the clipped routed bin reproduces \\(G\\omega_k(G)s_j\\) at truth; the conditional-mean identity itself is the general atom identity normalized_mean (mapped under Lemma 5.3) applied to this bin function.",
+      "decls": [
+        {
+          "module": "ProbabilityAtoms",
+          "name": "bexact",
+          "informal": "If \\(x\\le(k_*+1)b_l\\), then \\(b_k\\cdot k^{(i)}_{b_k}(x/b_k)=x\\,\\omega_k(x)\\cdot s_i(x/b_l)\\), where \\(k^{(i)}\\) is the top-clipped bin function with routing fraction \\(s_i\\) (\\(s_{\\rm none}=1\\)).",
+          "chunks": {
+            "ProbabilityAtoms.bexact/0": "Let \\(d=x/b_k\\) and first consider \\(d\\le1/2\\).",
+            "ProbabilityAtoms.bexact/1": "If \\(d\\le1/2\\), both sides are \\(0\\).",
+            "ProbabilityAtoms.bexact/2": "Otherwise split on \\(d\\le\\text{cap}\\), where \\(\\text{cap}=k_*+32\\).",
+            "ProbabilityAtoms.bexact/3": "Case \\(1/2\\le d\\le\\text{cap}\\).",
+            "ProbabilityAtoms.bexact/3/0": "The clip does nothing: \\(\\operatorname{clip}_{[1/2,\\text{cap}]}(d)=d\\).",
+            "ProbabilityAtoms.bexact/3/1": "Then \\(b_k\\cdot d\\,\\omega_k(b_kd)\\,s_i(b_kd/b_l)=x\\,\\omega_k(x)\\,s_i(x/b_l)\\).",
+            "ProbabilityAtoms.bexact/4": "Case \\(d\\ge\\text{cap}\\).",
+            "ProbabilityAtoms.bexact/4/0": "\\(k_*+1<\\text{cap}\\).",
+            "ProbabilityAtoms.bexact/4/1": "\\(k\\ne0\\).",
+            "ProbabilityAtoms.bexact/4/1/0": "Suppose \\(k=0\\).",
+            "ProbabilityAtoms.bexact/4/1/1": "\\(b_l\\le1\\).",
+            "ProbabilityAtoms.bexact/4/1/2": "Then \\(d=x\\) since \\(b_0=1\\).",
+            "ProbabilityAtoms.bexact/4/1/3": "So \\(\\text{cap}\\le x\\le(k_*+1)b_l<\\text{cap}\\), a contradiction.",
+            "ProbabilityAtoms.bexact/4/2": "The right side is \\(0\\), since \\(d\\ge16\\) and \\(k\\ne0\\) give \\(\\omega_k(x)=0\\).",
+            "ProbabilityAtoms.bexact/4/3": "The clip gives \\(\\operatorname{clip}_{[1/2,\\text{cap}]}(d)=\\text{cap}\\).",
+            "ProbabilityAtoms.bexact/4/4": "The left side is also \\(0\\), since \\(\\text{cap}\\ge16\\)."
+          }
+        },
+        {
+          "module": "ProbabilityAtoms",
+          "name": "telescope",
+          "informal": "\\(\\sum_{j=0}^{k}x\\,\\omega_j(x)=x\\,\\chi(x/b_k)\\), where \\(\\omega_0(w)=\\chi(w)\\) and \\(\\omega_j(w)=\\chi(w/b_j)-\\chi(w/b_{j-1})\\).",
+          "chunks": {}
+        }
+      ]
+    },
+    {
+      "paper_id": "lem:hier-bin-products",
+      "informal": "If \\(C\\) satisfies the stage bounds with constant \\(1\\) and \\(F\\) with constant \\(k\\), then \\(C+FC\\) is nonnegative, strictly forward in \\(S'\\), with entries \\(\\le(k+1)f\\) and row sums \\(\\le k+1\\).",
+      "confidence": "structural",
+      "note": "Lean has no separate lemma for a general fine matrix \\(A_b\\); the bounds \\((FA)\\mathbf 1\\le F\\mathbf 1\\) and \\((FA)(x,y)\\le f\\sum_zF(x,z)\\) appear inside data_bounds for \\(A=C\\), which is the argument of the paper lemma.",
+      "decls": [
+        {
+          "module": "ProbabilityHierarchy",
+          "name": "data_bounds",
+          "informal": "If \\(C\\) satisfies the stage bounds with constant \\(1\\), \\(F\\) satisfies them with constant \\(k\\), and \\(f>0\\), then \\(C+FC\\) is nonnegative, has entries \\(\\le(k+1)f\\), row sums \\(\\le k+1\\), and strictly forward support in \\(S'\\).",
+          "chunks": {
+            "ProbabilityHierarchy.data_bounds/0": "\\((FC)(x,y)\\ge0\\).",
+            "ProbabilityHierarchy.data_bounds/1": "Check the four conditions.",
+            "ProbabilityHierarchy.data_bounds/2": "\\(C+FC\\ge0\\).",
+            "ProbabilityHierarchy.data_bounds/3": "Entry bound \\((C+FC)(x,y)\\le(k+1)f\\).",
+            "ProbabilityHierarchy.data_bounds/3/0": "Fix \\(x,y\\).",
+            "ProbabilityHierarchy.data_bounds/3/1": "\\((FC)(x,y)\\le(F\\mathbf 1)(x)\\cdot f\\).",
+            "ProbabilityHierarchy.data_bounds/3/2": "\\((F\\mathbf 1)(x)\\le k\\).",
+            "ProbabilityHierarchy.data_bounds/3/3": "So \\(C(x,y)+(FC)(x,y)\\le f+kf\\).",
+            "ProbabilityHierarchy.data_bounds/4": "Row bound \\((C+FC)\\mathbf 1\\le k+1\\).",
+            "ProbabilityHierarchy.data_bounds/4/0": "Fix \\(x\\).",
+            "ProbabilityHierarchy.data_bounds/4/1": "\\((FC\\mathbf 1)(x)\\le(F\\mathbf 1)(x)\\) because \\(C\\mathbf 1\\le\\mathbf 1\\).",
+            "ProbabilityHierarchy.data_bounds/4/2": "So \\((C\\mathbf 1)(x)+(FC\\mathbf 1)(x)\\le1+k\\).",
+            "ProbabilityHierarchy.data_bounds/5": "Forward support of \\(C+FC\\).",
+            "ProbabilityHierarchy.data_bounds/5/0": "Assume \\((C+FC)(x,y)>0\\) and split on whether \\(C(x,y)>0\\).",
+            "ProbabilityHierarchy.data_bounds/5/1": "If \\(C(x,y)>0\\), use the support of \\(C\\).",
+            "ProbabilityHierarchy.data_bounds/5/2": "Otherwise \\(C(x,y)=0\\).",
+            "ProbabilityHierarchy.data_bounds/5/3": "Then \\((FC)(x,y)>0\\).",
+            "ProbabilityHierarchy.data_bounds/5/4": "So some \\(z\\in S\\) has \\(F(x,z)C(z,y)>0\\).",
+            "ProbabilityHierarchy.data_bounds/5/5": "Hence \\(F(x,z)>0\\) and \\(C(z,y)>0\\).",
+            "ProbabilityHierarchy.data_bounds/5/6": "So \\(x,y\\in S'\\) and \\(x<z<y\\)."
+          }
+        }
+      ]
+    },
+    {
+      "paper_id": "lem:atom-correction",
+      "informal": "Under the task conditions, for any \\(f\\) vanishing on \\((-\\infty,\\vartheta]\\), \\(\\mathbb E[\\,\\cdot\\mid X_u(x)=Y_t(y)=1]\\) of the normalized atom \\(\\mathbf 1_{\\{Y_t(y)=1\\}}f(d_y)RT_y\\,g_0(y)/c(q_y)\\) equals \\(f(d_y)g_0(y)\\), with no condition when \\(g_0(y)=0\\); the row and incoming gates each fail with conditional probability \\(\\le1/128\\).",
+      "confidence": "named",
+      "note": "normalized_mean is the exact conditional-mean identity with zero multipliers allowed, proved by showing \\(q_y=\\mathbb E[RT_y\\mid\\cdot]\\ge1/2\\) from row_fail and col_fail; Lean's lower bound is \\(1/2\\) rather than \\(3/4\\).",
+      "decls": [
+        {
+          "module": "ProbabilityAtoms",
+          "name": "normalized_mean",
+          "informal": "If the task is valid, \\(x,y\\in S\\), and \\(f(d)=0\\) for \\(d\\le\\vartheta\\), then \\(\\mathbb E[\\,\\cdot\\mid X_u(x)=Y_t(y)=1]\\) of the normalized atom equals \\(f(d_y)\\,g_0(y)\\).",
+          "chunks": {
+            "ProbabilityAtoms.normalized_mean/0": "Let \\(b=R\\,T_y\\) be the product of the row and incoming gates, \\(w=q_y\\) the preparatory conditional mean, and \\(p=\\mathbb E[b\\mid\\cdot]\\).",
+            "ProbabilityAtoms.normalized_mean/1": "The conditional mean of the atom equals \\(p\\cdot f(d_y)g_0(y)/c(w)\\).",
+            "ProbabilityAtoms.normalized_mean/2": "Substitute this; first consider \\(f(d_y)=0\\).",
+            "ProbabilityAtoms.normalized_mean/3": "If \\(f(d_y)=0\\) both sides are \\(0\\).",
+            "ProbabilityAtoms.normalized_mean/4": "Next consider \\(g_0(y)=0\\).",
+            "ProbabilityAtoms.normalized_mean/5": "If \\(g_0(y)=0\\) both sides are \\(0\\).",
+            "ProbabilityAtoms.normalized_mean/6": "\\(w=p\\).",
+            "ProbabilityAtoms.normalized_mean/6/0": "The preparatory factor is \\(h(d_y)=1\\).",
+            "ProbabilityAtoms.normalized_mean/6/0/0": "\\(d_y>\\vartheta\\), since \\(f(d_y)\\ne0\\).",
+            "ProbabilityAtoms.normalized_mean/6/0/1": "\\(\\vartheta\\ge\\delta>0\\).",
+            "ProbabilityAtoms.normalized_mean/6/0/2": "Hence \\(d_y\\ge3\\vartheta/4\\) and \\(h(d_y)=1\\).",
+            "ProbabilityAtoms.normalized_mean/6/1": "On the two hits the preparatory table equals \\(h(d_y)R\\,T_y=b\\), so \\(w=p\\).",
+            "ProbabilityAtoms.normalized_mean/7": "\\(p\\ge1/2\\).",
+            "ProbabilityAtoms.normalized_mean/7/0": "Let \\(v(t)\\) indicate that the row gate is not full.",
+            "ProbabilityAtoms.normalized_mean/7/1": "\\(1-v-\\mathbf 1\\{T_y\\ne1\\}\\le b\\) pointwise.",
+            "ProbabilityAtoms.normalized_mean/7/1/0": "Both gates lie in \\([0,1]\\).",
+            "ProbabilityAtoms.normalized_mean/7/1/1": "\\(b\\ge0\\).",
+            "ProbabilityAtoms.normalized_mean/7/1/2": "If both gates are full then \\(b=1\\); otherwise the left side is \\(\\le0\\).",
+            "ProbabilityAtoms.normalized_mean/7/2": "Let \\(u\\) be the conditional mean of \\(1-v-\\mathbf 1\\{T_y\\ne1\\}\\).",
+            "ProbabilityAtoms.normalized_mean/7/3": "\\(u\\le p\\).",
+            "ProbabilityAtoms.normalized_mean/7/4": "The row gate fails with conditional probability \\(\\le1/128\\).",
+            "ProbabilityAtoms.normalized_mean/7/5": "For each terminal sample the incoming gate fails with conditional probability \\(\\le1/128\\).",
+            "ProbabilityAtoms.normalized_mean/7/6": "\\(u\\ge1/2\\).",
+            "ProbabilityAtoms.normalized_mean/7/6/0": "Exchange the averages and split the mean by linearity.",
+            "ProbabilityAtoms.normalized_mean/7/6/1": "The averaged incoming-gate failure is \\(\\le1/128\\).",
+            "ProbabilityAtoms.normalized_mean/7/6/2": "So \\(u\\ge1-2/128\\ge1/2\\).",
+            "ProbabilityAtoms.normalized_mean/7/7": "Hence \\(p\\ge u\\ge1/2\\).",
+            "ProbabilityAtoms.normalized_mean/8": "\\(w\\le1\\).",
+            "ProbabilityAtoms.normalized_mean/9": "Restate \\(w\\le1\\).",
+            "ProbabilityAtoms.normalized_mean/10": "The clipped denominator is exact: \\(c(w)=p\\).",
+            "ProbabilityAtoms.normalized_mean/10/0": "\\(\\zeta/2\\le\\zeta p\\).",
+            "ProbabilityAtoms.normalized_mean/10/1": "\\(\\zeta w\\le\\zeta\\).",
+            "ProbabilityAtoms.normalized_mean/10/2": "So the clip of \\(\\zeta w\\) to \\([\\zeta/2,\\zeta]\\) is \\(\\zeta p\\).",
+            "ProbabilityAtoms.normalized_mean/11": "Therefore \\(p\\cdot f(d_y)g_0(y)/p=f(d_y)g_0(y)\\)."
+          }
+        },
+        {
+          "module": "ProbabilityAtoms",
+          "name": "col_fail",
+          "informal": "If the task is valid, \\(x,y\\in S\\) and \\(g_0(y)\\ne0\\), then for every terminal sample \\(\\mathbb E[\\mathbf 1\\{T_y\\ne1\\}\\mid X_u(x)=1]\\le1/128\\).",
+          "chunks": {
+            "ProbabilityAtoms.col_fail/0": "Split on whether the task is sparse (has an incoming gate).",
+            "ProbabilityAtoms.col_fail/1": "Sparse case.",
+            "ProbabilityAtoms.col_fail/1/0": "Then \\(\\vartheta=A\\), \\(a\\le u\\), and the column-support bound holds; let \\(W=\\{x':G(x',y)\\ge2\\delta b_a\\}\\).",
+            "ProbabilityAtoms.col_fail/1/1": "\\(|W|\\,b_a\\le128+4(J+1)\\) because \\(g_0(y)\\ne0\\).",
+            "ProbabilityAtoms.col_fail/1/2": "For each source sample, \\((K_c+1)\\mathbf 1\\{T_y\\ne1\\}\\) is at most the number of retained sources in \\(W\\).",
+            "ProbabilityAtoms.col_fail/1/2/0": "Split on whether \\(T_y=1\\).",
+            "ProbabilityAtoms.col_fail/1/2/1": "If \\(T_y=1\\) the bound is trivial.",
+            "ProbabilityAtoms.col_fail/1/2/2": "If \\(T_y\\ne1\\), the \\(K_c\\)th incoming rank exceeds \\(1/4\\), so more than \\(K_c\\) retained sources have witness \\(>1/4\\), and each such source lies in \\(W\\).",
+            "ProbabilityAtoms.col_fail/1/3": "Conditional on \\(X_u(x)=1\\), the expected retained count of \\(W\\) is \\(\\le1+32|W|b_u\\).",
+            "ProbabilityAtoms.col_fail/1/4": "So \\((K_c+1)\\,\\mathbb E[\\mathbf 1\\{T_y\\ne1\\}\\mid\\cdot]\\le\\mathbb E[\\text{count}\\mid\\cdot]\\).",
+            "ProbabilityAtoms.col_fail/1/5": "\\(b_u\\le b_a\\).",
+            "ProbabilityAtoms.col_fail/1/6": "\\((1+32(128+4(J+1)))\\cdot128\\le K_c+1\\).",
+            "ProbabilityAtoms.col_fail/1/7": "\\(1+32|W|b_u\\le1+32(128+4(J+1))\\).",
+            "ProbabilityAtoms.col_fail/1/8": "Dividing by \\(K_c+1\\) gives the bound \\(1/128\\).",
+            "ProbabilityAtoms.col_fail/2": "Non-sparse case: \\(T_y=1\\) always, so the failure probability is \\(0\\)."
+          }
+        },
+        {
+          "module": "ProbabilityAtoms",
+          "name": "row_fail",
+          "informal": "If the task is valid and \\(y\\in S\\), then the row gate of \\(x\\) fails with \\(\\mathbb E[\\cdot\\mid Y_t(y)=1]\\le1/128\\).",
+          "chunks": {
+            "ProbabilityAtoms.row_fail/0": "Use the choice of \\(K\\) in the constants.",
+            "ProbabilityAtoms.row_fail/1": "\\(\\delta\\le\\vartheta\\).",
+            "ProbabilityAtoms.row_fail/2": "Apply the general row-gate failure bound; it remains to check \\((1+32(k_*+1)/\\eta(\\vartheta))\\cdot128\\le K+1\\).",
+            "ProbabilityAtoms.row_fail/3": "\\(\\eta(\\vartheta)>0\\).",
+            "ProbabilityAtoms.row_fail/4": "\\(\\eta(\\delta)>0\\).",
+            "ProbabilityAtoms.row_fail/5": "Since \\(\\eta(\\vartheta)\\ge\\eta(\\delta)\\), the condition follows from the one for \\(\\delta\\)."
+          }
+        }
+      ]
+    },
+    {
+      "paper_id": "lem:atom-margins",
+      "informal": "For any raw row \\(v\\) (no accuracy assumption), a row function \\(f_1(v_y)f_2(\\rho)f_3(\\cdot)\\) vanishing for \\(v_y\\le\\vartheta/8\\) or \\(\\rho\\ge\\vartheta/40\\) has at most \\(K\\) nonzero entries; every nonzero main entry lies in the exposed class computed from approximations within \\(\\vartheta/10^4\\), and the witness \\(I_\\vartheta\\) equals \\(1\\) on that class.",
+      "confidence": "named",
+      "note": "These three lemmas give the support bound, the containment of the main support in an exposed class, and \\(I=1\\) on that class, for arbitrary real raw arrays; Lean's bound is \\(K\\) rather than \\(K-1\\).",
+      "decls": [
+        {
+          "module": "ProbabilityAtoms",
+          "name": "support_size",
+          "informal": "If the row function satisfies the support thresholds at \\(\\vartheta>0\\), then for any raw row the number of \\(y\\in S\\) with nonzero value is at most \\(K\\).",
+          "chunks": {
+            "ProbabilityAtoms.support_size/0": "It suffices that each nonzero entry has first signal \\(>\\vartheta/8\\) while the \\(K\\)th rank is \\(<\\vartheta/40\\).",
+            "ProbabilityAtoms.support_size/1": "A nonzero entry has first signal \\(>\\vartheta/8\\), since otherwise the start factor vanishes.",
+            "ProbabilityAtoms.support_size/2": "And the rank is \\(<\\vartheta/40\\), since otherwise the row factor vanishes."
+          }
+        },
+        {
+          "module": "ProbabilityAtoms",
+          "name": "exposed_main",
+          "informal": "If the approximations are within \\(\\vartheta/10^4\\) of the raw row, \\(f\\) vanishes on \\((-\\infty,\\vartheta/2]\\), and the main entry at \\(y\\) is nonzero, then \\(y\\) lies in the exposed main class.",
+          "chunks": {
+            "ProbabilityAtoms.exposed_main/0": "The first signal exceeds \\(\\vartheta/2\\), since otherwise \\(f\\) vanishes.",
+            "ProbabilityAtoms.exposed_main/1": "The rank is below \\(2\\eta(\\vartheta)\\), since otherwise the row gate vanishes.",
+            "ProbabilityAtoms.exposed_main/2": "With the approximation error \\(\\le\\vartheta/10^4\\), the approximate first signal exceeds \\(5\\vartheta/12\\) and the approximate rank is below \\(35\\vartheta/10^4\\), so \\(y\\) is exposed."
+          }
+        },
+        {
+          "module": "ProbabilityAtoms",
+          "name": "protects",
+          "informal": "If the approximations are within \\(\\vartheta/10^4\\) of the raw row and \\(y\\) is in the exposed class, then the witness value at \\(y\\) equals \\(1\\).",
+          "chunks": {}
+        }
+      ]
+    },
+    {
+      "paper_id": "lem:atom-ports",
+      "informal": "For row tables on the retained source and terminal sets: each pre-incoming row has at most \\(K\\) nonzero entries, every exposed entry has witness \\(1\\), and every nonzero main output at \\((x,y)\\) lies in the bounded paired class of \\(x\\) (exposed and, for sparse tasks, with incoming count \\(\\le K_c\\)).",
+      "confidence": "structural",
+      "note": "These lemmas give the bounded row support, the witness-equals-one property and the containment of outputs in the bounded access class, which are the core clauses of the port contract; the remaining clauses are spread over other Grid lemmas.",
+      "decls": [
+        {
+          "module": "ProbabilityAtoms",
+          "name": "pre_count",
+          "informal": "If the row function satisfies the support thresholds at \\(\\vartheta>0\\), then for every source \\(x\\) and set \\(A\\), at most \\(K\\) entries \\(y\\in A\\) of the pre-incoming row of \\(x\\) are nonzero.",
+          "chunks": {
+            "ProbabilityAtoms.pre_count/0": "It suffices that each nonzero entry is a nonzero entry of the row of \\(x\\) over the terminal set, which has at most \\(K\\) of them.",
+            "ProbabilityAtoms.pre_count/1": "A nonzero pre-incoming entry has \\(y\\) in the terminal set and a nonzero row value.",
+            "ProbabilityAtoms.pre_count/2": "Otherwise the entry is \\(0\\)."
+          }
+        },
+        {
+          "module": "ProbabilityAtoms",
+          "name": "protect",
+          "informal": "If the approximations agree with the raw rows and \\(y\\) is in the exposed class of \\(x\\), then the witness table at \\((x,y)\\) equals \\(1\\).",
+          "chunks": {}
+        },
+        {
+          "module": "ProbabilityAtoms",
+          "name": "nonzero_present",
+          "informal": "If the approximations agree with the raw rows, \\(f\\) vanishes on \\((-\\infty,\\vartheta/2]\\), and the main output at \\((x,y)\\) is nonzero, then \\(y\\) belongs to the paired class of \\(x\\).",
+          "chunks": {
+            "ProbabilityAtoms.nonzero_present/0": "The output is the pre-incoming value times the incoming gate times \\(g_0(y)\\).",
+            "ProbabilityAtoms.nonzero_present/1": "Since the pre-incoming value is nonzero, \\(y\\) is in the exposed class of \\(x\\).",
+            "ProbabilityAtoms.nonzero_present/2": "Split on whether the task is sparse.",
+            "ProbabilityAtoms.nonzero_present/3": "Sparse case: the incoming count of \\(y\\) must be \\(\\le K_c\\).",
+            "ProbabilityAtoms.nonzero_present/3/0": "It remains to show the incoming count of \\(y\\) is \\(\\le K_c\\).",
+            "ProbabilityAtoms.nonzero_present/3/1": "Suppose more than \\(K_c\\) sources expose \\(y\\).",
+            "ProbabilityAtoms.nonzero_present/3/2": "Each of them has witness \\(1\\), so the \\(K_c\\)th incoming rank is \\(\\ge1\\).",
+            "ProbabilityAtoms.nonzero_present/3/3": "Then \\(T_y=0\\), so the output is \\(0\\), a contradiction.",
+            "ProbabilityAtoms.nonzero_present/4": "Non-sparse case: the paired class is the exposed class."
+          }
+        }
+      ]
+    },
+    {
+      "paper_id": "lem:atom-assembly",
+      "informal": "For two versions of a sparse normalized output \\(H=PTg\\), \\(H'=P'T'g'\\) with \\(\\mathfrak d(P,P')\\le r\\) and \\(\\mathfrak d(I,I')\\le r\\), \\(\\mathfrak d(H,H')\\le r+C^3(1+2K_c)(4JC^9r+\\rho_{u,a}\\|g-g'\\|)\\); and the column order statistics satisfy \\(\\rho_{u,a}\\|\\operatorname{rk}_K(p)-\\operatorname{rk}_K(q)\\|\\le\\|p-q\\|\\).",
+      "confidence": "structural",
+      "note": "sealed is the sparse assembly comparison and rank_fee the detector order-statistic comparison, stated with fourth-root norms and a linear (not \\(s\\)th-power) combination, and with the multiplier error measured directly by \\(\\|g-g'\\|\\).",
+      "decls": [
+        {
+          "module": "EstimatorOperations",
+          "name": "sealed",
+          "informal": "If both outputs have incoming degree \\(\\le K_c\\), the pre-incoming tables satisfy \\(\\mathfrak d(P,P')\\le r\\), the witness tables satisfy \\(\\mathfrak d(I,I')\\le r\\), \\(g,g'\\in[0,1]\\) and the cutoff of \\(T\\) has \\(J\\)-Lipschitz fourth root, then \\(\\mathfrak d(H,H')\\le r+C^3(1+2K_c)\\bigl(4JC^9r+\\rho_{u,a}\\|g-g'\\|\\bigr)\\).",
+          "chunks": {
+            "EstimatorOperations.sealed/0": "Name the outputs \\(H,H'\\), the pre-incoming tables \\(P,P'\\), the witness tables \\(I,I'\\), \\(M=K_c\\), \\(K=1+2M\\), and the set of positions where \\(H\\) or \\(H'\\) is nonzero.",
+            "EstimatorOperations.sealed/1": "\\(C\\ge1\\).",
+            "EstimatorOperations.sealed/2": "\\(C^3\\ge0\\).",
+            "EstimatorOperations.sealed/3": "\\(K\\ge0\\).",
+            "EstimatorOperations.sealed/4": "For each sample and column \\(y\\), at most \\(2M\\) sources lie in that set.",
+            "EstimatorOperations.sealed/4/0": "Let \\(A\\) and \\(B\\) be the sources where \\(H\\) and \\(H'\\) are nonzero.",
+            "EstimatorOperations.sealed/4/1": "The set is contained in \\(A\\cup B\\).",
+            "EstimatorOperations.sealed/4/1/0": "A position in the set has \\(H\\ne0\\) or \\(H'\\ne0\\).",
+            "EstimatorOperations.sealed/4/1/1": "If \\(H\\ne0\\) it lies in \\(A\\).",
+            "EstimatorOperations.sealed/4/1/2": "If \\(H'\\ne0\\) it lies in \\(B\\).",
+            "EstimatorOperations.sealed/4/2": "\\(|A|\\le M\\).",
+            "EstimatorOperations.sealed/4/3": "\\(|B|\\le M\\).",
+            "EstimatorOperations.sealed/4/4": "So the count is \\(\\le2M\\).",
+            "EstimatorOperations.sealed/5": "Let \\(a=|P^{1/4}-P'^{1/4}|\\), \\(\\Delta\\rho\\) the difference of incoming ranks, \\(g_1=J|\\Delta\\rho|\\), \\(c=|g-g'|\\), and spread \\(g_1\\) and \\(c\\) over the nonzero positions.",
+            "EstimatorOperations.sealed/6": "Pointwise \\(|H^{1/4}-H'^{1/4}|\\le a+C^3(\\text{spread }g_1+\\text{spread }c)\\).",
+            "EstimatorOperations.sealed/6/0": "Split on whether the position is in the nonzero set.",
+            "EstimatorOperations.sealed/6/1": "On the nonzero set the three-factor product estimate applies.",
+            "EstimatorOperations.sealed/6/1/0": "Let \\(T,T'\\) be the incoming gates at \\(y\\).",
+            "EstimatorOperations.sealed/6/1/1": "\\(|T^{1/4}-T'^{1/4}|\\le J|\\Delta\\rho|\\), since \\(T\\) is the cutoff of the incoming rank.",
+            "EstimatorOperations.sealed/6/1/2": "With \\(P^{1/4}\\le C^3\\) and \\(T,g\\in[0,1]\\), \\(|H^{1/4}-H'^{1/4}|\\le a+C^3(J|\\Delta\\rho|+|g-g'|)\\).",
+            "EstimatorOperations.sealed/6/2": "Off the set, \\(H=0\\).",
+            "EstimatorOperations.sealed/6/3": "Off the set, \\(H'=0\\).",
+            "EstimatorOperations.sealed/6/4": "So the left side is \\(0\\).",
+            "EstimatorOperations.sealed/7": "\\(\\|a\\|\\le r\\).",
+            "EstimatorOperations.sealed/8": "Let \\(\\|\\cdot\\|\\) be the start-domain norm and \\(\\rho_{u,a}\\) the rate ratio.",
+            "EstimatorOperations.sealed/9": "\\(\\rho_{u,a}\\ge0\\).",
+            "EstimatorOperations.sealed/10": "The spread of \\(c\\) has norm \\(\\le K\\rho_{u,a}\\|g-g'\\|\\).",
+            "EstimatorOperations.sealed/10/0": "Spreading over at most \\(2M\\) sources per column costs a factor \\(1+2M\\).",
+            "EstimatorOperations.sealed/10/1": "\\(\\|\\,|g-g'|\\,\\|=\\|g-g'\\|\\).",
+            "EstimatorOperations.sealed/10/2": "Substitute.",
+            "EstimatorOperations.sealed/11": "The spread of \\(g_1\\) has norm \\(\\le K\\cdot4JC^9r\\).",
+            "EstimatorOperations.sealed/11/0": "Spreading costs a factor \\(K\\rho_{u,a}\\).",
+            "EstimatorOperations.sealed/11/1": "\\(\\|g_1\\|=J\\|\\Delta\\rho\\|\\).",
+            "EstimatorOperations.sealed/11/2": "\\(\\rho_{u,a}\\|\\Delta\\rho\\|\\le\\|I-I'\\|\\) by the order-statistic comparison.",
+            "EstimatorOperations.sealed/11/3": "\\(\\|I-I'\\|\\le4C^9\\,\\mathfrak d(I,I')\\).",
+            "EstimatorOperations.sealed/11/4": "So \\(\\rho_{u,a}\\|\\Delta\\rho\\|\\le4C^9r\\).",
+            "EstimatorOperations.sealed/11/5": "Chain the spreading bound.",
+            "EstimatorOperations.sealed/11/6": "Multiply by \\(KJ\\).",
+            "EstimatorOperations.sealed/11/7": "Conclude.",
+            "EstimatorOperations.sealed/12": "By monotonicity and the triangle inequality, \\(\\mathfrak d(H,H')\\le\\|a\\|+C^3\\|\\text{spreads}\\|\\).",
+            "EstimatorOperations.sealed/13": "The norm of the sum of the spreads is at most the sum of their norms.",
+            "EstimatorOperations.sealed/14": "Combine the bounds."
+          }
+        },
+        {
+          "module": "EstimatorOperations",
+          "name": "rank_fee",
+          "informal": "If \\(a\\le u\\), then \\(\\rho_{u,a}\\,\\|\\operatorname{rk}_K(p)-\\operatorname{rk}_K(q)\\|\\le\\|p-q\\|\\), where \\(\\operatorname{rk}_K\\) is the \\(K\\)th largest entry of a column over retained sources.",
+          "chunks": {
+            "EstimatorOperations.rank_fee/0": "Name the rank difference and the table difference.",
+            "EstimatorOperations.rank_fee/1": "\\(\\rho_{u,a}\\ge0\\).",
+            "EstimatorOperations.rank_fee/2": "Compare fourth powers sample by sample, using \\((\\operatorname{rk}_Kp-\\operatorname{rk}_Kq)^4\\le\\sum_x(p(x,y)-q(x,y))^4\\)."
+          }
+        }
+      ]
+    }
+  ],
+  "unmapped": [
+    {
+      "paper_id": "rem:atom-finite-ranks",
+      "reason": "The observation about ranks of arrays with a common default is not stated separately in Lean."
+    }
+  ]
+}

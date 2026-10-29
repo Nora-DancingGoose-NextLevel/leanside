@@ -1,0 +1,112 @@
+{
+  "section": "sec:conclusion",
+  "informal": "The Lean builds one logspace-computable deterministic estimator \\(f\\) within \\(1/32\\) of the normalized estimator value on every sampling environment, and shows that its conditional average at the start is within \\(1/8\\) of \\(p_{\\mathcal M}(x)\\).",
+  "modules": [
+    "Equality",
+    "ProbabilityDecision",
+    "FiniteFieldPrograms"
+  ],
+  "results": [
+    {
+      "paper_id": "thm:fixed-precision",
+      "informal": "There is a uniformly logspace-computable \\(f\\) whose normalized output is within \\(1/32\\) of the estimator value \\(\\bar W(z)\\) on every environment, and then the conditional average of the outputs over environments with \\(X_f(z)=1\\) is within \\(1/8\\) of \\(p_{\\mathcal M}(x)\\).",
+      "confidence": "structural",
+      "note": "Lean proves only a fixed constant accuracy (\\(1/8\\) for the conditional average) sufficient for bounded-error decisions, rather than accuracy \\((n+2)^{-d}\\) for every fixed \\(d\\).",
+      "decls": [
+        {
+          "module": "Equality",
+          "name": "fixed_precision_estimator",
+          "informal": "For admissible constants with \\(B\\ge6\\) and error budget \\(\\le2^{B}\\), and a machine with the logarithmic space bound, there is a uniformly logspace-computable \\(f\\) with \\(|\\min(64,f(x,s))/64-\\bar W_s(z)|\\le1/32\\) for every input \\(x\\) and every sampling environment \\(s\\).",
+          "chunks": {
+            "Equality.fixed_precision_estimator/0": "Obtain the finite estimator program \\(p\\) with its instruction parameters \\(v\\) and level \\(k\\), meeting the resource contracts for precision exponent \\(6\\).",
+            "Equality.fixed_precision_estimator/1": "These data, together with the admissibility of every input under \\(B\\ge6\\) and error budget \\(\\le2^{B}\\), satisfy the sanity conditions of the estimator.",
+            "Equality.fixed_precision_estimator/2": "Sane estimator data under the logarithmic space bound yield a uniformly logspace-computable \\(f\\) with \\(|\\min(64,f(x,s))/64-\\bar W_s(z)|\\le1/32\\) for all \\(x\\) and \\(s\\)."
+          }
+        },
+        {
+          "module": "ProbabilityDecision",
+          "name": "probes",
+          "informal": "If \\(|f(s)-\\bar W_s(z)|\\le1/32\\) for every environment \\(s\\) with \\(X_f(z)=1\\), then \\(|p_{\\mathcal M}(x)-\\mathbb E[f\\mid X_f(z)=1]|<1/8\\).",
+          "chunks": {
+            "ProbabilityDecision.probes/0": "Replace \\(p_{\\mathcal M}(x)\\) by the true value \\(p_0(x_0)\\) at the start vertex.",
+            "ProbabilityDecision.probes/1": "\\(|p_0(x_0)-W(z)|\\le1/32\\) for the deterministic hierarchy value \\(W(z)\\), and \\(|W(z)-\\mathbb E[\\bar W(z)\\mid X_f(z)=1]|\\le1/32\\).",
+            "ProbabilityDecision.probes/2": "Averaging the hypothesis gives \\(|\\mathbb E[f\\mid X_f(z)=1]-\\mathbb E[\\bar W(z)\\mid X_f(z)=1]|\\le1/32\\).",
+            "ProbabilityDecision.probes/3": "Adding the three errors gives \\(|p_0(x_0)-\\mathbb E[f\\mid X_f(z)=1]|\\le3/32<1/8\\)."
+          }
+        }
+      ]
+    },
+    {
+      "paper_id": "lem:final-majority",
+      "informal": "For every environment-indexed vector \\(F\\), \\(|\\mathbb E[F(z)\\mid X_f(z)=1]|\\le N\\|F\\|_4\\), and hence \\(|W(z)-\\mathbb E[\\bar W(z)\\mid X_f(z)=1]|\\le1/32\\).",
+      "confidence": "structural",
+      "note": "Like the paper, Lean keeps only the summand at the specified start and pays a factor \\(N\\), but it bounds the conditional mean via the fourth-moment integrated norm instead of an eighth-moment Markov tail bound.",
+      "decls": [
+        {
+          "module": "ProbabilityDecision",
+          "name": "designate",
+          "informal": "For every environment-indexed vector \\(F\\), \\(|\\mathbb E[F(z)\\mid X_f(z)=1]|\\le N\\|F\\|_4\\), where \\(\\|F\\|_4\\) is the integrated fourth-root norm at the top stage.",
+          "chunks": {
+            "ProbabilityDecision.designate/0": "Write \\(\\pi\\) for the selection probability, \\(N\\) for the stage size, \\(z\\) for the start child, and \\(k=\\mathbb E[F(z)\\mid X_f(z)=1]\\).",
+            "ProbabilityDecision.designate/1": "The rate exponent of the top stage is \\(B\\).",
+            "ProbabilityDecision.designate/2": "\\(2^{B}\\le n\\), the size of the prime field.",
+            "ProbabilityDecision.designate/2/0": "Rewrite the exponent as \\(B\\).",
+            "ProbabilityDecision.designate/2/1": "The stage setup holds.",
+            "ProbabilityDecision.designate/2/2": "The field-size bound of the setup applies because \\(B\\) is below the ceiling.",
+            "ProbabilityDecision.designate/3": "\\(z\\) is a vertex of the top stage.",
+            "ProbabilityDecision.designate/4": "\\(k^4\\le\\mathbb E[F(z)^4\\mid X_f(z)=1]\\).",
+            "ProbabilityDecision.designate/5": "\\(N\\ge1\\).",
+            "ProbabilityDecision.designate/6": "Every conditional fourth moment \\(\\mathbb E[F(i)^4\\mid X_f(i)=1]\\) is nonnegative.",
+            "ProbabilityDecision.designate/7": "The nominal rate \\(2^{-HB}\\) is positive.",
+            "ProbabilityDecision.designate/8": "The nominal rate is at most \\(\\pi\\).",
+            "ProbabilityDecision.designate/9": "Let \\(u=(N\\cdot 2^{-HB})^{-1}\\) be the normalization of the integrated norm.",
+            "ProbabilityDecision.designate/10": "\\(u\\,\\pi\\,k^4\\le\\|F\\|_4^4\\), by keeping only the nonnegative summand at \\(z\\) in \\(\\|F\\|_4^4=u\\sum_i\\pi\\,\\mathbb E[F(i)^4\\mid X_f(i)=1]\\).",
+            "ProbabilityDecision.designate/11": "\\(N\\cdot2^{-HB}>0\\).",
+            "ProbabilityDecision.designate/12": "\\(N\\,u\\,\\pi\\,k^4\\ge k^4\\).",
+            "ProbabilityDecision.designate/12/0": "\\(N>0\\).",
+            "ProbabilityDecision.designate/12/1": "Since \\(u=(N2^{-HB})^{-1}\\) and \\(\\pi\\ge2^{-HB}\\), \\(Nu\\pi\\ge1\\).",
+            "ProbabilityDecision.designate/13": "The goal is \\(|k|\\le N\\|F\\|_4\\).",
+            "ProbabilityDecision.designate/14": "\\(\\|F\\|_4\\ge0\\).",
+            "ProbabilityDecision.designate/15": "It suffices to prove \\(k^4\\le N^4\\|F\\|_4^4\\).",
+            "ProbabilityDecision.designate/16": "\\(N\\le N^4\\).",
+            "ProbabilityDecision.designate/17": "Chain \\(k^4\\le N\\cdot u\\pi k^4\\le N\\|F\\|_4^4\\le N^4\\|F\\|_4^4\\)."
+          }
+        },
+        {
+          "module": "ProbabilityDecision",
+          "name": "designate_est",
+          "informal": "\\(|W(z)-\\mathbb E[\\bar W(z)\\mid X_f(z)=1]|\\le1/32\\), where \\(W\\) is the deterministic hierarchy value and \\(\\bar W\\) the estimator value.",
+          "chunks": {
+            "ProbabilityDecision.designate_est/0": "The stage setup holds.",
+            "ProbabilityDecision.designate_est/1": "The integrated error estimate holds for the estimator at the top budget.",
+            "ProbabilityDecision.designate_est/2": "In particular \\(\\|\\bar W-W\\|_4\\) is at most the allowed error at the top level.",
+            "ProbabilityDecision.designate_est/3": "Let \\(F=W-\\bar W\\) as an environment-indexed vector.",
+            "ProbabilityDecision.designate_est/4": "Apply the single-vertex bound to \\(F\\): \\(|\\mathbb E[F(z)\\mid X_f(z)=1]|\\le N\\|F\\|_4\\).",
+            "ProbabilityDecision.designate_est/5": "The conditional mean of the difference is the difference of conditional means.",
+            "ProbabilityDecision.designate_est/6": "The conditional mean of the deterministic \\(W\\) is \\(W\\) itself.",
+            "ProbabilityDecision.designate_est/7": "So it suffices to bound \\(N\\|W-\\bar W\\|_4\\le1/32\\).",
+            "ProbabilityDecision.designate_est/8": "\\(N\\|W-\\bar W\\|_4\\le N\\cdot\\text{allowance}\\).",
+            "ProbabilityDecision.designate_est/9": "The allowance equals \\(\\delta(D)\\,\\delta(B)^2\\), where \\(D\\) is the density exponent.",
+            "ProbabilityDecision.designate_est/10": "\\(N=2^{D}\\).",
+            "ProbabilityDecision.designate_est/11": "Substitute \\(N=2^{D}\\).",
+            "ProbabilityDecision.designate_est/12": "\\(2^{D}\\cdot c\\,\\delta(D)\\delta(B)^2=c\\,\\delta(B)^2\\) for the budget constant \\(c\\).",
+            "ProbabilityDecision.designate_est/12/0": "\\(2^{D}\\delta(D)=1\\).",
+            "ProbabilityDecision.designate_est/12/1": "Multiply out to get the identity.",
+            "ProbabilityDecision.designate_est/13": "So the bound is \\(c\\,\\delta(B)^2\\).",
+            "ProbabilityDecision.designate_est/14": "Since \\(c\\le2^{B}\\) and \\(2^{B}\\delta(B)=1\\), \\(c\\,\\delta(B)^2\\le\\delta(B)\\le1/32\\) for \\(B\\ge6\\)."
+          }
+        }
+      ]
+    }
+  ],
+  "unmapped": [
+    {
+      "paper_id": "cor:promise-bpl",
+      "reason": "Promise classes are not defined in the Lean library; only language classes are formalized."
+    },
+    {
+      "paper_id": "cor:certified-search",
+      "reason": "Constructing accepting computations or witnesses is not formalized in Lean."
+    }
+  ]
+}

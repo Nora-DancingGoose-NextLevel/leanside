@@ -1,0 +1,23 @@
+{
+  "name": "leanside",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Recursive Granularity: natural-language proofs, Lean code, and informalizations side by side, with recursively unfoldable granularity.",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "highlight.js": "11.11.1",
+    "highlightjs-lean": "1.2.0",
+    "katex": "0.16.25",
+    "react": "19.2.0",
+    "react-dom": "19.2.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "5.0.4",
+    "vite": "7.1.9"
+  }
+}

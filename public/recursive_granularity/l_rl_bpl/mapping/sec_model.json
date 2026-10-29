@@ -1,0 +1,88 @@
+{
+  "section": "sec:model",
+  "informal": "The Lean builds the time-labelled configuration graph of a clocked randomized machine and shows its transition matrix \\(S\\) is strictly forward and substochastic with bounded in-degree, and that \\(p_0=e+Sp_0\\in[0,1]^{V_0}\\) has \\(p_0(x_0)\\) equal to the acceptance probability.",
+  "modules": [
+    "ConfigurationGraph",
+    "ProbabilityDecision"
+  ],
+  "results": [
+    {
+      "paper_id": "lem:model-reduction",
+      "informal": "For the configuration graph on \\(V_0\\) with coin-averaged matrix \\(S\\), reward \\(e\\) and start \\(x_0\\), \\(S\\) is strictly forward substochastic with bounded in-degree, \\(p_0=e+Sp_0\\) with \\(p_0\\in[0,1]^{V_0}\\), and \\(p_0(x_0)=p_{\\mathcal M}(x)\\).",
+      "confidence": "structural",
+      "note": "These lemmas prove the three listed properties of the configuration reduction for the Lean graph, but the logarithmic-space computability of ports and weights is handled elsewhere and \\(p_0\\) is given as a bounded recursion rather than \\((I-S)^{-1}e\\).",
+      "decls": [
+        {
+          "module": "ProbabilityDecision",
+          "name": "honestly",
+          "informal": "The data \\((S,e,p_0)\\) of the configuration graph form a correct hierarchy level: \\(S\\) is strictly forward and substochastic, \\(e\\ge0\\), \\(p_0\\in[0,1]^{V_0}\\) and \\(p_0=e+Sp_0\\).",
+          "chunks": {
+            "ProbabilityDecision.honestly/0": "Split correctness into four goals: the step conditions on \\(S\\), \\(e\\ge0\\), \\(p_0\\in[0,1]\\), and \\(p_0=e+Sp_0\\).",
+            "ProbabilityDecision.honestly/1": "\\(S\\) is nonnegative, has entries \\(\\le1\\), has row sums \\(\\le1\\), and every positive entry \\(S(i,j)\\) has \\(i,j\\in V_0\\) and \\(i<j\\).",
+            "ProbabilityDecision.honestly/1/0": "Prove the step conditions on \\(S\\) one at a time.",
+            "ProbabilityDecision.honestly/1/1": "\\(S(i,j)\\ge0\\).",
+            "ProbabilityDecision.honestly/1/2": "\\(S(i,j)\\le 1\\), which is the rate bound at level \\(0\\).",
+            "ProbabilityDecision.honestly/1/3": "\\(\\sum_{j\\in V_0}S(i,j)\\le1\\).",
+            "ProbabilityDecision.honestly/1/4": "Assume \\(S(i,j)>0\\).",
+            "ProbabilityDecision.honestly/1/5": "Then one of the two coin moves from \\(i\\) leads to \\(j\\).",
+            "ProbabilityDecision.honestly/1/6": "A coin move from \\(i\\) to \\(j\\) gives \\(i,j\\in V_0\\) and \\(i<j\\).",
+            "ProbabilityDecision.honestly/1/7": "Apply this to whichever coin move leads to \\(j\\).",
+            "ProbabilityDecision.honestly/2": "\\(e(i)\\in\\{0,1\\}\\), so \\(e(i)\\ge0\\).",
+            "ProbabilityDecision.honestly/3": "\\(0\\le p_0(i)\\le1\\).",
+            "ProbabilityDecision.honestly/3/0": "The bounded recursion for \\(p_0\\) stays in \\([0,1]\\).",
+            "ProbabilityDecision.honestly/3/1": "Hence \\(0\\le p_0(i)\\le1\\).",
+            "ProbabilityDecision.honestly/4": "Prove \\(p_0=e+Sp_0\\) coordinatewise.",
+            "ProbabilityDecision.honestly/5": "\\(p_0(i)\\) equals \\(e(i)\\) plus the average of \\(p_0\\) over the two coin moves from \\(i\\).",
+            "ProbabilityDecision.honestly/6": "The coin average equals \\(\\sum_{j\\in V_0}S(i,j)p_0(j)\\), so \\(p_0(i)=e(i)+\\sum_{j\\in V_0}S(i,j)p_0(j)\\)."
+          }
+        },
+        {
+          "module": "ConfigurationGraph",
+          "name": "fair",
+          "informal": "Under the logarithmic space bound, \\(p_0(x_0)\\) equals the acceptance probability of \\(\\mathcal M\\) on \\(x\\) within \\(T(n)\\) steps.",
+          "chunks": {
+            "ConfigurationGraph.fair/0": "Let \\(k=T(n)\\), let \\(f_b(t)\\) be the configuration at time \\(t\\) under coin string \\(b\\in\\{0,1\\}^k\\), and let \\(g_t(b)=p_0(f_b(t))\\).",
+            "ConfigurationGraph.fair/1": "For \\(t<k\\), \\(g_t(b)=\\tfrac12\\bigl(g_{t+1}(b)+g_{t+1}(b')\\bigr)\\), where \\(b'\\) is \\(b\\) with bit \\(t\\) flipped.",
+            "ConfigurationGraph.fair/1/0": "Let \\(i=t\\), let \\(b'\\) be \\(b\\) with bit \\(i\\) flipped, and extend coin strings to infinite coin tapes.",
+            "ConfigurationGraph.fair/1/1": "\\(f_b(t)=f_{b'}(t)\\), since the first \\(t\\) coins of \\(b\\) and \\(b'\\) agree.",
+            "ConfigurationGraph.fair/1/1/0": "It suffices that \\(b\\) and \\(b'\\) agree at every \\(j<t\\).",
+            "ConfigurationGraph.fair/1/1/1": "Such \\(j\\) satisfies \\(j<k\\).",
+            "ConfigurationGraph.fair/1/1/2": "\\(i\\ne j\\).",
+            "ConfigurationGraph.fair/1/1/3": "So the positions \\(i\\) and \\(j\\) of the coin string differ.",
+            "ConfigurationGraph.fair/1/1/4": "Hence \\(b'(j)=b(j)\\).",
+            "ConfigurationGraph.fair/1/2": "At time \\(t<k\\), the configuration under each of \\(b,b'\\) steps along its coin \\(t\\) to its time-\\((t+1)\\) configuration, and the configuration under \\(b\\) is not a final rewarded one.",
+            "ConfigurationGraph.fair/1/3": "Coin \\(t\\) of \\(b\\) is \\(b(i)\\).",
+            "ConfigurationGraph.fair/1/4": "Coin \\(t\\) of \\(b'\\) is \\(\\lnot b(i)\\).",
+            "ConfigurationGraph.fair/1/5": "Using \\(p_0=e+Sp_0\\) at \\(f_b(t)\\) with \\(e=0\\) there, \\(p_0(f_b(t))\\) is the average of \\(p_0\\) over the two successors \\(f_b(t+1)\\) and \\(f_{b'}(t+1)\\).",
+            "ConfigurationGraph.fair/2": "For every \\(t\\le k\\), \\(\\sum_b g_0(b)=\\sum_b g_t(b)\\), by induction using the averaging identity and the fact that flipping bit \\(t\\) is a bijection.",
+            "ConfigurationGraph.fair/3": "Let \\(\\mathrm{acc}(b)\\) mean that \\(\\mathcal M\\) outputs accept after \\(k\\) steps with coins \\(b\\).",
+            "ConfigurationGraph.fair/4": "\\(g_k(b)=1\\) if \\(\\mathrm{acc}(b)\\) and \\(0\\) otherwise.",
+            "ConfigurationGraph.fair/5": "\\(g_0(b)=p_0(x_0)\\) for every \\(b\\).",
+            "ConfigurationGraph.fair/6": "\\(\\sum_b g_0(b)=\\sum_b g_k(b)\\).",
+            "ConfigurationGraph.fair/7": "Thus \\(2^k p_0(x_0)=\\#\\{b:\\mathrm{acc}(b)\\}\\), which is \\(2^k\\) times the acceptance probability."
+          }
+        },
+        {
+          "module": "ConfigurationGraph",
+          "name": "in_degree",
+          "informal": "Each vertex \\(y\\) has at most \\(|\\mathcal H|\\) predecessors \\(i\\) with \\(S(i,y)>0\\), where \\(\\mathcal H\\) is a fixed finite set of hints depending only on the machine.",
+          "chunks": {
+            "ConfigurationGraph.in_degree/0": "Let \\(v\\) be the set of predecessors of \\(y\\) and, for each, let \\(b_i\\) be a coin that moves \\(i\\) to \\(y\\) (true if possible).",
+            "ConfigurationGraph.in_degree/1": "Each \\(i\\in v\\) moves to \\(y\\) with coin \\(b_i\\).",
+            "ConfigurationGraph.in_degree/1/0": "\\(i\\in v\\) means some coin moves \\(i\\) to \\(y\\).",
+            "ConfigurationGraph.in_degree/1/1": "So the chosen coin \\(b_i\\) moves \\(i\\) to \\(y\\).",
+            "ConfigurationGraph.in_degree/2": "Code each predecessor \\(i\\) by the hint of its configuration and coin \\(b_i\\) (old control and locally overwritten data).",
+            "ConfigurationGraph.in_degree/3": "The hint code is injective on \\(v\\).",
+            "ConfigurationGraph.in_degree/3/0": "Take \\(i,m\\in v\\) with equal hints.",
+            "ConfigurationGraph.in_degree/3/1": "The coin move from \\(i\\) lands at \\(y\\).",
+            "ConfigurationGraph.in_degree/3/2": "The coin move from \\(m\\) lands at \\(y\\).",
+            "ConfigurationGraph.in_degree/3/3": "Two configurations with the same successor and the same hint are equal.",
+            "ConfigurationGraph.in_degree/3/4": "Hence \\(i=m\\) as vertex identifiers.",
+            "ConfigurationGraph.in_degree/4": "An injection from \\(v\\) into \\(\\mathcal H\\) gives \\(|v|\\le|\\mathcal H|\\)."
+          }
+        }
+      ]
+    }
+  ],
+  "unmapped": []
+}

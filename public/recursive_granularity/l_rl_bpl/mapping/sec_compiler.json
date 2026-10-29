@@ -1,0 +1,20 @@
+{
+  "section": "sec:compiler",
+  "informal": "The Lean library has no counterpart to the effective compiler with explicit bounds; it proves \\(\\mathsf{BPL}\\subseteq\\mathsf{L}\\) as an existence statement.",
+  "modules": [],
+  "results": [],
+  "unmapped": [
+    {
+      "paper_id": "thm:effective-simulation",
+      "reason": "Lean proves existence of a deterministic logspace decider but no terminating algorithm emitting it with explicit constants."
+    },
+    {
+      "paper_id": "lem:compiler-interpreter",
+      "reason": "No resource-capped universal interpreter is formalized in Lean."
+    },
+    {
+      "paper_id": "res-13.3",
+      "reason": "Remark about optional head conventions with no Lean counterpart."
+    }
+  ]
+}

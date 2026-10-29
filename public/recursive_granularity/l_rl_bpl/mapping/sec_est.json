@@ -1,0 +1,358 @@
+{
+ "section": "sec:est",
+ "informal": "The Lean proves fourth-root norm estimates for the estimator: importance reweighting changes the conditioning slice exactly, the clipped relative error of a sample term costs \\((b/a)^{1/4}\\) or \\((b/a)^{3/4}\\) times the child root discrepancy, a wholly fine tail costs \\((b/a)^{3/4}\\), increments are enumerated by \\(O(d)\\)-bit descriptors, and mean prefixes and walk noise of the additive schedule meet their precision bounds.",
+ "modules": [
+  "EstimatorBounds",
+  "IterationSchedule",
+  "AffineSampling"
+ ],
+ "results": [
+  {
+   "paper_id": "lem:est-true-means",
+   "informal": "Multiplying the conditional mean of an array supported on \\(Y_{a'}\\) by \\(\\pi_a/\\pi_{a'}\\) gives its conditional mean on the narrower slice, so a carried bin term has conditional mean \\((\\rho_k/\\rho_a)\\,\\mathbb E[f\\mid\\mathcal C^{u,\\max(a,k)}]\\).",
+   "confidence": "structural",
+   "note": "mean_move is the conditioning-change identity \\(\\mathbb E[\\frac{\\pi_a}{\\pi_b}\\mathbf 1_{Y_b}V\\mid\\mathcal C^{u,a}]=\\mathbb E[V\\mid\\mathcal C^{u,b}]\\) at the core of the proof and carry_change applies it to a carried term; the full statement for all formulas is not one Lean lemma.",
+   "decls": [
+    {
+     "module": "EstimatorBounds",
+     "name": "mean_move",
+     "informal": "If \\(a\\le a'\\) and \\(f\\) is supported on the terminal slice \\(Y_{a'}\\), then for \\(j\\in S\\), \\(\\frac{\\pi_a}{\\pi_{a'}}\\,\\mathbb E[f_{ij}\\mid\\mathcal C^{u,a}_{ij}]=\\mathbb E[f_{ij}\\mid\\mathcal C^{u,a'}_{ij}]\\).",
+     "chunks": {
+      "EstimatorBounds.mean_move/0": "The masking identity for the narrower slice, with \\(f=\\mathbf 1_{Y_{a'}}f\\), relates the two conditional means.",
+      "EstimatorBounds.mean_move/1": "Clearing the denominator \\(\\pi_{a'}>0\\) gives the identity."
+     }
+    },
+    {
+     "module": "EstimatorBounds",
+     "name": "carry_change",
+     "informal": "If \\(f\\) is supported on \\(Y_{\\max(a,k)}\\), then for \\(j\\in S\\), \\(\\mathbb E[\\text{carry}_k f\\mid\\mathcal C^{u,a}]_{ij}=\\frac{\\rho_k}{\\rho_a}\\,\\mathbb E[f\\mid\\mathcal C^{u,\\max(a,k)}]_{ij}\\).",
+     "chunks": {}
+    }
+   ]
+  },
+  {
+   "paper_id": "lem:est-loss",
+   "informal": "The fourth-root difference contracts under nonnegative mixtures, and \\(0\\le s\\le Cu\\) with \\(C\\ge1\\) implies \\(\\min\\{1,|s-t|/(1+u)\\}\\le32C\\,|s^{1/4}-t^{1/4}|\\).",
+   "confidence": "structural",
+   "note": "With \\(s=4\\) the Lean works directly with \\(|H^{1/4}-H'^{1/4}|\\), which the paper shows comparable to \\(\\mathcal L\\), and proves its mixture contraction and the \\(a=1\\) form of the relative-loss inequality; \\(\\mathcal L\\) itself is not defined.",
+   "decls": [
+    {
+     "module": "AffineSampling",
+     "name": "mixtures",
+     "informal": "For a nonnegative integral \\(\\mathcal I\\) and \\(f,g\\ge0\\), \\((\\mathcal I(f)^{1/4}-\\mathcal I(g)^{1/4})^4\\le\\mathcal I\\big((f^{1/4}-g^{1/4})^4\\big)\\).",
+     "chunks": {
+      "AffineSampling.mixtures/0": "Write \\(\\mathcal I(f)^{1/4}=\\|f^{1/4}\\|_{L_4(\\mathcal I)}\\), likewise for \\(g\\), and set \\(f'=f^{1/4}\\), \\(g'=g^{1/4}\\).",
+      "AffineSampling.mixtures/1": "By the triangle inequality, \\(\\big|\\|f'\\|_{L_4}-\\|g'\\|_{L_4}\\big|\\le\\|f'-g'\\|_{L_4}\\).",
+      "AffineSampling.mixtures/2": "Raising to the fourth power preserves this inequality.",
+      "AffineSampling.mixtures/3": "Since \\(\\|h\\|_{L_4}^4=\\mathcal I(h^4)\\), this is the claim."
+     }
+    },
+    {
+     "module": "AffineSampling",
+     "name": "fidelity",
+     "informal": "If \\(s,t,u\\ge0\\), \\(s\\le Cu\\) and \\(C\\ge1\\), then \\(\\min\\{1,|s-t|/(1+u)\\}\\le32C\\,|s^{1/4}-t^{1/4}|\\).",
+     "chunks": {
+      "AffineSampling.fidelity/0": "Let \\(v=s^{1/4}\\), \\(w=t^{1/4}\\) and \\(x=\\max(1,v)\\).",
+      "AffineSampling.fidelity/1": "\\(1\\le x\\).",
+      "AffineSampling.fidelity/2": "\\(v\\ge0\\).",
+      "AffineSampling.fidelity/3": "\\(v\\le x\\).",
+      "AffineSampling.fidelity/4": "Split according to whether \\(|v-w|\\ge1\\) or \\(|v-w|\\le1\\).",
+      "AffineSampling.fidelity/5": "If \\(|v-w|\\ge1\\), the left side is at most \\(1\\le32C|v-w|\\).",
+      "AffineSampling.fidelity/6": "If \\(|v-w|\\le1\\), the clipped error is again at most \\(32C|v-w|\\).",
+      "AffineSampling.fidelity/6/0": "If \\(|v-w|\\le1\\), then \\(w\\le2x\\).",
+      "AffineSampling.fidelity/6/1": "\\(x^3\\le C(1+u)\\).",
+      "AffineSampling.fidelity/6/1/0": "Split according to whether \\(v\\le1\\) or \\(v\\ge1\\).",
+      "AffineSampling.fidelity/6/1/1": "If \\(v\\le1\\), then \\(x^3=1\\le C(1+u)\\).",
+      "AffineSampling.fidelity/6/1/2": "If \\(v\\ge1\\), then \\(x^3=v^3\\le v^4=s\\le Cu\\le C(1+u)\\).",
+      "AffineSampling.fidelity/6/2": "\\(1+u>0\\).",
+      "AffineSampling.fidelity/6/3": "Since \\(v,w\\le2x\\), \\(|s-t|\\le4(2x)^3|v-w|\\).",
+      "AffineSampling.fidelity/6/4": "Hence \\(|s-t|/(1+u)\\le32C|v-w|\\), which bounds the minimum."
+     }
+    }
+   ]
+  },
+  {
+   "paper_id": "lem:est-mean-comparison",
+   "informal": "The \\(L_4\\) norm of the clipped relative error of a carried first-channel mean is at most \\(64K^4\\sigma(a,k)\\) times the child root discrepancy, with \\(\\sigma=2^{a-k}\\) for coarse and \\(2^{-3(k-a)}\\) for fine bins, and changing the endpoint scale of a deterministic array costs \\(2\\cdot2^{a'-a}\\).",
+   "confidence": "structural",
+   "note": "With \\(s=4\\) and \\(b/a=\\rho_k/\\rho_a=2^{4(a-k)}\\), \\(\\sigma\\) equals \\((b/a)^{1/4}\\) or \\((b/a)^{3/4}\\), the fourth roots of the paper's costs \\(b/a\\) and \\((b/a)^{s-1}\\); the source-release factor \\(f/u\\) is handled by other lemmas.",
+   "decls": [
+    {
+     "module": "EstimatorBounds",
+     "name": "stream_fee",
+     "informal": "Assume \\(2^{\\max(a,k)}\\le n\\), \\(K\\ge1\\), \\(f,g\\) have fourth roots in \\([0,K]\\) and are supported on \\(Y_{\\max(a,k)}\\), \\(D\\ge0\\), and \\(\\bar f_{ij}\\le KD_{ij}\\) where \\(\\bar h=\\mathbb E[\\text{carry}_k h\\mid\\mathcal C^{u,a}]\\); then \\(\\big\\|\\min\\{1,|\\bar f-\\bar g|/(1+D)\\}\\big\\|_{u,a;4}\\le64K^4\\,\\sigma(a,k)\\,\\|f^{1/4}-g^{1/4}\\|_{u,\\max(a,k);4}\\), with \\(\\sigma(a,k)=2^{a-k}\\) if \\(k\\le a\\) and \\(2^{-3(k-a)}\\) otherwise.",
+     "chunks": {
+      "EstimatorBounds.stream_fee/0": "Let \\(v_{ij}=\\bar f_{ij}-\\bar g_{ij}\\).",
+      "EstimatorBounds.stream_fee/1": "Each clipped relative error \\(\\min\\{1,|v_{ij}|/(1+D_{ij})\\}\\) is nonnegative.",
+      "EstimatorBounds.stream_fee/2": "\\(K>0\\).",
+      "EstimatorBounds.stream_fee/3": "Split into the coarse case \\(k\\le a\\) and the fine case \\(k>a\\).",
+      "EstimatorBounds.stream_fee/4": "In the coarse case \\(k\\le a\\) the bound holds with \\(\\sigma=2^{a-k}\\).",
+      "EstimatorBounds.stream_fee/4/0": "Here \\(\\sigma=p:=2^{a-k}\\); let \\(e_{ij}=\\mathbb E[f]_{ij}^{1/4}-\\mathbb E[g]_{ij}^{1/4}\\) and \\(A=32Kp\\).",
+      "EstimatorBounds.stream_fee/4/1": "\\(p>0\\).",
+      "EstimatorBounds.stream_fee/4/2": "\\(A\\ge0\\).",
+      "EstimatorBounds.stream_fee/4/3": "On the source and endpoint domains, \\(\\min\\{1,|v_{ij}|/(1+D_{ij})\\}\\le A|e_{ij}|\\).",
+      "EstimatorBounds.stream_fee/4/3/0": "Indices in the domains lie in \\(S\\).",
+      "EstimatorBounds.stream_fee/4/3/1": "The clipped error equals its absolute value.",
+      "EstimatorBounds.stream_fee/4/3/2": "For coarse bins the importance factor is \\(p^4\\), so \\(\\bar h_{ij}=p^4\\,\\mathbb E[h]_{ij}\\) for every \\(h\\).",
+      "EstimatorBounds.stream_fee/4/3/3": "\\(\\mathbb E[f]_{ij}\\ge0\\).",
+      "EstimatorBounds.stream_fee/4/3/4": "\\(\\mathbb E[g]_{ij}\\ge0\\).",
+      "EstimatorBounds.stream_fee/4/3/5": "\\(\\bar f_{ij}\\le KD_{ij}\\).",
+      "EstimatorBounds.stream_fee/4/3/6": "Rewrite \\(v_{ij}\\) and this hypothesis using \\(\\bar h=p^4\\,\\mathbb E[h]\\).",
+      "EstimatorBounds.stream_fee/4/3/7": "\\(p^4\\ge0\\).",
+      "EstimatorBounds.stream_fee/4/3/8": "The relative-loss bound gives at most \\(32K\\,|(p^4\\mathbb E f)^{1/4}-(p^4\\mathbb E g)^{1/4}|=32Kp\\,|e_{ij}|\\).",
+      "EstimatorBounds.stream_fee/4/4": "By monotonicity and homogeneity of the norm, the left side is at most \\(A\\,\\|e\\|_{u,a;4}\\).",
+      "EstimatorBounds.stream_fee/4/5": "Narrowing to scale \\(a\\) leaves the axis unchanged.",
+      "EstimatorBounds.stream_fee/4/6": "So the target norm is the original \\(\\|\\cdot\\|_{u,a;4}\\).",
+      "EstimatorBounds.stream_fee/4/7": "By Jensen, \\(\\|e\\|_{u,a;4}\\le\\|f^{1/4}-g^{1/4}\\|_{u,a;4}\\).",
+      "EstimatorBounds.stream_fee/4/8": "Since \\(32Kp\\le64K^4p\\), the coarse bound follows.",
+      "EstimatorBounds.stream_fee/5": "In the fine case \\(a<k\\).",
+      "EstimatorBounds.stream_fee/6": "\\(\\max(a,k)=k\\).",
+      "EstimatorBounds.stream_fee/7": "Let \\(p=2^{-(k-a)}\\).",
+      "EstimatorBounds.stream_fee/8": "By the conditioning change and \\(\\rho_k/\\rho_a=p^4\\), \\(v_{ij}=p^4\\,\\mathbb E[f-g\\mid\\mathcal C^{u,k}]_{ij}\\).",
+      "EstimatorBounds.stream_fee/9": "Let \\(A_{ij}=\\mathbb E[f-g\\mid\\mathcal C^{u,k}]_{ij}\\).",
+      "EstimatorBounds.stream_fee/10": "On the domains, \\(\\min\\{1,|v_{ij}|/(1+D_{ij})\\}\\le p^4|A_{ij}|\\).",
+      "EstimatorBounds.stream_fee/10/0": "Indices in the domains lie in \\(S\\).",
+      "EstimatorBounds.stream_fee/10/1": "\\(D_{ij}\\ge0\\).",
+      "EstimatorBounds.stream_fee/10/2": "The clipped error is at most \\(|v_{ij}|/(1+D_{ij})\\).",
+      "EstimatorBounds.stream_fee/10/3": "\\(p^4\\ge0\\).",
+      "EstimatorBounds.stream_fee/10/4": "Since \\(1+D_{ij}\\ge1\\), \\(|v_{ij}|/(1+D_{ij})\\le|v_{ij}|=p^4|A_{ij}|\\).",
+      "EstimatorBounds.stream_fee/11": "Hence the left side is at most \\(p^4\\,\\|A\\|_{u,a;4}\\).",
+      "EstimatorBounds.stream_fee/12": "By Jensen, \\(\\|A\\|_{u,k;4}\\le\\|f-g\\|_{u,k;4}\\).",
+      "EstimatorBounds.stream_fee/13": "The ordinary difference is controlled by the root difference: \\(\\|f-g\\|_{u,k;4}\\le4K^3\\|f^{1/4}-g^{1/4}\\|_{u,k;4}\\).",
+      "EstimatorBounds.stream_fee/14": "Restate the Jensen bound for the deterministic array \\(A\\).",
+      "EstimatorBounds.stream_fee/15": "So \\(\\|A\\|_{u,k;4}\\le4K^3\\|f^{1/4}-g^{1/4}\\|_{u,k;4}\\).",
+      "EstimatorBounds.stream_fee/16": "Changing the endpoint domain from \\(Y_a\\) to \\(Y_k\\) costs \\(2\\cdot2^{k-a}\\), so the left side is at most \\(p^4\\cdot2\\cdot2^{k-a}\\cdot4K^3\\|f^{1/4}-g^{1/4}\\|_{u,k;4}\\), and here \\(\\sigma=p^3\\).",
+      "EstimatorBounds.stream_fee/17": "\\(p\\cdot2^{k-a}=1\\).",
+      "EstimatorBounds.stream_fee/18": "With \\(w=\\|f^{1/4}-g^{1/4}\\|_{u,k;4}\\), it remains to show \\(p^4\\cdot2\\cdot2^{k-a}\\cdot4K^3w\\le64K^4p^3w\\).",
+      "EstimatorBounds.stream_fee/19": "\\(K^3\\le K^4\\).",
+      "EstimatorBounds.stream_fee/20": "\\(p\\ge0\\).",
+      "EstimatorBounds.stream_fee/21": "\\(w\\ge0\\).",
+      "EstimatorBounds.stream_fee/22": "The left side equals \\(8K^3p^3w\\cdot(p\\,2^{k-a})\\) and is at most \\(64K^4p^3w\\).",
+      "EstimatorBounds.stream_fee/22/0": "Use \\(p\\cdot2^{k-a}=1\\).",
+      "EstimatorBounds.stream_fee/22/1": "\\(8K^3p^3w\\le64K^4p^3w\\).",
+      "EstimatorBounds.stream_fee/22/2": "This gives the fine bound."
+     }
+    },
+    {
+     "module": "EstimatorBounds",
+     "name": "unit_change",
+     "informal": "If \\(a\\le a'\\) and \\(2^{a'}\\le n\\), then every deterministic array \\(f\\) satisfies \\(\\|f\\|_{u,a;4}\\le2\\cdot2^{a'-a}\\,\\|f\\|_{u,a';4}\\).",
+     "chunks": {
+      "EstimatorBounds.unit_change/0": "Let \\(K=2\\cdot2^{a'-a}\\).",
+      "EstimatorBounds.unit_change/1": "\\(K\\ge0\\).",
+      "EstimatorBounds.unit_change/2": "Raising to the fourth power and swapping the endpoint scale of a deterministic array, the claim follows from \\(\\pi_a\\le\\pi_{a'}K^4\\)."
+     }
+    }
+   ]
+  },
+  {
+   "paper_id": "lem:est-omission",
+   "informal": "A deterministic array with entries in \\([0,K\\rho_{a+m}]\\) and row sums at most \\(K\\) has \\(\\|X_0/\\rho_a\\|_{u,a;4}\\le4K\\,2^{-3m}\\).",
+   "confidence": "named",
+   "note": "With \\(b=\\rho_{a+m}\\), \\(2^{-3m}=(b/a)^{3/4}=(b/a)^{(s-1)/s}\\) for \\(s=4\\), and the hypotheses are the entry bound \\(Cb\\) and bounded row mass used in the paper's proof (docstring: one collective loss of a wholly fine tail).",
+   "decls": [
+    {
+     "module": "EstimatorBounds",
+     "name": "fine_tail",
+     "informal": "Assume \\(K\\ge1\\), \\(2^a\\le n\\), \\(2^u\\le n\\), \\(|S|\\le N\\), \\(0\\le X_0(i,j)\\le K\\rho_{a+m}\\) and \\(\\sum_jX_0(i,j)\\le K\\) for \\(i,j\\in S\\); then \\(\\|X_0/\\rho_a\\|_{u,a;4}\\le4K\\,2^{-3m}\\).",
+     "chunks": {
+      "EstimatorBounds.fine_tail/0": "Let \\(f=\\rho_a\\), \\(g=\\rho_u\\) and \\(\\alpha=2^{-m}\\).",
+      "EstimatorBounds.fine_tail/1": "\\(f>0\\).",
+      "EstimatorBounds.fine_tail/2": "\\(g>0\\).",
+      "EstimatorBounds.fine_tail/3": "\\(\\alpha\\ge0\\).",
+      "EstimatorBounds.fine_tail/4": "\\(K\\ge0\\).",
+      "EstimatorBounds.fine_tail/5": "\\(\\rho_{a+m}=\\alpha^4f\\).",
+      "EstimatorBounds.fine_tail/6": "Let \\(T_{ij}=(X_0(i,j)/f)^4\\).",
+      "EstimatorBounds.fine_tail/7": "For each row \\(i\\in S\\), \\(\\sum_jT_{ij}\\le K^4\\alpha^{12}/f\\).",
+      "EstimatorBounds.fine_tail/7/0": "Each term satisfies \\(T_{ij}\\le(K\\alpha^4)^3\\,X_0(i,j)/f\\).",
+      "EstimatorBounds.fine_tail/7/0/0": "Use \\(0\\le X_0(i,j)\\le K\\rho_{a+m}\\).",
+      "EstimatorBounds.fine_tail/7/0/1": "So \\(X_0(i,j)/f\\le K\\alpha^4\\).",
+      "EstimatorBounds.fine_tail/7/0/2": "\\(X_0(i,j)/f\\ge0\\).",
+      "EstimatorBounds.fine_tail/7/0/3": "Hence \\((X_0/f)^4=(X_0/f)^3(X_0/f)\\le(K\\alpha^4)^3(X_0/f)\\).",
+      "EstimatorBounds.fine_tail/7/1": "Summing and using \\(\\sum_jX_0(i,j)\\le K\\) gives \\(\\sum_jT_{ij}\\le(K\\alpha^4)^3K/f=K^4\\alpha^{12}/f\\).",
+      "EstimatorBounds.fine_tail/8": "It suffices to bound the fourth power of the norm by \\((4K\\alpha^3)^4\\), and for a deterministic array it equals \\(\\frac1{N\\rho_u}\\sum_{i,j}\\pi_u\\pi_aT_{ij}\\).",
+      "EstimatorBounds.fine_tail/9": "\\(\\pi_u\\pi_a\\ge0\\).",
+      "EstimatorBounds.fine_tail/10": "\\(\\pi_u\\pi_a\\le16g\\cdot16f\\).",
+      "EstimatorBounds.fine_tail/11": "For each row, \\(\\sum_j\\pi_u\\pi_aT_{ij}\\le(4K\\alpha^3)^4g\\).",
+      "EstimatorBounds.fine_tail/11/0": "Factor out \\(\\pi_u\\pi_a\\).",
+      "EstimatorBounds.fine_tail/11/1": "Use the row bound on \\(\\sum_jT_{ij}\\).",
+      "EstimatorBounds.fine_tail/11/2": "Then \\(\\pi_u\\pi_a\\sum_jT_{ij}\\le256gf\\cdot K^4\\alpha^{12}/f=(4K\\alpha^3)^4g\\).",
+      "EstimatorBounds.fine_tail/12": "Summing over rows bounds the norm power by \\((N\\rho_u)^{-1}|S|(4K\\alpha^3)^4g\\).",
+      "EstimatorBounds.fine_tail/13": "Split on whether \\(N=0\\).",
+      "EstimatorBounds.fine_tail/14": "If \\(N=0\\), the scale factor vanishes and the bound is trivial.",
+      "EstimatorBounds.fine_tail/15": "Otherwise the factor is \\((Ng)^{-1}\\).",
+      "EstimatorBounds.fine_tail/16": "\\(Ng>0\\).",
+      "EstimatorBounds.fine_tail/17": "\\(|S|\\le N\\).",
+      "EstimatorBounds.fine_tail/18": "Clear the denominator \\(Ng\\).",
+      "EstimatorBounds.fine_tail/19": "Since \\(|S|\\le N\\), the bound is at most \\((4K\\alpha^3)^4\\)."
+     }
+    }
+   ]
+  },
+  {
+   "paper_id": "lem:est-paths",
+   "informal": "The group-\\(i\\) portion of walked increments equals the sum of signed, walk-weighted values over the immediate candidates, plus the base term in the first group, and every candidate descriptor has bit length at most \\(4^7\\cdot\\text{passport}\\cdot d_i\\).",
+   "confidence": "structural",
+   "note": "humid is the exact-endpoint-grouping identity for the path enumeration and lengthC the \\(O(d)\\)-bit description bound; the midpoint-pairing and budget clauses are not stated in these lemmas.",
+   "decls": [
+    {
+     "module": "IterationSchedule",
+     "name": "humid",
+     "informal": "For every group \\(i\\), environment \\(u\\) and pair \\((x,y)\\), \\(\\text{portion}_i(u,x,y)=\\sum_{j\\in\\text{tracks}(i)}\\text{wind}_j(u,x,y)+[i=0]\\,\\text{base}(x,y)\\), where \\(\\text{wind}_j\\) is \\(\\pm w^h\\) times the budget-\\((m+1)\\) or budget-\\(m\\) term at the endpoint of the path of \\(j\\) if that path is live, and \\(0\\) otherwise.",
+     "chunks": {
+      "IterationSchedule.humid/0": "Enumerate tracks ray by ray, layer by layer and path by path, expand each walked difference \\(T_{m+1}-T_m\\) as a sum over live paths, and match the terms.",
+      "IterationSchedule.humid/1": "In the live case the terms agree, with sign \\(+\\) for budget \\(m+1\\) and \\(-\\) for budget \\(m\\).",
+      "IterationSchedule.humid/2": "In the non-live case both terms are \\(0\\)."
+     }
+    },
+    {
+     "module": "IterationSchedule",
+     "name": "lengthC",
+     "informal": "If \\(\\lambda=\\ell\\), \\(i<L\\), every ray in the forest has copy index at most \\(M^2+2M+2\\), \\(q\\) is an admissible group-\\(i\\) descriptor and \\(p,r\\le K\\), then the encoding of the candidate \\((q,p,r)\\) has bit length at most \\(4^7\\cdot\\text{passport}\\cdot d_i\\), where \\(d_i\\) is the slack of group \\(i\\).",
+     "chunks": {
+      "IterationSchedule.lengthC/0": "Let \\(c=\\text{passport}\\) and \\(d=d_i\\).",
+      "IterationSchedule.lengthC/1": "\\(c\\ge50\\).",
+      "IterationSchedule.lengthC/2": "\\(d\\ge1\\).",
+      "IterationSchedule.lengthC/3": "The copy index of the ray of \\(q\\) is at most \\(M^2+2M+2\\).",
+      "IterationSchedule.lengthC/4": "The scale offset of \\(q\\) is at most \\(2d\\), and its slack \\(\\sigma\\) satisfies \\(d\\le\\sigma<2d\\).",
+      "IterationSchedule.lengthC/5": "The walk-event index of \\(q\\) has bit length at most \\(cd\\).",
+      "IterationSchedule.lengthC/5/0": "The event index is below \\(\\text{rad}^{\\ell\\sigma}\\).",
+      "IterationSchedule.lengthC/5/1": "\\(\\text{rad}\\le2^{\\lg\\text{rad}}\\).",
+      "IterationSchedule.lengthC/5/2": "Since \\(\\ell\\sigma\\lg\\text{rad}\\le cd\\), the event index is below \\(2^{cd}\\).",
+      "IterationSchedule.lengthC/5/3": "So its encoding has at most \\(cd\\) bits.",
+      "IterationSchedule.lengthC/6": "Every number \\(x\\le c-1\\) has bit length at most \\(cd\\).",
+      "IterationSchedule.lengthC/7": "Every number \\(x\\le2d\\) has bit length at most \\(cd\\).",
+      "IterationSchedule.lengthC/8": "The scale-offset field has bit length at most \\(4cd\\).",
+      "IterationSchedule.lengthC/9": "The copy-index and slack field has bit length at most \\(4cd\\).",
+      "IterationSchedule.lengthC/10": "The cell of \\(q\\) has bit length at most \\(16cd\\).",
+      "IterationSchedule.lengthC/11": "The first component of \\(q\\) has bit length at most \\(64cd\\).",
+      "IterationSchedule.lengthC/12": "The whole descriptor \\(q\\) has bit length at most \\(256cd\\).",
+      "IterationSchedule.lengthC/13": "The header \\((2,p,r)\\) has bit length at most \\(16cd\\).",
+      "IterationSchedule.lengthC/14": "Pairing header and descriptor gives bit length at most \\(4^7cd\\)."
+     }
+    }
+   ]
+  },
+  {
+   "paper_id": "lem:est-mean-prefix",
+   "informal": "For a ray with accuracy guarantee coefficient \\(c\\), the mean prefix at the last budget \\(\\text{reach}(k,i)\\) has clipped relative or absolute error norm at most \\(c\\cdot\\text{wide}\\cdot2^{2d_i}\\cdot2^{-\\lfloor|a-k|/2\\rfloor}\\).",
+   "confidence": "structural",
+   "note": "This is the per-scale form of the bound \\(c_*2^{-p+B_1d_j}\\) with \\(B_1=2\\) and a geometric scale factor that is later summed over scales; wholly omitted fine scales are handled by fine_tail.",
+   "decls": [
+    {
+     "module": "EstimatorBounds",
+     "name": "winning",
+     "informal": "If the line \\(f\\) satisfies \\(\\text{Due}(s,k,d,D,b,c)\\) and \\(r>0\\), then \\(\\big\\|\\text{toll}_b(\\mathbb E[f_{\\text{reach}(k,i)}]-\\text{account},D)\\big\\|_{u,a;4}\\le c\\cdot\\text{wide}\\cdot2^{2d_i}\\cdot2^{-\\lfloor|a-k|/2\\rfloor}\\), where \\(\\text{toll}_b\\) is the clipped relative error \\(\\min\\{1,|\\cdot|/(1+D)\\}\\) if \\(b\\) holds and the absolute error otherwise.",
+     "chunks": {
+      "EstimatorBounds.winning/0": "The accuracy guarantee at budget \\(\\text{reach}(k,i)\\le M-\\text{cut}(k)\\) bounds the left side by \\(c\\,\\sigma(a,k)\\,\\theta_{\\text{reach}(k,i)}\\).",
+      "EstimatorBounds.winning/1": "The precision bound times \\(c\\ge0\\) gives \\(c\\,\\sigma(a,k)\\,\\theta_{\\text{reach}(k,i)}\\le c\\cdot\\text{wide}\\cdot2^{2d_i}\\cdot2^{-\\lfloor|a-k|/2\\rfloor}\\).",
+      "EstimatorBounds.winning/2": "Combining the two bounds gives the claim."
+     }
+    },
+    {
+     "module": "EstimatorBounds",
+     "name": "precision",
+     "informal": "If \\(r>0\\), then \\(\\sigma(a,k)\\,\\theta_{\\text{reach}(k,i)}\\le\\text{wide}\\cdot2^{2d_i}\\cdot2^{-\\lfloor|a-k|/2\\rfloor}\\), where \\(\\theta_m\\) is the child allowance at budget \\(m\\).",
+     "chunks": {}
+    }
+   ]
+  },
+  {
+   "paper_id": "lem:est-raw-difference",
+   "informal": "The ordinary norm of a difference of carried terms is at most \\(64K^4\\,2^{4|a-k|}\\) times the child root discrepancy, and at slack \\(d\\) the child allowance for both budgets \\(m,m+1\\) satisfies \\(2^{4|a-k|}\\theta_x\\le\\text{wide}\\cdot2^{8d}\\cdot2^{-\\lfloor|a-k|/2\\rfloor}\\).",
+   "confidence": "structural",
+   "note": "raw_fee is the unaveraged absolute comparison with scale cost \\(2^{O(|h_b|)}\\) and pegged converts the child accuracy into \\(\\text{wide}\\cdot2^{8d}\\), i.e. \\(2^{-p-A_*+C_0d}\\) with \\(C_0=8\\), for both parts of a paired layer; the variant-counting clause is not stated separately.",
+   "decls": [
+    {
+     "module": "EstimatorBounds",
+     "name": "raw_fee",
+     "informal": "If \\(2^{\\max(a,k)}\\le n\\), \\(K\\ge1\\), and \\(f,g\\) have fourth roots in \\([0,K]\\) and are supported on \\(Y_{\\max(a,k)}\\), then \\(\\|\\text{carry}_kf-\\text{carry}_kg\\|_{u,a;4}\\le64K^4\\,2^{4|a-k|}\\,\\|f^{1/4}-g^{1/4}\\|_{u,\\max(a,k);4}\\).",
+     "chunks": {
+      "EstimatorBounds.raw_fee/0": "Let \\(c\\) be the importance factor of \\(\\text{carry}_k\\), \\(a'=\\max(a,k)\\) and \\(z=f-g\\).",
+      "EstimatorBounds.raw_fee/1": "\\(z\\) is supported on \\(Y_{a'}\\).",
+      "EstimatorBounds.raw_fee/1/0": "Masking by \\(Y_{a'}\\) commutes with differences.",
+      "EstimatorBounds.raw_fee/1/1": "So the mask of \\(z\\) is \\(z\\) itself.",
+      "EstimatorBounds.raw_fee/2": "Hence \\(\\|z\\|_{u,a;4}=\\|z\\|_{u,a';4}\\).",
+      "EstimatorBounds.raw_fee/3": "The root comparison gives \\(\\|z\\|_{u,a';4}\\le4K^3\\|f^{1/4}-g^{1/4}\\|_{u,a';4}\\).",
+      "EstimatorBounds.raw_fee/4": "The left side equals \\(|c|\\,\\|z\\|_{u,a;4}\\).",
+      "EstimatorBounds.raw_fee/5": "\\(c\\ge0\\).",
+      "EstimatorBounds.raw_fee/6": "So the left side is at most \\(c\\cdot4K^3\\|f^{1/4}-g^{1/4}\\|_{u,a';4}\\); let \\(\\beta=2^{4|a-k|}\\).",
+      "EstimatorBounds.raw_fee/7": "\\(c\\le16\\beta\\).",
+      "EstimatorBounds.raw_fee/8": "\\(K\\ge0\\).",
+      "EstimatorBounds.raw_fee/9": "The root discrepancy is nonnegative.",
+      "EstimatorBounds.raw_fee/10": "\\(\\beta\\ge0\\).",
+      "EstimatorBounds.raw_fee/11": "It remains to show \\(16\\beta\\cdot4K^3\\le64K^4\\beta\\).",
+      "EstimatorBounds.raw_fee/12": "\\(K^3\\le K^4\\).",
+      "EstimatorBounds.raw_fee/13": "This gives the inequality."
+     }
+    },
+    {
+     "module": "EstimatorBounds",
+     "name": "pegged",
+     "informal": "If \\(r>0\\), \\(m<\\text{reach}(k,i)\\) and \\(x\\in\\{m,m+1\\}\\), then \\(2^{4|a-k|}\\,\\theta_x\\le\\text{wide}\\cdot2^{8\\,\\text{slack}(m)}\\cdot2^{-\\lfloor|a-k|/2\\rfloor}\\).",
+     "chunks": {
+      "EstimatorBounds.pegged/0": "From \\(m<\\text{reach}(k,i)\\) get \\(d_i\\le\\text{slack}(m)\\), \\(\\text{cut}(k)\\le\\text{slack}(m)\\) and \\(m+1<M\\), and apply the raw payment bound with \\(x\\le M\\).",
+      "EstimatorBounds.pegged/1": "Its scale condition \\(|a-k|<\\text{slack}(m)\\) holds.",
+      "EstimatorBounds.pegged/2": "Its budget condition \\(M-x\\le\\text{slack}(m)+1\\) holds.",
+      "EstimatorBounds.pegged/3": "Its rank condition \\(r>0\\) is the hypothesis."
+     }
+    }
+   ]
+  },
+  {
+   "paper_id": "lem:est-prefix",
+   "informal": "Each walked prefix is its noise plus the conditional-mean prefix, a walk of length \\(\\lambda t\\) shrinks noise by \\(2^{-et}\\), and the accumulated noise through group \\(i\\) is at most \\(4c\\cdot\\text{wide}\\cdot2^{-8d_i}\\cdot2^{-\\lfloor|a-k|/2\\rfloor}\\).",
+   "confidence": "structural",
+   "note": "foggy is the noise bound of Equation (est-prefix-noise), proved through windF from the conditional-walk contraction and the raw bound pegged, runoff gives \\(S_j=S_j^{\\rm noise}+S_j^{\\rm mean}\\), and the mean bound is winning (mapped to Lemma 7.6).",
+   "decls": [
+    {
+     "module": "EstimatorBounds",
+     "name": "foggy",
+     "informal": "If \\(f\\) satisfies \\(\\text{Due}(s,k,d,D,b,c)\\), \\(\\text{Wind}(18,\\lambda)\\) holds and \\(r>0\\), then the accumulated noise satisfies \\(\\|\\text{noise}_{i+1}\\|_{u,a;4}\\le4c\\cdot\\text{wide}\\cdot2^{-8d_i}\\cdot2^{-\\lfloor|a-k|/2\\rfloor}\\).",
+     "chunks": {
+      "EstimatorBounds.foggy/0": "By the triangle inequality the noise norm is at most the sum of the layer noise norms over \\(m<\\text{reach}(k,i)\\); let \\(C=2c\\cdot\\text{wide}\\cdot2^{-8d_i}\\mu\\) with \\(\\mu=2^{-\\lfloor|a-k|/2\\rfloor}\\).",
+      "EstimatorBounds.foggy/1": "\\(c\\ge0\\).",
+      "EstimatorBounds.foggy/2": "Let \\(\\mu=2^{-\\lfloor|a-k|/2\\rfloor}\\).",
+      "EstimatorBounds.foggy/3": "\\(\\mu\\ge0\\).",
+      "EstimatorBounds.foggy/4": "\\(C\\ge0\\).",
+      "EstimatorBounds.foggy/4/0": "\\(\\text{wide}\\ge0\\).",
+      "EstimatorBounds.foggy/4/1": "So \\(C\\), a product of nonnegative factors, is nonnegative.",
+      "EstimatorBounds.foggy/5": "Each layer \\(m<\\text{reach}(k,i)\\) has noise norm at most \\(C\\cdot2^{-\\text{slack}(m)}\\).",
+      "EstimatorBounds.foggy/5/0": "From \\(m<\\text{reach}(k,i)\\): \\(d_i\\le\\rho\\), \\(\\text{cut}(k)\\le\\rho\\) and \\(m+1<M\\), where \\(\\rho=\\text{slack}(m)\\).",
+      "EstimatorBounds.foggy/5/1": "\\(\\rho>0\\).",
+      "EstimatorBounds.foggy/5/2": "The walk contraction bounds the layer noise by \\(2^{-18\\rho}\\|f_{m+1}-f_m\\|_{u,a;4}\\).",
+      "EstimatorBounds.foggy/5/3": "The progress guarantee gives \\(\\|f_{m+1}-f_m\\|_{u,a;4}\\le c\\,2^{4|a-k|}(\\theta_m+\\theta_{m+1})\\).",
+      "EstimatorBounds.foggy/5/4": "\\(2^{4|a-k|}\\theta_m\\le\\text{wide}\\cdot2^{8\\rho}\\mu\\).",
+      "EstimatorBounds.foggy/5/5": "\\(2^{4|a-k|}\\theta_{m+1}\\le\\text{wide}\\cdot2^{8\\rho}\\mu\\).",
+      "EstimatorBounds.foggy/5/6": "Hence \\(\\|f_{m+1}-f_m\\|_{u,a;4}\\le2c\\cdot\\text{wide}\\cdot2^{8\\rho}\\mu\\).",
+      "EstimatorBounds.foggy/5/7": "Let \\(K'=2c\\cdot\\text{wide}\\cdot\\mu\\).",
+      "EstimatorBounds.foggy/5/8": "So the layer noise is at most \\(2^{-18\\rho}K'2^{8\\rho}\\).",
+      "EstimatorBounds.foggy/5/9": "\\(K'\\ge0\\).",
+      "EstimatorBounds.foggy/5/10": "Since \\(d_i\\le\\rho\\), \\(2^{8\\rho}2^{-18\\rho}\\le2^{-8d_i}2^{-\\rho}\\).",
+      "EstimatorBounds.foggy/5/11": "Multiplying by \\(K'\\) gives \\(K'2^{8\\rho}2^{-18\\rho}\\le K'2^{-8d_i}2^{-\\rho}\\).",
+      "EstimatorBounds.foggy/5/12": "Combining gives the layer bound \\(C\\cdot2^{-\\rho}\\).",
+      "EstimatorBounds.foggy/6": "Summing the layer bounds gives at most \\(C\\sum_{m<\\text{reach}(k,i)}2^{-\\text{slack}(m)}\\).",
+      "EstimatorBounds.foggy/7": "The slacks are distinct, so \\(\\sum_m2^{-\\text{slack}(m)}\\le2\\).",
+      "EstimatorBounds.foggy/8": "Hence the noise norm is at most \\(2C=4c\\cdot\\text{wide}\\cdot2^{-8d_i}\\mu\\)."
+     }
+    },
+    {
+     "module": "EstimatorBounds",
+     "name": "windF",
+     "informal": "If \\(16(1-\\delta)^\\lambda\\le2^{-4e}\\) and \\(t>0\\), then \\(\\|W_{\\lambda t}f-\\mathbb E[f\\mid\\mathcal C]\\|_{u,a;4}\\le2^{-et}\\,\\|f\\|_{u,a;4}\\), where \\(W_l\\) is the variant-sampling walk of length \\(l\\) on each conditional slice.",
+     "chunks": {}
+    },
+    {
+     "module": "EstimatorBounds",
+     "name": "runoff",
+     "informal": "If \\(f_0=0\\), then at every \\((u,x,y)\\), \\(\\sum_{m<\\text{yoke}(k,i)}W_m(f_{m+1}-f_m)=\\text{noise}_i+\\mathbb E[f_{\\text{yoke}(k,i)}\\mid\\mathcal C]\\), where \\(\\text{noise}_i=\\sum_{m<\\text{yoke}(k,i)}(W_m-\\mathbb E)(f_{m+1}-f_m)\\).",
+     "chunks": {
+      "EstimatorBounds.runoff/0": "By induction on the number of layers, each walked increment is its noise plus \\(\\mathbb E[f_{m+1}]-\\mathbb E[f_m]\\), and the means telescope from \\(\\mathbb E[f_0]=0\\).",
+      "EstimatorBounds.runoff/1": "Apply this with \\(\\text{yoke}(k,i)\\) layers."
+     }
+    }
+   ]
+  }
+ ],
+ "unmapped": []
+}

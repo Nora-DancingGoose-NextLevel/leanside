@@ -1,0 +1,79 @@
+{
+  "section": "sec:env",
+  "informal": "The Lean models a rank channel as a uniform pair (nonzero frame vector, offset) in \\(\\mathbb F_P^4\\), with \\(y\\) retained at level \\(k\\) when all coordinates of \\(a(y)\\) lie below \\(\\lceil P2^{-k}\\rceil\\), and proves the exact marginal retention probability \\(\\pi_{b_k}\\), the conditional pair bound, and the mean and variance of retained counts.",
+  "modules": [
+    "AffineSampling"
+  ],
+  "results": [
+    {
+      "paper_id": "lem:env-ranks",
+      "informal": "For the affine channel, \\(\\Pr\\{X_{b_k}(y)=1\\}=\\pi_{b_k}\\); for \\(y\\ne x\\), \\(\\Pr\\{X_{b_j}(y)=1\\mid X_{b_k}(x)=1\\}\\le 2\\pi_{b_j}\\) (and \\(\\le\\pi_{b_j}\\) when \\(k=j\\)); and for a set \\(A_0\\) of \\(q\\) distinct identifiers, \\(T=\\sum_{y\\in A_0}X_{b_k}(y)\\) has \\(\\mathbb E T=q\\pi_{b_k}\\) and \\(\\operatorname{Var}T\\le q\\pi_{b_k}\\).",
+      "confidence": "structural",
+      "note": "These lemmas give items 1 to 3 of the paper lemma for the Lean channel (frame of one column, \\(H=4\\)); item 3 is stated as a variance bound rather than the Chebyshev tail, and the rate comparison \\(b_k\\le\\pi_{b_k}\\le16b_k\\) is the separate lemma pct_bounds.",
+      "decls": [
+        {
+          "module": "AffineSampling",
+          "name": "marginal",
+          "informal": "\\(\\mathbb E[X_{b_k}(y)]=\\pi_{b_k}\\), i.e. a specified identifier \\(y\\) is retained at level \\(k\\) with probability exactly \\(\\pi_{b_k}\\).",
+          "chunks": {}
+        },
+        {
+          "module": "AffineSampling",
+          "name": "pairMean",
+          "informal": "If \\(y\\ne x\\) then \\(\\mathbb E[X_{b_j}(y)\\mid X_{b_k}(x)=1]\\le 2\\pi_{b_j}\\), and if moreover \\(k=j\\) then \\(\\mathbb E[X_{b_j}(y)\\mid X_{b_k}(x)=1]\\le\\pi_{b_j}\\).",
+          "chunks": {
+            "AffineSampling.pairMean/0": "For a fixed retained value \\(v\\) of \\(a(x)\\) and a frame \\(F\\), let \\(f_v(F)\\) be the indicator that \\(y\\) is retained at level \\(j\\), and let \\(\\text{value}(v)\\) be its average over frames.",
+            "AffineSampling.pairMean/1": "The conditional expectation \\(\\mathbb E[X_{b_j}(y)\\mid X_{b_k}(x)=1]\\) equals the average of \\(\\text{value}(v)\\) over retained values \\(v\\).",
+            "AffineSampling.pairMean/2": "Let \\(M\\) be the number of frames (nonzero vectors) and \\(N=P^4\\) the number of all vectors.",
+            "AffineSampling.pairMean/3": "\\(M\\ge1\\).",
+            "AffineSampling.pairMean/4": "\\(M+1=N\\).",
+            "AffineSampling.pairMean/5": "For each retained value \\(v\\), \\(M\\cdot\\text{value}(v)+\\mathbf 1\\{v\\text{ lies in the level-}j\\text{ box}\\}=N\\pi_{b_j}\\).",
+            "AffineSampling.pairMean/5/0": "Averaging the box indicator over \\(v+(y-x)F\\) for nonzero frames \\(F\\) and adding the value at \\(v\\) gives \\(N\\) times the box average, since \\(y-x\\ne0\\).",
+            "AffineSampling.pairMean/5/1": "The average of the level-\\(j\\) box indicator over all vectors is \\(\\pi_{b_j}\\).",
+            "AffineSampling.pairMean/5/2": "\\(f_v(F)\\) is the box indicator evaluated at \\(v+(y-x)F\\).",
+            "AffineSampling.pairMean/5/2/0": "Fix a frame \\(F\\).",
+            "AffineSampling.pairMean/5/2/1": "Given \\(a(x)=v\\), the evaluation at \\(y\\) is \\(a(y)=v+(y-x)F\\).",
+            "AffineSampling.pairMean/5/2/2": "Hence \\(f_v(F)\\) is the box indicator at \\(v+(y-x)F\\).",
+            "AffineSampling.pairMean/5/3": "Substituting this into the averaging identity gives the claim.",
+            "AffineSampling.pairMean/6": "Prove the two bounds separately.",
+            "AffineSampling.pairMean/7": "First, \\(\\mathbb E[X_{b_j}(y)\\mid X_{b_k}(x)=1]\\le2\\pi_{b_j}\\).",
+            "AffineSampling.pairMean/7/0": "It suffices to show \\(\\text{value}(v)\\le2\\pi_{b_j}\\) for each \\(v\\).",
+            "AffineSampling.pairMean/7/1": "Use \\(M\\cdot\\text{value}(v)+\\mathbf 1\\{\\cdot\\}=N\\pi_{b_j}\\).",
+            "AffineSampling.pairMean/7/2": "\\(\\pi_{b_j}>0\\).",
+            "AffineSampling.pairMean/7/3": "The box indicator is nonnegative.",
+            "AffineSampling.pairMean/7/4": "Since \\(N=M+1\\le2M\\), \\(\\text{value}(v)\\le N\\pi_{b_j}/M\\le2\\pi_{b_j}\\).",
+            "AffineSampling.pairMean/8": "Now assume \\(k=j\\); it suffices to show \\(\\text{value}(v)\\le\\pi_{b_j}\\) for each \\(v\\).",
+            "AffineSampling.pairMean/9": "Use \\(M\\cdot\\text{value}(v)+\\mathbf 1\\{\\cdot\\}=N\\pi_{b_j}\\).",
+            "AffineSampling.pairMean/10": "When \\(k=j\\) the value \\(v\\) itself lies in the box, so the indicator is \\(1\\).",
+            "AffineSampling.pairMean/11": "\\(\\pi_{b_j}\\le1\\).",
+            "AffineSampling.pairMean/12": "Hence \\(M\\cdot\\text{value}(v)=(M+1)\\pi_{b_j}-1\\le M\\pi_{b_j}\\), so \\(\\text{value}(v)\\le\\pi_{b_j}\\)."
+          }
+        },
+        {
+          "module": "AffineSampling",
+          "name": "count_var",
+          "informal": "If \\(g\\) is injective on \\(s\\) and \\(T=\\sum_{j\\in s}X_{b_k}(g(j))\\), then \\(\\mathbb E T=|s|\\pi_{b_k}\\) and \\(\\operatorname{Var}T\\le|s|\\pi_{b_k}\\).",
+          "chunks": {
+            "AffineSampling.count_var/0": "Let \\(p=\\pi_{b_k}\\) and \\(T=\\sum_{j\\in s}X_{b_k}(g(j))\\).",
+            "AffineSampling.count_var/1": "\\(\\mathbb E T=|s|p\\), by linearity and the exact marginal.",
+            "AffineSampling.count_var/2": "It remains to show \\(\\mathbb E T^2-(\\mathbb E T)^2\\le|s|p\\).",
+            "AffineSampling.count_var/3": "For \\(a,b\\in s\\), \\(\\mathbb E[X_{b_k}(g(a))X_{b_k}(g(b))]\\le p^2+\\mathbf 1\\{a=b\\}p\\).",
+            "AffineSampling.count_var/3/0": "Split on whether \\(a=b\\).",
+            "AffineSampling.count_var/3/1": "If \\(a=b\\), the product is \\(X_{b_k}(g(a))\\), whose mean is \\(p\\le p^2+p\\).",
+            "AffineSampling.count_var/3/2": "If \\(a\\ne b\\), the bound \\(p^2\\) follows from the conditional pair bound.",
+            "AffineSampling.count_var/3/2/0": "Write the mean as \\(p\\cdot\\mathbb E[X_{b_k}(g(b))\\mid X_{b_k}(g(a))=1]\\).",
+            "AffineSampling.count_var/3/2/1": "Since \\(g(a)\\ne g(b)\\), the conditional mean is at most \\(p\\) at equal levels.",
+            "AffineSampling.count_var/3/2/2": "Multiplying by \\(p\\ge0\\) gives \\(\\le p^2\\).",
+            "AffineSampling.count_var/4": "\\(\\mathbb E T^2=\\sum_{a\\in s}\\sum_{b\\in s}\\mathbb E[X_{b_k}(g(a))X_{b_k}(g(b))]\\).",
+            "AffineSampling.count_var/4/0": "Pointwise, \\(T^2=\\sum_{a}\\sum_{b}X_{b_k}(g(a))X_{b_k}(g(b))\\).",
+            "AffineSampling.count_var/4/1": "Take expectations term by term.",
+            "AffineSampling.count_var/5": "Summing the pair bound gives \\(\\mathbb E T^2\\le\\sum_a\\sum_b(p^2+\\mathbf 1\\{a=b\\}p)\\).",
+            "AffineSampling.count_var/6": "For each \\(a\\in s\\), \\(\\sum_{b\\in s}(p^2+\\mathbf 1\\{a=b\\}p)=|s|p^2+p\\).",
+            "AffineSampling.count_var/7": "Hence \\(\\mathbb E T^2-(|s|p)^2\\le|s|^2p^2+|s|p-|s|^2p^2=|s|p\\)."
+          }
+        }
+      ]
+    }
+  ],
+  "unmapped": []
+}
